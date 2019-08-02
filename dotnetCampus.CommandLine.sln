@@ -8,15 +8,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		Directory.Build.props = Directory.Build.props
+		LICENSE = LICENSE
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{7DDA8183-3606-4B08-86E3-A4537860448F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotnetCampus.CommandLine.Performance", "tests\dotnetCampus.CommandLine.Performance\dotnetCampus.CommandLine.Performance.csproj", "{7B664373-31A0-47AB-9076-15153EF4722A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnetCampus.CommandLine.Performance", "tests\dotnetCampus.CommandLine.Performance\dotnetCampus.CommandLine.Performance.csproj", "{7B664373-31A0-47AB-9076-15153EF4722A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnetCampus.CommandLine", "src\dotnetCampus.CommandLine\dotnetCampus.CommandLine.csproj", "{EE3640D1-C870-4C4E-869E-AE3DCC6CB3C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotnetCampus.CommandLine.Tests", "tests\dotnetCampus.CommandLine.Tests\dotnetCampus.CommandLine.Tests.csproj", "{470A596C-D8C4-4506-A71A-4BEEA08BCC62}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnetCampus.CommandLine.Tests", "tests\dotnetCampus.CommandLine.Tests\dotnetCampus.CommandLine.Tests.csproj", "{470A596C-D8C4-4506-A71A-4BEEA08BCC62}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,6 +26,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7B664373-31A0-47AB-9076-15153EF4722A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B664373-31A0-47AB-9076-15153EF4722A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B664373-31A0-47AB-9076-15153EF4722A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B664373-31A0-47AB-9076-15153EF4722A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EE3640D1-C870-4C4E-869E-AE3DCC6CB3C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EE3640D1-C870-4C4E-869E-AE3DCC6CB3C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE3640D1-C870-4C4E-869E-AE3DCC6CB3C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -32,17 +38,13 @@ Global
 		{470A596C-D8C4-4506-A71A-4BEEA08BCC62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{470A596C-D8C4-4506-A71A-4BEEA08BCC62}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{470A596C-D8C4-4506-A71A-4BEEA08BCC62}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7B664373-31A0-47AB-9076-15153EF4722A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7B664373-31A0-47AB-9076-15153EF4722A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7B664373-31A0-47AB-9076-15153EF4722A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7B664373-31A0-47AB-9076-15153EF4722A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{470A596C-D8C4-4506-A71A-4BEEA08BCC62} = {7DDA8183-3606-4B08-86E3-A4537860448F}
 		{7B664373-31A0-47AB-9076-15153EF4722A} = {7DDA8183-3606-4B08-86E3-A4537860448F}
+		{470A596C-D8C4-4506-A71A-4BEEA08BCC62} = {7DDA8183-3606-4B08-86E3-A4537860448F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {52E30C59-C5C8-4517-811A-667BFA2BFABB}
