@@ -1,7 +1,7 @@
 # 命令行解析
 
 [English][en]|[简体中文][zh-chs]|[繁體中文][zh-cht]
--|-|-|-
+-|-|-
 
 [en]: /README.md
 [zh-chs]: /docs/zh-chs/README.md
