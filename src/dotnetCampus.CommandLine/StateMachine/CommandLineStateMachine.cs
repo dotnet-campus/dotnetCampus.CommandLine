@@ -1,0 +1,131 @@
+﻿using System;
+using System.Collections.Generic;
+using dotnetCampus.Cli.Core;
+
+namespace dotnetCampus.Cli.StateMachine
+{
+    /// <summary>
+    /// 使用状态机的方式解析命令行参数。
+    /// </summary>
+    internal class CommandLineStateMachine
+    {
+        /// <summary>
+        /// 当构造此状态机时，储存下来的命令行参数列表。状态机在执行时，将在此参数列表中移动。
+        /// </summary>
+        private readonly IReadOnlyList<string> _commandLineArgs;
+
+        /// <summary>
+        /// 当构造此状态机时，储存选项型参数的前缀。
+        /// </summary>
+        private readonly char _optionPrefix;
+
+        /// <summary>
+        /// 状态机执行时，如果有新的选项和相关的值生成完成，则调用此委托。此委托仅在状态机开始执行时才会初始化。
+        /// </summary>
+        private Action<string, SingleOptimizedList> _optionCollectedAction;
+
+        /// <summary>
+        /// 状态机执行时，如果有新的选项生成，则设置到此字段中。此字段仅在状态机开始执行时才会初始化。
+        /// </summary>
+        private string _currentOption;
+
+        /// <summary>
+        /// 状态机执行时，如果有新的值生成，则添加到此集合中。此集合仅在状态机开始执行时才会初始化。
+        /// </summary>
+        private SingleOptimizedList _currentValues;
+
+        /// <summary>
+        /// 创建此命令行状态机的新实例。
+        /// </summary>
+        /// <param name="args">命令行参数列表。</param>
+        /// <param name="optionPrefix"></param>
+        public CommandLineStateMachine(IReadOnlyList<string> args, char optionPrefix)
+        {
+            _commandLineArgs = args ?? throw new ArgumentNullException(nameof(args));
+            if (optionPrefix is '-' || optionPrefix is '/')
+            {
+                _optionPrefix = optionPrefix;
+            }
+            else
+            {
+                throw new NotSupportedException("仅支持 - 或者 / 作为选项的前缀。");
+            }
+        }
+
+        /// <summary>
+        /// 开始执行状态机，以便得到命令行解析后的字典集合。
+        /// 执行此状态机仅会原封不动地将参数进行选项和值的分组，不会修改任何参数字符。
+        /// </summary>
+        /// <returns>包含命令行解析的字典集合。</returns>
+        public ListGroup<SingleOptimizedList> Run()
+        {
+            // 准备初始参数。
+            var parsedArgs = new ListGroup<SingleOptimizedList>();
+
+            // 初始化状态机运行的所有状态。
+            _currentOption = null;
+            _currentValues = null;
+            _optionCollectedAction = OnOptionCollected;
+
+            // 执行状态机。
+            foreach (var arg in _commandLineArgs)
+            {
+                if (arg[0] == _optionPrefix)
+                {
+                    Commit();
+                    SetOption(arg);
+                }
+                else
+                {
+                    AppendValue(arg);
+                }
+            }
+
+            Commit();
+
+            // 清除此次状态机运行的所有状态。
+            _currentOption = null;
+            _currentValues = null;
+            _optionCollectedAction = null;
+
+            // 返回结果。
+            return parsedArgs;
+
+            // 当状态机运行触发选项生成时，将此选项更新到集合中。
+            void OnOptionCollected(string option, SingleOptimizedList values)
+            {
+                if (values != null && values.Count > 0)
+                {
+                    parsedArgs.Add(option ?? "", values);
+                }
+                else if (!string.IsNullOrEmpty(option))
+                {
+                    parsedArgs.Add(option, values);
+                }
+            }
+        }
+
+        private void SetOption(string option)
+        {
+            _currentOption = option;
+            _currentValues = null;
+        }
+
+        private void AppendValue(string value)
+        {
+            if (_currentValues == null)
+            {
+                _currentValues = new SingleOptimizedList(value);
+            }
+            else
+            {
+                _currentValues.Add(value);
+            }
+        }
+
+        private void Commit()
+        {
+            _optionCollectedAction(_currentOption, _currentValues);
+        }
+    }
+}
