@@ -3,7 +3,7 @@
     internal static class CommandLineArgs
     {
         internal const string UrlProtocol = "walterlv";
-        internal const string FileValue = @"C:\Users\lvyi\Desktop\重命名试验.txt";
+        internal const string FileValue = @"C:\Users\lvyi\Desktop\文件.txt";
         internal const bool CloudValue = true;
         internal const bool IwbValue = true;
         internal const string ModeValue = "Display";
@@ -57,7 +57,7 @@
 
         internal static readonly string[] UrlArgs =
         {
-            @"walterlv://open/?file=C:\Users\lvyi\Desktop\%E9%87%8D%E5%91%BD%E5%90%8D%E8%AF%95%E9%AA%8C.txt&cloud=true&iwb=true&mode=Display&silence=true&placement=Outside&startupSession=89EA9D26-6464-4E71-BD04-AA6516063D83",
+            @"walterlv://open/?file=C:\Users\lvyi\Desktop\%E6%96%87%E4%BB%B6.txt&cloud=true&iwb=true&mode=Display&silence=true&placement=Outside&startupSession=89EA9D26-6464-4E71-BD04-AA6516063D83",
         };
 
         internal static readonly string[] EditVerbArgs =

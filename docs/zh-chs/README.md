@@ -78,7 +78,7 @@ $ demo.exe "C:/Users/lvyi/Desktop/demo.txt" -s --mode Edit --startup-sessions A 
 
 以上不同风格不能混合使用。
 
-对于 bool 类型的属性，在命令行中既可以在选项后传入 `true` / `True` / `false` / `False` 也可以不传。如果不传，则表示 `true`。
+对于 bool 类型的属性，在命令行中既可以在选项后传入 `true` / `True` / `false` / `False` 也可以不传。如果不传，则表示 `true`。举例来说，`-s true`、`-s True` 和 `-s` 都是等价的。
 
 另外，`ValueAttribute` 和 `OptionAttribute` 可以出现在同一个属性上。这时如果发现了不带选项的值，将填充到 `ValueAttribute` 的属性上；而一旦之后发现了此 `OptionsAttribute` 指定的短名称或者长名称，会将新的值覆盖再次设置到此属性上。
 
@@ -86,6 +86,8 @@ $ demo.exe "C:/Users/lvyi/Desktop/demo.txt" -s --mode Edit --startup-sessions A 
 [Value(0), Option('f', "File")]
 public string FilePath { get; }
 ```
+
+在这段例子中，`demo.exe xxx.txt`、`demo.exe -f xxx.txt` 和 `demo.exe --file xxx.txt` 都会将 `xxx.txt` 赋值给 `FilePath` 这个属性。
 
 ## 需要注意
 
@@ -97,13 +99,16 @@ public string FilePath { get; }
 
 你可以为你的命令行参数指定谓词，每一种谓词都可以有自己的一组独特的参数类型。
 
+谓词的用法如 `git commit` 和 `git add` 一样，其中的 `commit` 和 `add` 将作为命令行的命令分支逻辑标识，对于命令行谓词之后的参数将会填充到不同的谓词对应的类型。
+
 ```csharp
+const int defaultExitCode = 0;
 var commandLine = CommandLine.Parse(args);
-commandLine.AddHandler<EditOptions>(options => 0)
+commandLine.AddHandler<EditOptions>(options => defaultExitCode)
     .AddHandler<PrintOptions>(options => 0).Run();
 ```
 
-而 `EditOptions` 和 `PrintOptions` 的定义如下，区别在于类型标记了谓词。
+而 `EditOptions` 和 `PrintOptions` 的定义如下，区别在于通过 Verb 特性标记了谓词。
 
 ```csharp
 [Verb("Edit")]
@@ -119,6 +124,8 @@ public class PrintOptions
     [Option('p', "Printer")] public string Printer { get; set; }
 }
 ```
+
+谓词的用法如 `git commit` 一样，将作为命令行的命令分支逻辑标识。如以上代码可使用 `demo.exe edit -f xx.txt` 和 `demo.exe print -f xx.txt -p xx` 分别调用 `EditOptions` 和 `PrintOptions` 对应逻辑。
 
 你也可以在 `Handle` 中使用不标谓词的参数类型，但是这样的参数最多只允许有一个，会作为没有任何谓词匹配上时使用的默认参数类型。
 
@@ -246,7 +253,7 @@ public class SelfWrittenShareOptionsParser : CommandLineOptionParser<Options>
 请注意，解析 URL 有如下限制：
 
 1. 你的 `Options` 类型中所有的 `ValueAttribute` 都将无法被赋值；
-1. 你的 `Options` 类型中不允许出现标记有 `OptionAttribute` 的字符串集合属性。
+1. 你的 `Options` 类型中不允许出现标记有 `OptionAttribute` 的字符串集合属性（即 `OptionAttribute` 标记的属性类型不能是 `IList<string>` 等类型）。
 
 另外，URL 解析中的选项名称也是大小写敏感的。当你在 `Options` 类型中正确使用 PascalCase 风格定义了选项的长名称后，你在 URL 中既可以使用 PascalCase 风格也可以使用 camelCase 风格。
 
@@ -272,6 +279,8 @@ public class SelfWrittenShareOptionsParser : CommandLineOptionParser<Options>
 
 总结来说：完成一次解析只需要 1091ns，也就是大约 10 tick。
 
+其中，s 是秒，ns 是纳秒。换算关系为 1s = 1,000,000,000 ns。
+
 说明：
 
 - NoArgs 表示没有传入参数
@@ -280,7 +289,7 @@ public class SelfWrittenShareOptionsParser : CommandLineOptionParser<Options>
 - Handle 表示进行多谓词匹配
 - CommandLineParser 是使用的 CommandLineParser 库作为对照
 - 测试使用的参数：
-    - Windows 风格：`"C:\Users\lvyi\Desktop\重命名试验.enbx" -Cloud -Iwb -m Display -s -p Outside -StartupSession 89EA9D26-6464-4E71-BD04-AA6516063D83`
-    - Cmd 风格：`"C:\Users\lvyi\Desktop\重命名试验.enbx" /Cloud /Iwb /m Display /s /p Outside /StartupSession 89EA9D26-6464-4E71-BD04-AA6516063D83`
-    - Linux 风格：`"C:\Users\lvyi\Desktop\重命名试验.enbx" --cloud --iwb -m Display -s -p Outside --startup-session 89EA9D26-6464-4E71-BD04-AA6516063D83`
-    - Url 风格：`walterlv://open/?file=C:\Users\lvyi\Desktop\%E9%87%8D%E5%91%BD%E5%90%8D%E8%AF%95%E9%AA%8C.enbx&cloud=true&iwb=true&silence=true&placement=Outside&startupSession=89EA9D26-6464-4E71-BD04-AA6516063D83`
+    - Windows 风格：`"C:\Users\lvyi\Desktop\文件.txt" -Cloud -Iwb -m Display -s -p Outside -StartupSession 89EA9D26-6464-4E71-BD04-AA6516063D83`
+    - Cmd 风格：`"C:\Users\lvyi\Desktop\文件.txt" /Cloud /Iwb /m Display /s /p Outside /StartupSession 89EA9D26-6464-4E71-BD04-AA6516063D83`
+    - Linux 风格：`"C:\Users\lvyi\Desktop\文件.txt" --cloud --iwb -m Display -s -p Outside --startup-session 89EA9D26-6464-4E71-BD04-AA6516063D83`
+    - Url 风格：`walterlv://open/?file=C:\Users\lvyi\Desktop\%E6%96%87%E4%BB%B6.txt&cloud=true&iwb=true&silence=true&placement=Outside&startupSession=89EA9D26-6464-4E71-BD04-AA6516063D83`
