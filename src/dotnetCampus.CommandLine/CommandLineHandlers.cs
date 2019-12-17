@@ -19,7 +19,7 @@ namespace dotnetCampus.Cli
         /// <returns>已收集的谓词处理方法，可以继续收集或者开始执行。</returns>
         [Pure]
         public static CommandLineHandlerBuilder AddHandler<TVerb>(this CommandLine commandLine,
-            Action<TVerb> handler, ICommandLineOptionParser<TVerb> parser = null) =>
+            Action<TVerb> handler, ICommandLineOptionParser<TVerb>? parser = null) =>
             new CommandLineHandlerBuilder(commandLine).AddHandler(handler, parser);
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace dotnetCampus.Cli
         /// <returns>已收集的谓词处理方法，可以继续收集或者开始执行。</returns>
         [Pure]
         public static CommandLineHandlerBuilder AddHandler<TVerb>(this CommandLine commandLine,
-            Func<TVerb, int> handler, ICommandLineOptionParser<TVerb> parser = null)
+            Func<TVerb, int> handler, ICommandLineOptionParser<TVerb>? parser = null)
             => new CommandLineHandlerBuilder(commandLine).AddHandler(handler, parser);
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace dotnetCampus.Cli
         /// <returns>已收集的谓词处理方法，可以继续收集或者开始异步执行。</returns>
         [Pure]
         public static CommandLineAsyncHandlerBuilder AddHandler<TVerb>(this CommandLine commandLine,
-            Func<TVerb, Task> handler, ICommandLineOptionParser<TVerb> parser = null) =>
+            Func<TVerb, Task> handler, ICommandLineOptionParser<TVerb>? parser = null) =>
             new CommandLineAsyncHandlerBuilder(commandLine).AddHandler(handler, parser);
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace dotnetCampus.Cli
         /// <returns>已收集的谓词处理方法，可以继续收集或者开始异步执行。</returns>
         [Pure]
         public static CommandLineAsyncHandlerBuilder AddHandler<TVerb>(this CommandLine commandLine,
-            Func<TVerb, Task<int>> handler, ICommandLineOptionParser<TVerb> parser = null)
+            Func<TVerb, Task<int>> handler, ICommandLineOptionParser<TVerb>? parser = null)
             => new CommandLineAsyncHandlerBuilder(commandLine).AddHandler(handler, parser);
     }
 }

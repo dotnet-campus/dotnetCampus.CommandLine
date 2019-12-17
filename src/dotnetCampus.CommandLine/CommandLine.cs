@@ -12,7 +12,7 @@ using System.Web;
 using dotnetCampus.Cli.Core;
 using dotnetCampus.Cli.StateMachine;
 using static dotnetCampus.Cli.Utils.CommandLineHelpers;
-using ListGroupItem = System.Collections.Generic.KeyValuePair<string, dotnetCampus.Cli.Core.SingleOptimizedList>;
+using ListGroupItem = System.Collections.Generic.KeyValuePair<string, dotnetCampus.Cli.Core.SingleOptimizedList?>;
 
 #pragma warning disable CA1710 // Identifiers should have correct suffix
 #pragma warning disable CA1825 // Avoid zero-length array allocations.
@@ -74,7 +74,7 @@ namespace dotnetCampus.Cli
                     var verbOffset = parser.Verb is null ? 0 : 1;
                     for (var i = verbOffset; i < valueCount; i++)
                     {
-                        parser.SetValue(i - verbOffset, values[i]);
+                        parser.SetValue(i - verbOffset, values![i]);
                     }
                 }
                 else if (option.Length == 1)
@@ -87,7 +87,7 @@ namespace dotnetCampus.Cli
                     }
                     else if (valueCount == 1)
                     {
-                        if (bool.TryParse(values[0], out var @bool))
+                        if (bool.TryParse(values![0], out var @bool))
                         {
                             parser.SetValue(shortName, @bool);
                         }
@@ -98,7 +98,7 @@ namespace dotnetCampus.Cli
                     }
                     else
                     {
-                        parser.SetValue(shortName, values);
+                        parser.SetValue(shortName, values!);
                     }
                 }
                 else
@@ -111,7 +111,7 @@ namespace dotnetCampus.Cli
                     }
                     else if (valueCount == 1)
                     {
-                        if (bool.TryParse(values[0], out var @bool))
+                        if (bool.TryParse(values![0], out var @bool))
                         {
                             parser.SetValue(longName, @bool);
                         }
@@ -122,7 +122,7 @@ namespace dotnetCampus.Cli
                     }
                     else
                     {
-                        parser.SetValue(longName, values);
+                        parser.SetValue(longName, values!);
                     }
                 }
             }
@@ -148,7 +148,7 @@ namespace dotnetCampus.Cli
         /// </param>
         /// <returns>包含命令行解析后结果的 <see cref="CommandLine"/> 类型的新实例。</returns>
         [Pure]
-        public static CommandLine Parse(string[] args, string protocolName = null)
+        public static CommandLine Parse(string[] args, string? protocolName = null)
         {
             if (args is null || args.Length == 0)
             {
@@ -181,7 +181,7 @@ namespace dotnetCampus.Cli
         private static string[] ConvertUrlToArgs(string url)
         {
             url = HttpUtility.UrlDecode(url);
-            var start = url?.IndexOf('?') ?? -1;
+            var start = url?.IndexOf('?', StringComparison.OrdinalIgnoreCase) ?? -1;
             if (start >= 0 && url != null)
             {
                 var arguments = url.Substring(start + 1);
@@ -245,6 +245,7 @@ namespace dotnetCampus.Cli
         /// <summary>
         /// 将 longName 这种名称转换为 -LongName 这种名称。
         /// </summary>
+        /// <param name="option">要转换的一个 Option（而不是它的值）。</param>
         [Pure, MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static string FormatShellLongName(string option)
         {
@@ -261,6 +262,8 @@ namespace dotnetCampus.Cli
         /// <summary>
         /// 将 --long-name 这种名称转换为 -LongName 这种名称。
         /// </summary>
+        /// <param name="option">要转换的一个 Option（而不是它的值）。</param>
+        /// <param name="prefix">前缀符号。</param>
         [Pure, MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static string FormatCoreLongName(IEnumerable<char> option, char prefix)
         {
@@ -289,6 +292,7 @@ namespace dotnetCampus.Cli
         /// <summary>
         /// 自动根据命令行参数决定选项的前缀应该是哪一个字符。
         /// </summary>
+        /// <param name="args">从一组命令行参数中查找最适合作为命令行 Option 分隔符的字符。</param>
         [Pure, MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static char AutoFindPrefix(string[] args)
         {

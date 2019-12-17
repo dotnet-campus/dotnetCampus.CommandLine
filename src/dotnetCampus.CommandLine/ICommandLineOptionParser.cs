@@ -12,7 +12,7 @@ namespace dotnetCampus.Cli
         /// 获取此命令行选项的谓词。
         /// 此属性仅在存在多个命令行参数类型时才会生效，所以如果确定只有一个命令行参数类型，可以在这里返回 null。
         /// </summary>
-        string Verb { get; }
+        string? Verb { get; }
 
         /// <summary>
         /// 将一个无参数的指定索引处的值填充到命令行参数类型 <typeparamref name="T"/> 的实例中。

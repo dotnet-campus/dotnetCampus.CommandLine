@@ -16,7 +16,7 @@ namespace dotnetCampus.Cli.Core
         /// <summary>
         /// 当所需储存的值超过 1 个时，将启用此列表。所以此列表要么为 null，要么有多于 1 个的值。
         /// </summary>
-        private List<string> _restValues;
+        private List<string>? _restValues;
 
         /// <summary>
         /// 创建带有一个值的 <see cref="SingleOptimizedList"/> 的实例。
@@ -30,18 +30,25 @@ namespace dotnetCampus.Cli.Core
         /// <summary>
         /// 添加一个值到集合中。
         /// </summary>
+        /// <param name="value">要添加的值。</param>
         public void Add(string value)
         {
+            if (value is null)
+            {
+                throw new System.ArgumentNullException(nameof(value));
+            }
+
             if (_restValues == null)
             {
                 _restValues = new List<string>(1)
                 {
                     value,
                 };
-                return;
             }
-
-            _restValues.Add(value);
+            else
+            {
+                _restValues.Add(value);
+            }
         }
 
         public IEnumerator<string> GetEnumerator()
@@ -67,6 +74,6 @@ namespace dotnetCampus.Cli.Core
         /// <summary>
         /// 获取集合中指定索引处的值。
         /// </summary>
-        public string this[int index] => index is 0 ? _firstValue : _restValues[index - 1];
+        public string this[int index] => index is 0 ? _firstValue : _restValues![index - 1];
     }
 }

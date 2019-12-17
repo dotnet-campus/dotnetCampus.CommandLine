@@ -7,12 +7,12 @@ namespace dotnetCampus.Cli.Parsers
 {
     internal abstract class RuntimeCommandLineOptionParser<T> : ICommandLineOptionParser<T>
     {
-        protected RuntimeCommandLineOptionParser(string verb)
+        protected RuntimeCommandLineOptionParser(string? verb)
         {
             Verb = verb;
         }
 
-        public string Verb { get; }
+        public string? Verb { get; }
         public abstract void SetValue(int index, string value);
         public abstract void SetValue(char shortName, bool value);
         public abstract void SetValue(char shortName, string value);
@@ -25,7 +25,7 @@ namespace dotnetCampus.Cli.Parsers
         internal static RuntimeCommandLineOptionParser<T> Create()
         {
             var verb = typeof(T).IsDefined(typeof(VerbAttribute))
-                ? typeof(T).GetCustomAttribute<VerbAttribute>().VerbName
+                ? typeof(T).GetCustomAttribute<VerbAttribute>()!.VerbName
                 : null;
 
             var properties = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public)
@@ -42,7 +42,7 @@ namespace dotnetCampus.Cli.Parsers
             // 2. 所有属性都只有 public get 方法，视为不可变类型，支持；
             // 3. 其他任何情况都不支持，包括属性中有 private set，或者部分有 public set 部分没有 set 等。
             var isImmutable = properties.All(x => !x.CanWrite);
-            var allCanWrite = properties.All(x => x.CanWrite && x.SetMethod.IsPublic);
+            var allCanWrite = properties.All(x => x.CanWrite && x.SetMethod!.IsPublic);
             if (allCanWrite || isImmutable)
             {
                 return isImmutable

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -13,12 +14,13 @@ namespace dotnetCampus.Cli.Parsers
         private readonly Dictionary<char, PropertyInfo> _shortNameDictionary = new Dictionary<char, PropertyInfo>();
         private readonly Dictionary<string, PropertyInfo> _longNameDictionary = new Dictionary<string, PropertyInfo>();
 
-        public ImmutableRuntimeOptionParser(string verb, IReadOnlyList<PropertyInfo> attributedProperties) : base(verb)
+        public ImmutableRuntimeOptionParser(string? verb, IReadOnlyList<PropertyInfo> attributedProperties) : base(verb)
         {
             var properties = attributedProperties;
 
             _values = new object[properties.Count];
-            _constructor = typeof(T).GetConstructor(properties.Select(x => x.PropertyType).ToArray());
+            var constructor = typeof(T).GetConstructor(properties.Select(x => x.PropertyType).ToArray());
+            _constructor = constructor ?? throw new InvalidOperationException("Option 中必须为每个可能的命令行参数添加构造函数参数。");
             for (var i = 0; i < properties.Count; i++)
             {
                 var propertyInfo = properties[i];
@@ -27,7 +29,7 @@ namespace dotnetCampus.Cli.Parsers
                 if (propertyInfo.IsDefined(typeof(OptionAttribute)))
                 {
                     var attribute = propertyInfo.GetCustomAttribute<OptionAttribute>();
-                    if (attribute.ShortName != null)
+                    if (attribute!.ShortName != null)
                     {
                         _shortNameDictionary[attribute.ShortName.Value] = propertyInfo;
                     }
@@ -41,7 +43,7 @@ namespace dotnetCampus.Cli.Parsers
                 if (propertyInfo.IsDefined(typeof(ValueAttribute)))
                 {
                     var attribute = propertyInfo.GetCustomAttribute<ValueAttribute>();
-                    _indexedValueDictionary[attribute.Index] = propertyInfo;
+                    _indexedValueDictionary[attribute!.Index] = propertyInfo;
                 }
             }
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 
 namespace dotnetCampus.Cli.StateMachine
 {
@@ -9,7 +10,8 @@ namespace dotnetCampus.Cli.StateMachine
     /// 对于同步处理器，使用处理器返回值 int；
     /// 对于异步处理器，使用处理器返回值 Task&lt;int&gt;。
     /// </typeparam>
-    internal readonly struct MatchHandleResult<T>
+    [StructLayout(LayoutKind.Auto)]
+    internal readonly struct MatchHandleResult<T> where T : notnull
     {
         /// <summary>
         /// 记录处理器真实的返回值（或者异步处理器的异步返回值）。
@@ -24,7 +26,7 @@ namespace dotnetCampus.Cli.StateMachine
         /// <summary>
         /// 记录默认处理器忽视谓词判断的执行方法。
         /// </summary>
-        public readonly Func<T> Handler;
+        public readonly Func<T>? Handler;
 
         public MatchHandleResult(T value)
         {

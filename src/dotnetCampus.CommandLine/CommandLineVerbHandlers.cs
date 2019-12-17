@@ -26,7 +26,7 @@ namespace dotnetCampus.Cli
         /// <param name="handler">命令行参数解析后的处理器。</param>
         /// <param name="parser">命令行解析器。</param>
         public static void Handle<TVerb>(this CommandLine commandLine,
-            Action<TVerb> handler, ICommandLineOptionParser<TVerb> parser = null)
+            Action<TVerb> handler, ICommandLineOptionParser<TVerb>? parser = null)
         {
             var possibleVerb = FindPossibleVerb(commandLine);
             foreach (var exitCode in new HandleVerbStateMachine<int>(
@@ -57,7 +57,7 @@ namespace dotnetCampus.Cli
         /// <returns>单个命令行处理器的推出代码。</returns>
         public static void Handle<TVerb0, TVerb1>(this CommandLine commandLine,
             Action<TVerb0> handler0, Action<TVerb1> handler1,
-            ICommandLineOptionParser<TVerb0> parser0 = null, ICommandLineOptionParser<TVerb1> parser1 = null)
+            ICommandLineOptionParser<TVerb0>? parser0 = null, ICommandLineOptionParser<TVerb1>? parser1 = null)
         {
             var possibleVerb = FindPossibleVerb(commandLine);
             foreach (var exitCode in new HandleVerbStateMachine<int>(
@@ -92,8 +92,8 @@ namespace dotnetCampus.Cli
         /// <returns>单个命令行处理器的推出代码。</returns>
         public static void Handle<TVerb0, TVerb1, TVerb2>(this CommandLine commandLine,
             Action<TVerb0> handler0, Action<TVerb1> handler1, Action<TVerb2> handler2,
-            ICommandLineOptionParser<TVerb0> parser0 = null, ICommandLineOptionParser<TVerb1> parser1 = null,
-            ICommandLineOptionParser<TVerb2> parser2 = null)
+            ICommandLineOptionParser<TVerb0>? parser0 = null, ICommandLineOptionParser<TVerb1>? parser1 = null,
+            ICommandLineOptionParser<TVerb2>? parser2 = null)
         {
             var possibleVerb = FindPossibleVerb(commandLine);
             foreach (var exitCode in new HandleVerbStateMachine<int>(
@@ -133,8 +133,8 @@ namespace dotnetCampus.Cli
         public static void Handle<TVerb0, TVerb1, TVerb2, TVerb3>(this CommandLine commandLine,
             Action<TVerb0> handler0, Action<TVerb1> handler1,
             Action<TVerb2> handler2, Action<TVerb3> handler3,
-            ICommandLineOptionParser<TVerb0> parser0 = null, ICommandLineOptionParser<TVerb1> parser1 = null,
-            ICommandLineOptionParser<TVerb2> parser2 = null, ICommandLineOptionParser<TVerb3> parser3 = null)
+            ICommandLineOptionParser<TVerb0>? parser0 = null, ICommandLineOptionParser<TVerb1>? parser1 = null,
+            ICommandLineOptionParser<TVerb2>? parser2 = null, ICommandLineOptionParser<TVerb3>? parser3 = null)
         {
             var possibleVerb = FindPossibleVerb(commandLine);
             foreach (var exitCode in new HandleVerbStateMachine<int>(
@@ -164,7 +164,7 @@ namespace dotnetCampus.Cli
         /// <param name="parser">命令行解析器。</param>
         /// <returns>单个命令行处理器的推出代码。</returns>
         public static int Handle<TVerb>(this CommandLine commandLine,
-            Func<TVerb, int> handler, ICommandLineOptionParser<TVerb> parser = null)
+            Func<TVerb, int> handler, ICommandLineOptionParser<TVerb>? parser = null)
         {
             var possibleVerb = FindPossibleVerb(commandLine);
             foreach (var exitCode in new HandleVerbStateMachine<int>(
@@ -195,7 +195,7 @@ namespace dotnetCampus.Cli
         /// <returns>单个命令行处理器的推出代码。</returns>
         public static int Handle<TVerb0, TVerb1>(this CommandLine commandLine,
             Func<TVerb0, int> handler0, Func<TVerb1, int> handler1,
-            ICommandLineOptionParser<TVerb0> parser0 = null, ICommandLineOptionParser<TVerb1> parser1 = null)
+            ICommandLineOptionParser<TVerb0>? parser0 = null, ICommandLineOptionParser<TVerb1>? parser1 = null)
         {
             var possibleVerb = FindPossibleVerb(commandLine);
             foreach (var exitCode in new HandleVerbStateMachine<int>(
@@ -230,8 +230,8 @@ namespace dotnetCampus.Cli
         /// <returns>单个命令行处理器的推出代码。</returns>
         public static int Handle<TVerb0, TVerb1, TVerb2>(this CommandLine commandLine,
             Func<TVerb0, int> handler0, Func<TVerb1, int> handler1, Func<TVerb2, int> handler2,
-            ICommandLineOptionParser<TVerb0> parser0 = null, ICommandLineOptionParser<TVerb1> parser1 = null,
-            ICommandLineOptionParser<TVerb2> parser2 = null)
+            ICommandLineOptionParser<TVerb0>? parser0 = null, ICommandLineOptionParser<TVerb1>? parser1 = null,
+            ICommandLineOptionParser<TVerb2>? parser2 = null)
         {
             var possibleVerb = FindPossibleVerb(commandLine);
             foreach (var exitCode in new HandleVerbStateMachine<int>(
@@ -271,8 +271,8 @@ namespace dotnetCampus.Cli
         public static int Handle<TVerb0, TVerb1, TVerb2, TVerb3>(this CommandLine commandLine,
             Func<TVerb0, int> handler0, Func<TVerb1, int> handler1,
             Func<TVerb2, int> handler2, Func<TVerb3, int> handler3,
-            ICommandLineOptionParser<TVerb0> parser0 = null, ICommandLineOptionParser<TVerb1> parser1 = null,
-            ICommandLineOptionParser<TVerb2> parser2 = null, ICommandLineOptionParser<TVerb3> parser3 = null)
+            ICommandLineOptionParser<TVerb0>? parser0 = null, ICommandLineOptionParser<TVerb1>? parser1 = null,
+            ICommandLineOptionParser<TVerb2>? parser2 = null, ICommandLineOptionParser<TVerb3>? parser3 = null)
         {
             var possibleVerb = FindPossibleVerb(commandLine);
             foreach (var exitCode in new HandleVerbStateMachine<int>(
@@ -302,7 +302,7 @@ namespace dotnetCampus.Cli
         /// <param name="parser">命令行解析器。</param>
         /// <returns>单个命令行处理器的推出代码。</returns>
         public static Task HandleAsync<TVerb>(this CommandLine commandLine,
-            Func<TVerb, Task> handler, ICommandLineOptionParser<TVerb> parser = null)
+            Func<TVerb, Task> handler, ICommandLineOptionParser<TVerb>? parser = null)
         {
             var possibleVerb = FindPossibleVerb(commandLine);
             foreach (var exitCode in new HandleVerbStateMachine<Task<int>>(
@@ -333,7 +333,7 @@ namespace dotnetCampus.Cli
         /// <returns>单个命令行处理器的推出代码。</returns>
         public static Task HandleAsync<TVerb0, TVerb1>(this CommandLine commandLine,
             Func<TVerb0, Task> handler0, Func<TVerb1, Task> handler1,
-            ICommandLineOptionParser<TVerb0> parser0 = null, ICommandLineOptionParser<TVerb1> parser1 = null)
+            ICommandLineOptionParser<TVerb0>? parser0 = null, ICommandLineOptionParser<TVerb1>? parser1 = null)
         {
             var possibleVerb = FindPossibleVerb(commandLine);
             foreach (var exitCode in new HandleVerbStateMachine<Task<int>>(
@@ -368,8 +368,8 @@ namespace dotnetCampus.Cli
         /// <returns>单个命令行处理器的推出代码。</returns>
         public static Task HandleAsync<TVerb0, TVerb1, TVerb2>(this CommandLine commandLine,
             Func<TVerb0, Task> handler0, Func<TVerb1, Task> handler1, Func<TVerb2, Task> handler2,
-            ICommandLineOptionParser<TVerb0> parser0 = null, ICommandLineOptionParser<TVerb1> parser1 = null,
-            ICommandLineOptionParser<TVerb2> parser2 = null)
+            ICommandLineOptionParser<TVerb0>? parser0 = null, ICommandLineOptionParser<TVerb1>? parser1 = null,
+            ICommandLineOptionParser<TVerb2>? parser2 = null)
         {
             var possibleVerb = FindPossibleVerb(commandLine);
             foreach (var exitCode in new HandleVerbStateMachine<Task<int>>(
@@ -409,8 +409,8 @@ namespace dotnetCampus.Cli
         public static Task HandleAsync<TVerb0, TVerb1, TVerb2, TVerb3>(this CommandLine commandLine,
             Func<TVerb0, Task> handler0, Func<TVerb1, Task> handler1,
             Func<TVerb2, Task> handler2, Func<TVerb3, Task> handler3,
-            ICommandLineOptionParser<TVerb0> parser0 = null, ICommandLineOptionParser<TVerb1> parser1 = null,
-            ICommandLineOptionParser<TVerb2> parser2 = null, ICommandLineOptionParser<TVerb3> parser3 = null)
+            ICommandLineOptionParser<TVerb0>? parser0 = null, ICommandLineOptionParser<TVerb1>? parser1 = null,
+            ICommandLineOptionParser<TVerb2>? parser2 = null, ICommandLineOptionParser<TVerb3>? parser3 = null)
         {
             var possibleVerb = FindPossibleVerb(commandLine);
             foreach (var exitCode in new HandleVerbStateMachine<Task<int>>(
@@ -440,7 +440,7 @@ namespace dotnetCampus.Cli
         /// <param name="parser">命令行解析器。</param>
         /// <returns>单个命令行处理器的推出代码。</returns>
         public static Task<int> HandleAsync<TVerb>(this CommandLine commandLine,
-            Func<TVerb, Task<int>> handler, ICommandLineOptionParser<TVerb> parser = null)
+            Func<TVerb, Task<int>> handler, ICommandLineOptionParser<TVerb>? parser = null)
         {
             var possibleVerb = FindPossibleVerb(commandLine);
             foreach (var exitCode in new HandleVerbStateMachine<Task<int>>(
@@ -471,7 +471,7 @@ namespace dotnetCampus.Cli
         /// <returns>单个命令行处理器的推出代码。</returns>
         public static Task<int> HandleAsync<TVerb0, TVerb1>(this CommandLine commandLine,
             Func<TVerb0, Task<int>> handler0, Func<TVerb1, Task<int>> handler1,
-            ICommandLineOptionParser<TVerb0> parser0 = null, ICommandLineOptionParser<TVerb1> parser1 = null)
+            ICommandLineOptionParser<TVerb0>? parser0 = null, ICommandLineOptionParser<TVerb1>? parser1 = null)
         {
             var possibleVerb = FindPossibleVerb(commandLine);
             foreach (var exitCode in new HandleVerbStateMachine<Task<int>>(
@@ -506,8 +506,8 @@ namespace dotnetCampus.Cli
         /// <returns>单个命令行处理器的推出代码。</returns>
         public static Task<int> HandleAsync<TVerb0, TVerb1, TVerb2>(this CommandLine commandLine,
             Func<TVerb0, Task<int>> handler0, Func<TVerb1, Task<int>> handler1, Func<TVerb2, Task<int>> handler2,
-            ICommandLineOptionParser<TVerb0> parser0 = null, ICommandLineOptionParser<TVerb1> parser1 = null,
-            ICommandLineOptionParser<TVerb2> parser2 = null)
+            ICommandLineOptionParser<TVerb0>? parser0 = null, ICommandLineOptionParser<TVerb1>? parser1 = null,
+            ICommandLineOptionParser<TVerb2>? parser2 = null)
         {
             var possibleVerb = FindPossibleVerb(commandLine);
             foreach (var exitCode in new HandleVerbStateMachine<Task<int>>(
@@ -547,8 +547,8 @@ namespace dotnetCampus.Cli
         public static Task<int> HandleAsync<TVerb0, TVerb1, TVerb2, TVerb3>(this CommandLine commandLine,
             Func<TVerb0, Task<int>> handler0, Func<TVerb1, Task<int>> handler1,
             Func<TVerb2, Task<int>> handler2, Func<TVerb3, Task<int>> handler3,
-            ICommandLineOptionParser<TVerb0> parser0 = null, ICommandLineOptionParser<TVerb1> parser1 = null,
-            ICommandLineOptionParser<TVerb2> parser2 = null, ICommandLineOptionParser<TVerb3> parser3 = null)
+            ICommandLineOptionParser<TVerb0>? parser0 = null, ICommandLineOptionParser<TVerb1>? parser1 = null,
+            ICommandLineOptionParser<TVerb2>? parser2 = null, ICommandLineOptionParser<TVerb3>? parser3 = null)
         {
             var possibleVerb = FindPossibleVerb(commandLine);
             foreach (var exitCode in new HandleVerbStateMachine<Task<int>>(
