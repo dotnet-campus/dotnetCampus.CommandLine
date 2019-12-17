@@ -70,13 +70,20 @@ namespace dotnetCampus.Cli.StateMachine
             // 执行状态机。
             foreach (var arg in _commandLineArgs)
             {
-                if (arg[0] == _optionPrefix)
+                if (string.IsNullOrEmpty(arg))
                 {
+                    // 如果此参数是空字符串，则将值加入。
+                    AppendValue(arg);
+                }
+                else if (arg[0] == _optionPrefix)
+                {
+                    // 如果此参数是选项，则作为选项。
                     Commit();
                     SetOption(arg);
                 }
                 else
                 {
+                    // 如果此参数不是选项，则作为值。
                     AppendValue(arg);
                 }
             }
