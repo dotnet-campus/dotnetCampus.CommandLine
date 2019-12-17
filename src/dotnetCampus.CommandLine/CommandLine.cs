@@ -181,7 +181,7 @@ namespace dotnetCampus.Cli
         private static string[] ConvertUrlToArgs(string url)
         {
             url = HttpUtility.UrlDecode(url);
-            var start = url?.IndexOf('?') ?? -1;
+            var start = url?.IndexOf('?', StringComparison.OrdinalIgnoreCase) ?? -1;
             if (start >= 0 && url != null)
             {
                 var arguments = url.Substring(start + 1);
