@@ -180,15 +180,18 @@ namespace dotnetCampus.Cli
         [Pure]
         private static string[] ConvertUrlToArgs(string url)
         {
-            url = HttpUtility.UrlDecode(url);
-            var start = url?.IndexOf('?', StringComparison.OrdinalIgnoreCase) ?? -1;
-            if (start >= 0 && url != null)
+            if (url != null)
             {
-                var arguments = url.Substring(start + 1);
-                var args = from keyValueString in arguments.Split(new[] {'&'}, StringSplitOptions.RemoveEmptyEntries)
-                    let keyValue = keyValueString.Split('=')
-                    select new[] {FormatShellLongName(keyValue[0]), keyValue[1]};
-                return args.SelectMany(x => x).ToArray();
+                url = HttpUtility.UrlDecode(url);
+                var start = url.IndexOf('?');
+                if (start >= 0 && url != null)
+                {
+                    var arguments = url.Substring(start + 1);
+                    var args = from keyValueString in arguments.Split(new[] { '&' }, StringSplitOptions.RemoveEmptyEntries)
+                               let keyValue = keyValueString.Split('=')
+                               select new[] { FormatShellLongName(keyValue[0]), keyValue[1] };
+                    return args.SelectMany(x => x).ToArray();
+                }
             }
 
 #if NET45
