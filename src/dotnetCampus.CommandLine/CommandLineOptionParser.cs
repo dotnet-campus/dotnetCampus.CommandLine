@@ -21,8 +21,8 @@ namespace dotnetCampus.Cli
     /// <typeparam name="T">命令行类型。</typeparam>
     public abstract class CommandLineOptionParser<T> : ICommandLineOptionParser<T>
     {
-        private string _verb;
-        private Func<T> _commit;
+        private string? _verb;
+        private Func<T>? _commit;
         private readonly IndexString _indexString = new IndexString();
         private readonly CharBool _shortNameBool = new CharBool();
         private readonly CharString _shortNameString = new CharString();
@@ -134,13 +134,13 @@ namespace dotnetCampus.Cli
         /// <summary>
         /// 获取或设置此命令行参数类型的谓词。
         /// </summary>
-        protected string Verb
+        protected string? Verb
         {
             get => _verb;
             set => _verb = string.IsNullOrWhiteSpace(value) ? null : value;
         }
 
-        string ICommandLineOptionParser<T>.Verb => Verb;
+        string? ICommandLineOptionParser<T>.Verb => Verb;
 
         void ICommandLineOptionParser<T>.SetValue(int index, string value)
         {

@@ -38,7 +38,7 @@ namespace dotnetCampus.Cli
         /// <returns>已收集的谓词处理方法，可以继续收集或者开始执行。</returns>
         [Pure]
         public CommandLineHandlerBuilder AddHandler<TVerb>(
-            Action<TVerb> handler, ICommandLineOptionParser<TVerb> parser = null)
+            Action<TVerb> handler, ICommandLineOptionParser<TVerb>? parser = null)
         {
             _toMatchList.Add(verb => MatchAndHandle(_commandLine, verb, options => Invoke(handler, options), parser));
             return this;
@@ -53,7 +53,7 @@ namespace dotnetCampus.Cli
         /// <returns>已收集的谓词处理方法，可以继续收集或者开始执行。</returns>
         [Pure]
         public CommandLineHandlerBuilder AddHandler<TVerb>(
-            Func<TVerb, int> handler, ICommandLineOptionParser<TVerb> parser = null)
+            Func<TVerb, int> handler, ICommandLineOptionParser<TVerb>? parser = null)
         {
             _toMatchList.Add(verb => MatchAndHandle(_commandLine, verb, options => Invoke(handler, options), parser));
             return this;
@@ -68,7 +68,7 @@ namespace dotnetCampus.Cli
         /// <returns>已收集的谓词处理方法，可以继续收集或者开始异步执行。</returns>
         [Pure]
         public CommandLineAsyncHandlerBuilder AddHandler<TVerb>(
-            Func<TVerb, Task> handler, ICommandLineOptionParser<TVerb> parser = null)
+            Func<TVerb, Task> handler, ICommandLineOptionParser<TVerb>? parser = null)
         {
             var builder = new CommandLineAsyncHandlerBuilder(_commandLine, _toMatchList);
             return builder.AddHandler(handler, parser);
@@ -83,7 +83,7 @@ namespace dotnetCampus.Cli
         /// <returns>已收集的谓词处理方法，可以继续收集或者开始异步执行。</returns>
         [Pure]
         public CommandLineAsyncHandlerBuilder AddHandler<TVerb>(
-            Func<TVerb, Task<int>> handler, ICommandLineOptionParser<TVerb> parser = null)
+            Func<TVerb, Task<int>> handler, ICommandLineOptionParser<TVerb>? parser = null)
         {
             var builder = new CommandLineAsyncHandlerBuilder(_commandLine, _toMatchList);
             return builder.AddHandler(handler, parser);
@@ -154,7 +154,7 @@ namespace dotnetCampus.Cli
         /// <returns>已收集的谓词处理方法，可以继续收集或者开始异步执行。</returns>
         [Pure]
         public CommandLineAsyncHandlerBuilder AddHandler<TVerb>(
-            Action<TVerb> handler, ICommandLineOptionParser<TVerb> parser = null)
+            Action<TVerb> handler, ICommandLineOptionParser<TVerb>? parser = null)
         {
             _toMatchList.Add(verb => MatchAndHandle(_commandLine, verb, options => Invoke(handler, options), parser));
             return this;
@@ -169,7 +169,7 @@ namespace dotnetCampus.Cli
         /// <returns>已收集的谓词处理方法，可以继续收集或者开始异步执行。</returns>
         [Pure]
         public CommandLineAsyncHandlerBuilder AddHandler<TVerb>(
-            Func<TVerb, int> handler, ICommandLineOptionParser<TVerb> parser = null)
+            Func<TVerb, int> handler, ICommandLineOptionParser<TVerb>? parser = null)
         {
             _toMatchList.Add(verb => MatchAndHandle(_commandLine, verb, options => Invoke(handler, options), parser));
             return this;
@@ -184,7 +184,7 @@ namespace dotnetCampus.Cli
         /// <returns>已收集的谓词处理方法，可以继续收集或者开始异步执行。</returns>
         [Pure]
         public CommandLineAsyncHandlerBuilder AddHandler<TVerb>(
-            Func<TVerb, Task> handler, ICommandLineOptionParser<TVerb> parser = null)
+            Func<TVerb, Task> handler, ICommandLineOptionParser<TVerb>? parser = null)
         {
             _toMatchList.Add(verb => MatchAndHandle(_commandLine, verb, options => Invoke(handler, options), parser));
             return this;
@@ -199,7 +199,7 @@ namespace dotnetCampus.Cli
         /// <returns>已收集的谓词处理方法，可以继续收集或者开始异步执行。</returns>
         [Pure]
         public CommandLineAsyncHandlerBuilder AddHandler<TVerb>(
-            Func<TVerb, Task<int>> handler, ICommandLineOptionParser<TVerb> parser = null)
+            Func<TVerb, Task<int>> handler, ICommandLineOptionParser<TVerb>? parser = null)
         {
             _toMatchList.Add(verb => MatchAndHandle(_commandLine, verb, handler, parser));
             return this;

@@ -22,17 +22,17 @@ namespace dotnetCampus.Cli.StateMachine
         /// <summary>
         /// 状态机执行时，如果有新的选项和相关的值生成完成，则调用此委托。此委托仅在状态机开始执行时才会初始化。
         /// </summary>
-        private Action<string, SingleOptimizedList> _optionCollectedAction;
+        private Action<string, SingleOptimizedList?>? _optionCollectedAction;
 
         /// <summary>
         /// 状态机执行时，如果有新的选项生成，则设置到此字段中。此字段仅在状态机开始执行时才会初始化。
         /// </summary>
-        private string _currentOption;
+        private string? _currentOption;
 
         /// <summary>
         /// 状态机执行时，如果有新的值生成，则添加到此集合中。此集合仅在状态机开始执行时才会初始化。
         /// </summary>
-        private SingleOptimizedList _currentValues;
+        private SingleOptimizedList? _currentValues;
 
         /// <summary>
         /// 创建此命令行状态机的新实例。
@@ -92,7 +92,7 @@ namespace dotnetCampus.Cli.StateMachine
             return parsedArgs;
 
             // 当状态机运行触发选项生成时，将此选项更新到集合中。
-            void OnOptionCollected(string option, SingleOptimizedList values)
+            void OnOptionCollected(string option, SingleOptimizedList? values)
             {
                 if (values != null && values.Count > 0)
                 {
@@ -125,7 +125,7 @@ namespace dotnetCampus.Cli.StateMachine
 
         private void Commit()
         {
-            _optionCollectedAction(_currentOption, _currentValues);
+            _optionCollectedAction!(_currentOption!, _currentValues);
         }
     }
 }

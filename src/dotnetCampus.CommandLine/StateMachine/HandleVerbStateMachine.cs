@@ -30,12 +30,12 @@ namespace dotnetCampus.Cli.StateMachine
         /// <summary>
         /// 记录所有的处理器。会依次执行，如果执行结束依然没有返回，那么会从中挑选出默认处理器再执行一次。
         /// </summary>
-        private readonly IEnumerable<Func<string, MatchHandleResult<T>>> _handlers;
+        private readonly IEnumerable<Func<string?, MatchHandleResult<T>>> _handlers;
 
         /// <summary>
         /// 传入一组处理器，用于匹配并执行。
         /// </summary>
-        public HandleVerbStateMachine(params Func<string, MatchHandleResult<T>>[] handlers)
+        public HandleVerbStateMachine(params Func<string?, MatchHandleResult<T>>[] handlers)
         {
             _handlers = handlers;
         }
@@ -43,7 +43,7 @@ namespace dotnetCampus.Cli.StateMachine
         /// <summary>
         /// 传入一组处理器，用于匹配并执行。
         /// </summary>
-        public HandleVerbStateMachine(IEnumerable<Func<string, MatchHandleResult<T>>> handlers)
+        public HandleVerbStateMachine(IEnumerable<Func<string?, MatchHandleResult<T>>> handlers)
         {
             _handlers = handlers;
         }
@@ -51,10 +51,10 @@ namespace dotnetCampus.Cli.StateMachine
         /// <summary>
         /// 使用 foreach 语法执行此状态机。
         /// </summary>
-        public IEnumerable<T> Run(string verb)
+        public IEnumerable<T> Run(string? verb)
         {
             // 留一个空位，保存默认处理器。
-            Func<T> @default = null;
+            Func<T>? @default = null;
 
             // 现在，开始依次匹配。
             foreach (var handler in _handlers)

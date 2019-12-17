@@ -11,7 +11,7 @@ namespace dotnetCampus.Cli.Parsers
         private readonly Dictionary<char, PropertyInfo> _shortNameDictionary = new Dictionary<char, PropertyInfo>();
         private readonly Dictionary<string, PropertyInfo> _longNameDictionary = new Dictionary<string, PropertyInfo>();
 
-        public RuntimeOptionParser(string verb, IReadOnlyList<PropertyInfo> attributedProperties) : base(verb)
+        public RuntimeOptionParser(string? verb, IReadOnlyList<PropertyInfo> attributedProperties) : base(verb)
         {
             _options = Activator.CreateInstance<T>();
             foreach (var propertyInfo in attributedProperties)
@@ -19,7 +19,7 @@ namespace dotnetCampus.Cli.Parsers
                 if (propertyInfo.IsDefined(typeof(OptionAttribute)))
                 {
                     var attribute = propertyInfo.GetCustomAttribute<OptionAttribute>();
-                    if (attribute.ShortName != null)
+                    if (attribute!.ShortName != null)
                     {
                         _shortNameDictionary[attribute.ShortName.Value] = propertyInfo;
                     }
@@ -33,7 +33,7 @@ namespace dotnetCampus.Cli.Parsers
                 if (propertyInfo.IsDefined(typeof(ValueAttribute)))
                 {
                     var attribute = propertyInfo.GetCustomAttribute<ValueAttribute>();
-                    _indexedValueDictionary[attribute.Index] = propertyInfo;
+                    _indexedValueDictionary[attribute!.Index] = propertyInfo;
                 }
             }
         }

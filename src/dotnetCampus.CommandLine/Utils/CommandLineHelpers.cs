@@ -21,7 +21,7 @@ namespace dotnetCampus.Cli.Utils
         [Pure]
         internal static ICommandLineOptionParser<T> FindParser<T>()
         {
-            ICommandLineOptionParser<T> parser = null;
+            ICommandLineOptionParser<T>? parser = null;
             var optionType = typeof(T);
             var parserType = optionType.Assembly.GetType($"{optionType.FullName}Parser", false, false);
 
@@ -39,7 +39,7 @@ namespace dotnetCampus.Cli.Utils
         /// 当第一个参数非选项的时候，取第一个命令行参数，这可能就是我们要找的谓词。
         /// </summary>
         [Pure, MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static string FindPossibleVerb(CommandLine commandLine)
+        internal static string? FindPossibleVerb(CommandLine commandLine)
         {
             var optionValue = commandLine.FirstOrDefault();
             var option = optionValue.Key;
@@ -55,8 +55,8 @@ namespace dotnetCampus.Cli.Utils
         /// 如果匹配成功则执行处理器函数并返回退出代码，否则返回 null。
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static MatchHandleResult<int> MatchAndHandle<TVerb>(CommandLine commandLine, string possibleVerb,
-            Action<TVerb> handler, ICommandLineOptionParser<TVerb> parser)
+        internal static MatchHandleResult<int> MatchAndHandle<TVerb>(CommandLine commandLine, string? possibleVerb,
+            Action<TVerb> handler, ICommandLineOptionParser<TVerb>? parser)
         {
             return MatchAndHandle(commandLine, possibleVerb, verb =>
             {
@@ -70,8 +70,8 @@ namespace dotnetCampus.Cli.Utils
         /// 如果匹配成功则执行处理器函数并返回退出代码，否则返回 null。
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static MatchHandleResult<int> MatchAndHandle<TVerb>(CommandLine commandLine, string possibleVerb,
-            Func<TVerb, int> handler, ICommandLineOptionParser<TVerb> parser)
+        internal static MatchHandleResult<int> MatchAndHandle<TVerb>(CommandLine commandLine, string? possibleVerb,
+            Func<TVerb, int> handler, ICommandLineOptionParser<TVerb>? parser)
         {
             if (handler == null)
             {
@@ -102,7 +102,7 @@ namespace dotnetCampus.Cli.Utils
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static MatchHandleResult<Task<int>> MatchAndHandle<TVerb>(CommandLine commandLine,
-            string possibleVerb, Func<TVerb, Task> handler, ICommandLineOptionParser<TVerb> parser)
+            string? possibleVerb, Func<TVerb, Task> handler, ICommandLineOptionParser<TVerb>? parser)
         {
             return MatchAndHandle(commandLine, possibleVerb, async verb =>
             {
@@ -117,7 +117,7 @@ namespace dotnetCampus.Cli.Utils
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static MatchHandleResult<Task<int>> MatchAndHandle<TVerb>(CommandLine commandLine,
-            string possibleVerb, Func<TVerb, Task<int>> handler, ICommandLineOptionParser<TVerb> parser)
+            string? possibleVerb, Func<TVerb, Task<int>> handler, ICommandLineOptionParser<TVerb>? parser)
         {
             if (handler == null)
             {
@@ -182,7 +182,7 @@ namespace dotnetCampus.Cli.Utils
         /// 如果所有谓词都不匹配，则抛出异常。
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static int ThrowIfVerbNotMatched(string possibleVerb)
+        internal static int ThrowIfVerbNotMatched(string? possibleVerb)
         {
             throw possibleVerb == null
                 ? new ArgumentException("传入的命令行参数中没有发现谓词，但此方法规定的所有命令行类型都要求有谓词。", nameof(possibleVerb))
@@ -193,7 +193,7 @@ namespace dotnetCampus.Cli.Utils
         /// 如果所有谓词都不匹配，则抛出异常。
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static int ThrowIfVerbNotMatchedAsync(string possibleVerb)
+        internal static int ThrowIfVerbNotMatchedAsync(string? possibleVerb)
         {
             throw possibleVerb == null
                 ? new ArgumentException("传入的命令行参数中没有发现谓词，但此方法规定的所有命令行类型都要求有谓词。", nameof(possibleVerb))
