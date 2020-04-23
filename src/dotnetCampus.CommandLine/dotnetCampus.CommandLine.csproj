@@ -13,7 +13,7 @@
     <PackageProjectUrl>https://github.com/dotnet-campus/dotnetCampus.CommandLine</PackageProjectUrl>
     <RepositoryUrl>https://github.com/dotnet-campus/dotnetCampus.CommandLine.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>1.2.1</Version>
+    <Version>1.3.0</Version>
     <Description>dotnetCampus.CommandLine is probably the fastest command line parser in all .NET open-source projects. Parsing a classical command line only takes 1091ns, thus 10 ticks.</Description>
   </PropertyGroup>
 
