@@ -29,6 +29,18 @@ namespace dotnetCampus.Cli.Tests
                 Assert.AreEqual(null, options.StartupSession);
             });
 
+            "对于 true/false，可以解析成字符串也可以解析成布尔值。".Test(() =>
+            {
+            });
+
+            "对于列表，如果只传入一项，可以解析成单项也可以解析成列表。".Test(() =>
+            {
+            });
+
+            "对于预定义的几种列表类型，都支持解析到。".Test(() =>
+            {
+            });
+
             "使用 {0} 风格的命令行，正确完成解析。".Test((string name, string[] args) =>
             {
                 // Arrange & Action

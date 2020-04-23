@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 
 namespace dotnetCampus.Cli.Parsers
 {
@@ -9,6 +10,8 @@ namespace dotnetCampus.Cli.Parsers
     {
         protected RuntimeCommandLineOptionParser(string? verb)
         {
+            CancellationToken a;
+            a.ThrowIfCancellationRequested();
             Verb = verb;
         }
 
