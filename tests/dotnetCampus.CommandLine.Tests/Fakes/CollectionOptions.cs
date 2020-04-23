@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,9 @@ namespace dotnetCampus.Cli.Tests.Fakes
 
         [Option("List")]
         public IList<string> List { get; set; }
+
+        [Option("Collection")]
+        public Collection<string> Collection { get; set; }
 
         [Option("Array")]
         public string[] Array { get; set; }

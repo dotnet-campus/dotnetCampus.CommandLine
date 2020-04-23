@@ -18,8 +18,8 @@ namespace dotnetCampus.Cli.Tests.Fakes
 
             AddMatch("Boolean", value => boolean = value);
             AddMatch("StringBoolean", value => stringBoolean = value);
-            AddMatch("stringArray", value => stringArray = value);
-            AddMatch("array", value => array = value);
+            AddMatch("StringArray", value => stringArray = value);
+            AddMatch("Array", value => array = value);
 
             SetResult(() => new AmbiguousOptions()
             {
