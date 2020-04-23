@@ -1,5 +1,7 @@
 # dotnetCampus.CommandLine
 
+![Build](https://github.com/dotnet-campus/dotnetCampus.CommandLine/workflows/.NET%20Build/badge.svg)  ![NuGet Package](https://github.com/dotnet-campus/dotnetCampus.CommandLine/workflows/NuGet%20Publish/badge.svg)
+
 [English][en]|[简体中文][zh-chs]|[繁體中文][zh-cht]
 -|-|-
 

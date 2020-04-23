@@ -23,6 +23,10 @@
     <PackageReference Include="dotnetCampus.SourceYard" Version="0.1.17751-alpha" PrivateAssets="all" />
   </ItemGroup>
 
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' OR '$(TargetFramework)' == 'netstandard2.0' ">
+    <PackageReference Include="Walterlv.NullableAttributes.Source" Version="0.15.0" PrivateAssets="all" />
+  </ItemGroup>
+
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
     <Reference Include="System.Web" />
   </ItemGroup>
