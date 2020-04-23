@@ -6,23 +6,23 @@ namespace dotnetCampus.Cli.Core
     /// <summary>
     /// 为 0 个和 1 个值特殊优化性能的列表。
     /// </summary>
-    internal class SingleOptimizedList : IReadOnlyList<string>
+    internal class SingleOptimizedList<T> : IReadOnlyList<T>
     {
         /// <summary>
         /// 如果有值储存，则此值不为 null。在此命令行解析的上下文中，通常也不会为空字符串或空白字符串。
         /// </summary>
-        private readonly string _firstValue;
+        private readonly T _firstValue;
 
         /// <summary>
         /// 当所需储存的值超过 1 个时，将启用此列表。所以此列表要么为 null，要么有多于 1 个的值。
         /// </summary>
-        private List<string>? _restValues;
+        private List<T>? _restValues;
 
         /// <summary>
         /// 创建带有一个值的 <see cref="SingleOptimizedList"/> 的实例。
         /// </summary>
         /// <param name="firstValue"></param>
-        public SingleOptimizedList(string firstValue)
+        public SingleOptimizedList(T firstValue)
         {
             _firstValue = firstValue;
         }
@@ -31,7 +31,7 @@ namespace dotnetCampus.Cli.Core
         /// 添加一个值到集合中。
         /// </summary>
         /// <param name="value">要添加的值。</param>
-        public void Add(string value)
+        public void Add(T value)
         {
             if (value is null)
             {
@@ -40,7 +40,7 @@ namespace dotnetCampus.Cli.Core
 
             if (_restValues == null)
             {
-                _restValues = new List<string>(1)
+                _restValues = new List<T>(1)
                 {
                     value,
                 };
@@ -51,7 +51,7 @@ namespace dotnetCampus.Cli.Core
             }
         }
 
-        public IEnumerator<string> GetEnumerator()
+        public IEnumerator<T> GetEnumerator()
         {
             yield return _firstValue;
 
@@ -74,6 +74,6 @@ namespace dotnetCampus.Cli.Core
         /// <summary>
         /// 获取集合中指定索引处的值。
         /// </summary>
-        public string this[int index] => index is 0 ? _firstValue : _restValues![index - 1];
+        public T this[int index] => index is 0 ? _firstValue : _restValues![index - 1];
     }
 }

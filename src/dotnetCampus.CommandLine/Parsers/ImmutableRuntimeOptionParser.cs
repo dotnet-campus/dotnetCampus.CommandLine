@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using dotnetCampus.Cli.Core;
 
 namespace dotnetCampus.Cli.Parsers
 {
-    internal class ImmutableRuntimeOptionParser<T> : RuntimeCommandLineOptionParser<T>
+    internal class ImmutableRuntimeOptionParser<T> : RuntimeCommandLineOptionParser<T>, IRawCommandLineOptionParser<T>
     {
         private readonly ConstructorInfo _constructor;
+        private readonly Type[] _propertyTypes;
         private readonly object[] _values;
         private readonly Dictionary<PropertyInfo, int> _indexDictionary = new Dictionary<PropertyInfo, int>();
         private readonly Dictionary<int, PropertyInfo> _indexedValueDictionary = new Dictionary<int, PropertyInfo>();
@@ -19,7 +21,8 @@ namespace dotnetCampus.Cli.Parsers
             var properties = attributedProperties;
 
             _values = new object[properties.Count];
-            var constructor = typeof(T).GetConstructor(properties.Select(x => x.PropertyType).ToArray());
+            _propertyTypes = properties.Select(x => x.PropertyType).ToArray();
+            var constructor = typeof(T).GetConstructor(_propertyTypes);
             _constructor = constructor ?? throw new InvalidOperationException("Option 中必须为每个可能的命令行参数添加构造函数参数。");
             for (var i = 0; i < properties.Count; i++)
             {
@@ -83,9 +86,36 @@ namespace dotnetCampus.Cli.Parsers
             _values[_indexDictionary[_longNameDictionary[longName]]] = values;
         }
 
+        public override void SetValue(char shortName, SingleOptimizedStrings? values)
+        {
+            SetValueCore(_indexDictionary[_shortNameDictionary[shortName]], values);
+        }
+
+        public override void SetValue(string longName, SingleOptimizedStrings? values)
+        {
+            SetValueCore(_indexDictionary[_longNameDictionary[longName]], values);
+        }
+
+        private void SetValueCore(int index, SingleOptimizedStrings? values)
+        {
+            var type = _propertyTypes[index];
+            if (type == typeof(bool))
+            {
+                _values[index] = values is null ? true : (bool.TryParse(values[0], out var result) && result);
+            }
+            else if (type == typeof(string) && values != null)
+            {
+                _values[index] = values.Count == 1 ? values[0] : string.Join(" ", values);
+            }
+            else if (values != null)
+            {
+                _values[index] = values.ToAssignableCollection(type);
+            }
+        }
+
         public override T Commit()
         {
-            return (T) _constructor.Invoke(_values);
+            return (T)_constructor.Invoke(_values);
         }
     }
 }

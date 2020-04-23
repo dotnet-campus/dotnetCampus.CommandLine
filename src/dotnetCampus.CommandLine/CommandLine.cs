@@ -12,7 +12,7 @@ using System.Web;
 using dotnetCampus.Cli.Core;
 using dotnetCampus.Cli.StateMachine;
 using static dotnetCampus.Cli.Utils.CommandLineHelpers;
-using ListGroupItem = System.Collections.Generic.KeyValuePair<string, dotnetCampus.Cli.Core.SingleOptimizedList?>;
+using ListGroupItem = System.Collections.Generic.KeyValuePair<string, dotnetCampus.Cli.Core.SingleOptimizedStrings?>;
 
 #pragma warning disable CA1710 // Identifiers should have correct suffix
 #pragma warning disable CA1825 // Avoid zero-length array allocations.
@@ -28,9 +28,9 @@ namespace dotnetCampus.Cli
     [DebuggerTypeProxy(typeof(CommandLineDebugView))]
     public sealed class CommandLine : IEnumerable<ListGroupItem>
     {
-        private readonly ListGroup<SingleOptimizedList> _optionArgs;
+        private readonly ListGroup<SingleOptimizedStrings> _optionArgs;
 
-        private CommandLine(ListGroup<SingleOptimizedList> optionArgs)
+        private CommandLine(ListGroup<SingleOptimizedStrings> optionArgs)
             => _optionArgs = optionArgs ?? throw new ArgumentNullException(nameof(optionArgs));
 
         /// <summary>
@@ -81,48 +81,62 @@ namespace dotnetCampus.Cli
                 {
                     // 短名称。
                     var shortName = option[0];
-                    if (valueCount == 0)
+                    if (parser is IRawCommandLineOptionParser<T> rawParser)
                     {
-                        parser.SetValue(shortName, true);
-                    }
-                    else if (valueCount == 1)
-                    {
-                        if (bool.TryParse(values![0], out var @bool))
-                        {
-                            parser.SetValue(shortName, @bool);
-                        }
-                        else
-                        {
-                            parser.SetValue(shortName, values[0]);
-                        }
+                        rawParser.SetValue(shortName, values);
                     }
                     else
                     {
-                        parser.SetValue(shortName, values!);
+                        if (valueCount == 0)
+                        {
+                            parser.SetValue(shortName, true);
+                        }
+                        else if (valueCount == 1)
+                        {
+                            if (bool.TryParse(values![0], out var @bool))
+                            {
+                                parser.SetValue(shortName, @bool);
+                            }
+                            else
+                            {
+                                parser.SetValue(shortName, values[0]);
+                            }
+                        }
+                        else
+                        {
+                            parser.SetValue(shortName, values!);
+                        }
                     }
                 }
                 else
                 {
                     // 长名称。
                     var longName = option;
-                    if (valueCount == 0)
+                    if (parser is IRawCommandLineOptionParser<T> rawParser)
                     {
-                        parser.SetValue(longName, true);
-                    }
-                    else if (valueCount == 1)
-                    {
-                        if (bool.TryParse(values![0], out var @bool))
-                        {
-                            parser.SetValue(longName, @bool);
-                        }
-                        else
-                        {
-                            parser.SetValue(longName, values[0]);
-                        }
+                        rawParser.SetValue(longName, values);
                     }
                     else
                     {
-                        parser.SetValue(longName, values!);
+                        if (valueCount == 0)
+                        {
+                            parser.SetValue(longName, true);
+                        }
+                        else if (valueCount == 1)
+                        {
+                            if (bool.TryParse(values![0], out var @bool))
+                            {
+                                parser.SetValue(longName, @bool);
+                            }
+                            else
+                            {
+                                parser.SetValue(longName, values[0]);
+                            }
+                        }
+                        else
+                        {
+                            parser.SetValue(longName, values!);
+                        }
                     }
                 }
             }
@@ -152,7 +166,7 @@ namespace dotnetCampus.Cli
         {
             if (args is null || args.Length == 0)
             {
-                return new CommandLine(new ListGroup<SingleOptimizedList>());
+                return new CommandLine(new ListGroup<SingleOptimizedStrings>());
             }
 
             if (!string.IsNullOrWhiteSpace(protocolName)
@@ -202,7 +216,7 @@ namespace dotnetCampus.Cli
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void NormalizeParsedArgs(ListGroup<SingleOptimizedList> parsedArgs, char optionPrefix)
+        private static void NormalizeParsedArgs(ListGroup<SingleOptimizedStrings> parsedArgs, char optionPrefix)
         {
             foreach (var optionValue in parsedArgs.ForIndexes())
             {

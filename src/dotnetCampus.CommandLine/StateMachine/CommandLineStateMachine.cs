@@ -22,7 +22,7 @@ namespace dotnetCampus.Cli.StateMachine
         /// <summary>
         /// 状态机执行时，如果有新的选项和相关的值生成完成，则调用此委托。此委托仅在状态机开始执行时才会初始化。
         /// </summary>
-        private Action<string, SingleOptimizedList?>? _optionCollectedAction;
+        private Action<string, SingleOptimizedStrings?>? _optionCollectedAction;
 
         /// <summary>
         /// 状态机执行时，如果有新的选项生成，则设置到此字段中。此字段仅在状态机开始执行时才会初始化。
@@ -32,7 +32,7 @@ namespace dotnetCampus.Cli.StateMachine
         /// <summary>
         /// 状态机执行时，如果有新的值生成，则添加到此集合中。此集合仅在状态机开始执行时才会初始化。
         /// </summary>
-        private SingleOptimizedList? _currentValues;
+        private SingleOptimizedStrings? _currentValues;
 
         /// <summary>
         /// 创建此命令行状态机的新实例。
@@ -57,10 +57,10 @@ namespace dotnetCampus.Cli.StateMachine
         /// 执行此状态机仅会原封不动地将参数进行选项和值的分组，不会修改任何参数字符。
         /// </summary>
         /// <returns>包含命令行解析的字典集合。</returns>
-        public ListGroup<SingleOptimizedList> Run()
+        public ListGroup<SingleOptimizedStrings> Run()
         {
             // 准备初始参数。
-            var parsedArgs = new ListGroup<SingleOptimizedList>();
+            var parsedArgs = new ListGroup<SingleOptimizedStrings>();
 
             // 初始化状态机运行的所有状态。
             _currentOption = null;
@@ -99,7 +99,7 @@ namespace dotnetCampus.Cli.StateMachine
             return parsedArgs;
 
             // 当状态机运行触发选项生成时，将此选项更新到集合中。
-            void OnOptionCollected(string option, SingleOptimizedList? values)
+            void OnOptionCollected(string option, SingleOptimizedStrings? values)
             {
                 if (values != null && values.Count > 0)
                 {
@@ -122,7 +122,7 @@ namespace dotnetCampus.Cli.StateMachine
         {
             if (_currentValues == null)
             {
-                _currentValues = new SingleOptimizedList(value);
+                _currentValues = new SingleOptimizedStrings(value);
             }
             else
             {
