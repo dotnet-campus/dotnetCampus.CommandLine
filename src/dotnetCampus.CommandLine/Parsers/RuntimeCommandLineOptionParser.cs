@@ -11,8 +11,6 @@ namespace dotnetCampus.Cli.Parsers
     {
         protected RuntimeCommandLineOptionParser(string? verb)
         {
-            CancellationToken a;
-            a.ThrowIfCancellationRequested();
             Verb = verb;
         }
 
