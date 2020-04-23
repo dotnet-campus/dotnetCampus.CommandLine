@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace dotnetCampus.Cli.StateMachine
@@ -16,6 +17,7 @@ namespace dotnetCampus.Cli.StateMachine
         /// <summary>
         /// 记录处理器真实的返回值（或者异步处理器的异步返回值）。
         /// </summary>
+        [MaybeNull, AllowNull]
         public readonly T Value;
 
         /// <summary>
