@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using dotnetCampus.Cli;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using dotnetCampus.Cli.Tests.Fakes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MSTest.Extensions.Contracts;
@@ -79,6 +79,75 @@ namespace dotnetCampus.Cli.Tests
                 Assert.AreEqual(SilenceValue, options.IsSilence);
                 Assert.AreEqual(PlacementValue, options.Placement);
                 Assert.AreEqual(StartupSessionValue, options.StartupSession);
+            });
+        }
+
+        [ContractTestCase]
+        public void ParseAsAmbiguously()
+        {
+            "命令行传入开关参数，或者传入带有 true/false 值的参数，可以赋值给 bool 类型。".Test((string[] args) =>
+            {
+                // Arrange & Action
+                var commandLine = CommandLine.Parse(args);
+                var options = commandLine.As(new AmbiguousOptionsParser());
+
+                // Assert
+                Assert.AreEqual(true, options.Boolean);
+            }).WithArguments(
+                new[] { "--boolean" },
+                new[] { "--boolean", "true" }
+                );
+
+            "命令行传入带有 true/false 值的参数，可以赋值给 string 类型。".Test(() =>
+            {
+                // Arrange & Action
+                var commandLine = CommandLine.Parse(new[] { "--string-boolean", "true" });
+                var options = commandLine.As(new AmbiguousOptionsParser());
+
+                // Assert
+                Assert.AreEqual("true", options.StringBoolean);
+            });
+
+            "命令行传入带有多个值的参数，可以赋值给 string 类型。".Test(() =>
+            {
+                // Arrange & Action
+                var commandLine = CommandLine.Parse(new[] { "--string-array", "a", "b" });
+                var options = commandLine.As(new AmbiguousOptionsParser());
+
+                // Assert
+                Assert.AreEqual("a b", options.StringArray);
+            });
+
+            "命令行传入带有多个值的参数，可以赋值给 string 集合类型。".Test(() =>
+            {
+                // Arrange & Action
+                var commandLine = CommandLine.Parse(new[]
+                {
+                    "--array", "a", "b",
+                    "--list", "a", "b",
+                    "--read-only-list", "a", "b",
+                    "--enumerable", "a", "b",
+                });
+                var options = commandLine.As<CollectionOptions>();
+
+                // Assert
+                CollectionAssert.AreEqual(new[] { "a", "b" }, options.Array);
+                CollectionAssert.AreEqual(new[] { "a", "b" }, options.List.ToArray());
+                CollectionAssert.AreEqual(new[] { "a", "b" }, options.ReadOnlyList.ToArray());
+                CollectionAssert.AreEqual(new[] { "a", "b" }, options.Enumerable.ToArray());
+            });
+
+            "命令行传入带有多个值的参数，可以赋值给未内置的 string 集合类型。".Test(() =>
+            {
+                // Arrange & Action
+                var commandLine = CommandLine.Parse(new[]
+                {
+                    "--collection", "a", "b",
+                });
+                var options = commandLine.As<CollectionOptions>();
+
+                // Assert
+                CollectionAssert.AreEqual(new[] { "a", "b" }, options.Collection.ToArray());
             });
         }
 

@@ -9,6 +9,7 @@ using StringBool = System.Collections.Generic.Dictionary<string, System.Action<b
 using StringString = System.Collections.Generic.Dictionary<string, System.Action<string>>;
 using StringStrings =
     System.Collections.Generic.Dictionary<string, System.Action<System.Collections.Generic.IReadOnlyList<string>>>;
+using dotnetCampus.Cli.Core;
 
 #pragma warning disable CA1033 // Interface methods should be callable by child types
 
@@ -19,7 +20,7 @@ namespace dotnetCampus.Cli
     /// 如果你需要手写一个命令行解析器的实现，那么继承自此类型可以大幅减少代码量。
     /// </summary>
     /// <typeparam name="T">命令行类型。</typeparam>
-    public abstract class CommandLineOptionParser<T> : ICommandLineOptionParser<T>
+    public abstract class CommandLineOptionParser<T> : ICommandLineOptionParser<T>, IRawCommandLineOptionParser<T>
     {
         private string? _verb;
         private Func<T>? _commit;
@@ -195,6 +196,38 @@ namespace dotnetCampus.Cli
             if (_longNameStrings.TryGetValue(longName, out var action))
             {
                 action(values);
+            }
+        }
+
+        void IRawCommandLineOptionParser<T>.SetValue(char shortName, SingleOptimizedStrings? values)
+        {
+            if (_shortNameBool.TryGetValue(shortName, out var actionB))
+            {
+                actionB(values is null ? true : (bool.TryParse(values[0], out var result) && result));
+            }
+            else if (_shortNameString.TryGetValue(shortName, out var actionS) && values != null)
+            {
+                actionS(values[0]);
+            }
+            else if (_shortNameStrings.TryGetValue(shortName, out var actionA) && values != null)
+            {
+                actionA(values);
+            }
+        }
+
+        void IRawCommandLineOptionParser<T>.SetValue(string longName, SingleOptimizedStrings? values)
+        {
+            if (_longNameBool.TryGetValue(longName, out var actionB))
+            {
+                actionB(values is null ? true : (bool.TryParse(values[0], out var result) && result));
+            }
+            else if (_longNameString.TryGetValue(longName, out var actionS) && values != null)
+            {
+                actionS(values.Count == 1 ? values[0] : string.Join(" ", values));
+            }
+            else if (_longNameStrings.TryGetValue(longName, out var actionA) && values != null)
+            {
+                actionA(values);
             }
         }
 

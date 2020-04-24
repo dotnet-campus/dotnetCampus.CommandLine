@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using dotnetCampus.Cli.Core;
 
 namespace dotnetCampus.Cli.Parsers
 {
-    internal abstract class RuntimeCommandLineOptionParser<T> : ICommandLineOptionParser<T>
+    internal abstract class RuntimeCommandLineOptionParser<T> : ICommandLineOptionParser<T>, IRawCommandLineOptionParser<T>
     {
         protected RuntimeCommandLineOptionParser(string? verb)
         {
@@ -20,6 +22,8 @@ namespace dotnetCampus.Cli.Parsers
         public abstract void SetValue(string longName, bool value);
         public abstract void SetValue(string longName, string value);
         public abstract void SetValue(string longName, IReadOnlyList<string> values);
+        public abstract void SetValue(char shortName, SingleOptimizedStrings? values);
+        public abstract void SetValue(string longName, SingleOptimizedStrings? values);
         public abstract T Commit();
 
         internal static RuntimeCommandLineOptionParser<T> Create()
