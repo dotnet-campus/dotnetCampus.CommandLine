@@ -144,6 +144,14 @@ namespace dotnetCampus.Cli
             return parser.Commit();
         }
 
+        /// <summary>
+        /// 将命令行参数转换为字符串值的字典。Key 为选项，Value 为选项后面的值。
+        /// 对于布尔类型，Value 为空字符串；对于字符串集合，Value 为此集合拼接的字符串。
+        /// </summary>
+        public Dictionary<string, string> ToDictionary() => this.ToDictionary(x => x.Key, x => x.Value is null
+            ? ""
+            : string.Join(' ', x.Value), StringComparer.OrdinalIgnoreCase);
+
         IEnumerator<ListGroupItem> IEnumerable<ListGroupItem>.GetEnumerator() => _optionArgs.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => _optionArgs.GetEnumerator();
