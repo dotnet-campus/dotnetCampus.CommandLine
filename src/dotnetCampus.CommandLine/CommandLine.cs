@@ -150,7 +150,7 @@ namespace dotnetCampus.Cli
         /// </summary>
         public Dictionary<string, string> ToDictionary() => this.ToDictionary(x => x.Key, x => x.Value is null
             ? ""
-            : string.Join(' ', x.Value), StringComparer.OrdinalIgnoreCase);
+            : string.Join(" ", x.Value), StringComparer.OrdinalIgnoreCase);
 
         IEnumerator<ListGroupItem> IEnumerable<ListGroupItem>.GetEnumerator() => _optionArgs.GetEnumerator();
 
