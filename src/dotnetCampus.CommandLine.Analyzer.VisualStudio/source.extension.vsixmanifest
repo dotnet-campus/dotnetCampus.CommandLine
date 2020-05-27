@@ -3,7 +3,7 @@
   <Metadata>
     <Identity Id="dotnetCampus.CommandLine.Analyzer.5e5274c0-ef92-4d29-86d9-6b6a561bb7e1" Version="1.0" Language="en-US" Publisher="walterlv"/>
     <DisplayName>Analyzer1</DisplayName>
-    <Description xml:space="preserve">This is a sample diagnostic extension for the .NET Compiler Platform ("Roslyn").</Description>
+    <Description xml:space="preserve">This extension is only used for Visual Studio debugging and we'll never publish as a VSIX extension. The analyzer should always be used as a NuGet package.</Description>
   </Metadata>
   <Installation>
     <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[15.0,)" />

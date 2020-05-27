@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Composition;
 using System.Linq;
@@ -10,11 +8,8 @@ using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Rename;
-using Microsoft.CodeAnalysis.Text;
 using dotnetCampus.CommandLine.Properties;
 using System.Text;
-using System.Globalization;
 
 namespace dotnetCampus.CommandLine.Analyzers
 {
@@ -108,7 +103,7 @@ namespace dotnetCampus.CommandLine.Analyzers
                     {
                         isFirstLetter = false;
                         isWordStart = false;
-                        builder.Append(char.ToUpper(c, CultureInfo.InvariantCulture));
+                        builder.Append(char.ToUpperInvariant(c));
                     }
                     else
                     {
@@ -128,7 +123,7 @@ namespace dotnetCampus.CommandLine.Analyzers
                     else if (!char.IsUpper(c))
                     {
                         builder.Append(isWordStart
-                            ? char.ToUpper(c, CultureInfo.InvariantCulture)
+                            ? char.ToUpperInvariant(c)
                             : c);
                         isWordStart = false;
                     }
