@@ -18,12 +18,12 @@ namespace dotnetCampus.CommandLine.Analyzers
     {
         private static DiagnosticDescriptor Rule = new DiagnosticDescriptor(
             DiagnosticIds.OptionLongNameMustBePascalCase,
-            LocalizableStrings.Get(nameof(Resources.AnalyzerTitle)),
-            LocalizableStrings.Get(nameof(Resources.AnalyzerMessageFormat)),
+            LocalizableStrings.Get(nameof(Resources.OptionLongNameMustBePascalCaseTitle)),
+            LocalizableStrings.Get(nameof(Resources.OptionLongNameMustBePascalCaseMessage)),
             "Naming",
             DiagnosticSeverity.Error,
             isEnabledByDefault: true,
-            description: LocalizableStrings.Get(nameof(Resources.AnalyzerDescription)));
+            description: LocalizableStrings.Get(nameof(Resources.OptionLongNameMustBePascalCaseDescription)));
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 

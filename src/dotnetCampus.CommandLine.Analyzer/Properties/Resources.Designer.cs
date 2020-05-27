@@ -61,29 +61,38 @@ namespace dotnetCampus.CommandLine.Properties {
         }
         
         /// <summary>
-        ///   查找类似 Type names should be all uppercase. 的本地化字符串。
+        ///   查找类似 The command-line option definition names must be PascalCase, even though you can use any kind of style in the command line environment. 的本地化字符串。
         /// </summary>
-        internal static string AnalyzerDescription {
+        internal static string OptionLongNameMustBePascalCaseDescription {
             get {
-                return ResourceManager.GetString("AnalyzerDescription", resourceCulture);
+                return ResourceManager.GetString("OptionLongNameMustBePascalCaseDescription", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 Type name &apos;{0}&apos; contains lowercase letters 的本地化字符串。
+        ///   查找类似 Convert to PascalCase 的本地化字符串。
         /// </summary>
-        internal static string AnalyzerMessageFormat {
+        internal static string OptionLongNameMustBePascalCaseFix {
             get {
-                return ResourceManager.GetString("AnalyzerMessageFormat", resourceCulture);
+                return ResourceManager.GetString("OptionLongNameMustBePascalCaseFix", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 Type name contains lowercase letters 的本地化字符串。
+        ///   查找类似 The option definition long name &apos;{0}&apos; must be PascalCase so that the CommandLine may not parse it correctly. Be relax, we just use the PascalCase to parse the command options, you can still pass other kinds of naming styles in the command-line. 的本地化字符串。
         /// </summary>
-        internal static string AnalyzerTitle {
+        internal static string OptionLongNameMustBePascalCaseMessage {
             get {
-                return ResourceManager.GetString("AnalyzerTitle", resourceCulture);
+                return ResourceManager.GetString("OptionLongNameMustBePascalCaseMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Option long name must be PascalCase 的本地化字符串。
+        /// </summary>
+        internal static string OptionLongNameMustBePascalCaseTitle {
+            get {
+                return ResourceManager.GetString("OptionLongNameMustBePascalCaseTitle", resourceCulture);
             }
         }
     }

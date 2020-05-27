@@ -12,14 +12,13 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Rename;
 using Microsoft.CodeAnalysis.Text;
+using dotnetCampus.CommandLine.Properties;
 
 namespace dotnetCampus.CommandLine.Analyzers
 {
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(OptionLongNameMustBePascalCaseCodeFixProvider)), Shared]
     public class OptionLongNameMustBePascalCaseCodeFixProvider : CodeFixProvider
     {
-        private const string title = "Make uppercase";
-
         public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(DiagnosticIds.OptionLongNameMustBePascalCase);
 
         public sealed override FixAllProvider GetFixAllProvider()
@@ -42,9 +41,9 @@ namespace dotnetCampus.CommandLine.Analyzers
             // Register a code action that will invoke the fix.
             context.RegisterCodeFix(
                 CodeAction.Create(
-                    title: title,
+                    title: Resources.OptionLongNameMustBePascalCaseFix,
                     createChangedSolution: c => MakeUppercaseAsync(context.Document, declaration, c),
-                    equivalenceKey: title),
+                    equivalenceKey: Resources.OptionLongNameMustBePascalCaseFix),
                 diagnostic);
         }
 

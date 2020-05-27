@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -118,15 +118,15 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="OptionLongNameMustBePascalCaseDescription" xml:space="preserve">
-    <value>The command-line option definition names must be PascalCase, even though you can use any kind of style in the command line environment.</value>
+    <value>选项名称的定义必须使用 PascalCase 命名法命名，即使真实使用命令行传参的时候你可以使用任意风格，但定义必须是 PascalCase 风格。</value>
   </data>
   <data name="OptionLongNameMustBePascalCaseFix" xml:space="preserve">
-    <value>Convert to PascalCase</value>
+    <value>改成 Pascal 命名法</value>
   </data>
   <data name="OptionLongNameMustBePascalCaseMessage" xml:space="preserve">
-    <value>The option definition long name '{0}' must be PascalCase so that the CommandLine may not parse it correctly. Be relax, we just use the PascalCase to parse the command options, you can still pass other kinds of naming styles in the command-line.</value>
+    <value>选项名称 {0} 必须使用 PascalCase 命名法命名，这样命名行解析器才可以进行正常解析。不过请放心，此命名法仅在开发阶段使用，真正在使用时输入命令行参数的时候，依然可以使用各种不同风格的命令行。</value>
   </data>
   <data name="OptionLongNameMustBePascalCaseTitle" xml:space="preserve">
-    <value>Option long name must be PascalCase</value>
+    <value>选项名称必须使用 Pascal 命名法</value>
   </data>
 </root>
