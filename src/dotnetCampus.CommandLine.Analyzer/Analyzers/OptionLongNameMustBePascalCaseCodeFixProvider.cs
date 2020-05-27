@@ -20,10 +20,7 @@ namespace dotnetCampus.CommandLine.Analyzers
     {
         private const string title = "Make uppercase";
 
-        public sealed override ImmutableArray<string> FixableDiagnosticIds
-        {
-            get { return ImmutableArray.Create(OptionLongNameMustBePascalCaseAnalyzer.DiagnosticId); }
-        }
+        public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(DiagnosticIds.OptionLongNameMustBePascalCase);
 
         public sealed override FixAllProvider GetFixAllProvider()
         {
