@@ -18,6 +18,10 @@ using System.Globalization;
 
 namespace dotnetCampus.CommandLine.Analyzers
 {
+    /// <summary>
+    /// [Option("LongName")]
+    /// The LongName must be PascalCase. If not, this codefix will fix it.
+    /// </summary>
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(OptionLongNameMustBePascalCaseCodeFixProvider)), Shared]
     public class OptionLongNameMustBePascalCaseCodeFixProvider : CodeFixProvider
     {
@@ -77,7 +81,7 @@ namespace dotnetCampus.CommandLine.Analyzers
             return document.Project.Solution.WithDocumentSyntaxRoot(document.Id, newRoot);
         }
 
-        private string MakePascalCase(string oldName)
+        private static string MakePascalCase(string oldName)
         {
             var builder = new StringBuilder();
 
@@ -123,14 +127,9 @@ namespace dotnetCampus.CommandLine.Analyzers
                     }
                     else if (!char.IsUpper(c))
                     {
-                        if (isWordStart)
-                        {
-                            builder.Append(char.ToUpper(c, CultureInfo.InvariantCulture));
-                        }
-                        else
-                        {
-                            builder.Append(c);
-                        }
+                        builder.Append(isWordStart
+                            ? char.ToUpper(c, CultureInfo.InvariantCulture)
+                            : c);
                         isWordStart = false;
                     }
                     else

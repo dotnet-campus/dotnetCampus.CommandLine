@@ -13,11 +13,21 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace dotnetCampus.CommandLine.Analyzers
 {
+    /// <summary>
+    /// [Option("LongName")]
+    /// The LongName must be PascalCase. If not, this analyzer report diagnostics.
+    /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class OptionLongNameMustBePascalCaseAnalyzer : DiagnosticAnalyzer
     {
+        /// <summary>
+        /// Recognize these attributes.
+        /// </summary>
         private readonly IList<string> _attributeNames = new List<string> { "Option", "OptionAttribute" };
 
+        /// <summary>
+        /// Supported diagnostics.
+        /// </summary>
         private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
             DiagnosticIds.OptionLongNameMustBePascalCase,
             LocalizableStrings.Get(nameof(Resources.OptionLongNameMustBePascalCaseTitle)),
@@ -27,11 +37,30 @@ namespace dotnetCampus.CommandLine.Analyzers
             isEnabledByDefault: true,
             description: LocalizableStrings.Get(nameof(Resources.OptionLongNameMustBePascalCaseDescription)));
 
+        /// <summary>
+        /// Supported diagnostics.
+        /// </summary>
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-        public override void Initialize(AnalysisContext context) =>
+        /// <summary>
+        /// Register property analyzer.
+        /// </summary>
+        /// <param name="context"></param>
+        public override void Initialize(AnalysisContext context)
+        {
+            if (context is null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
+            context.EnableConcurrentExecution();
             context.RegisterSyntaxNodeAction(AnalyzeProperty, SyntaxKind.PropertyDeclaration);
+        }
 
+        /// <summary>
+        /// Find OptionAttribute from a property.
+        /// </summary>
+        /// <param name="context"></param>
         private void AnalyzeProperty(SyntaxNodeAnalysisContext context)
         {
             var propertyNode = (PropertyDeclarationSyntax)context.Node;
@@ -59,6 +88,14 @@ namespace dotnetCampus.CommandLine.Analyzers
             }
         }
 
+        /// <summary>
+        /// Find LongName argument from the OptionAttribute.
+        /// </summary>
+        /// <param name="attributeSyntax"></param>
+        /// <returns>
+        /// name: the LongName value.
+        /// location: the syntax tree location of the LongName argument value.
+        /// </returns>
         private (string? name, Location? location) AnalyzeOptionAttributeArguments(AttributeSyntax attributeSyntax)
         {
             var argumentList = attributeSyntax.ChildNodes().OfType<AttributeArgumentListSyntax>().FirstOrDefault();
@@ -88,7 +125,12 @@ namespace dotnetCampus.CommandLine.Analyzers
             return (null, null);
         }
 
-        private bool CheckIsPascalCase(string value)
+        /// <summary>
+        /// Check if the specified <paramref name="value"/> is a PascalCase string.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private static bool CheckIsPascalCase(string value)
         {
             var first = value[0];
             if (!char.IsUpper(first))
