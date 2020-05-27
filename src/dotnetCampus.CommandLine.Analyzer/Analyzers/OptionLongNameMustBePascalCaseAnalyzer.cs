@@ -35,7 +35,8 @@ namespace dotnetCampus.CommandLine.Analyzers
             "Naming",
             DiagnosticSeverity.Error,
             isEnabledByDefault: true,
-            description: LocalizableStrings.Get(nameof(Resources.OptionLongNameMustBePascalCaseDescription)));
+            description: LocalizableStrings.Get(nameof(Resources.OptionLongNameMustBePascalCaseDescription)),
+            helpLinkUri: DiagnosticUrls.Get(DiagnosticIds.OptionLongNameMustBePascalCase));
 
         /// <summary>
         /// Supported diagnostics.
