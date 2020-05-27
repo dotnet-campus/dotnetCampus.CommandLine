@@ -79,7 +79,7 @@ namespace dotnetCampus.CommandLine.Properties {
         }
         
         /// <summary>
-        ///   查找类似 The option definition long name &apos;{0}&apos; must be PascalCase so that the CommandLine may not parse it correctly. Be relax, we just use the PascalCase to parse the command options, you can still pass other kinds of naming styles in the command-line. 的本地化字符串。
+        ///   查找类似 The option definition long name &apos;{0}&apos; must be PascalCase, even though you can use any kind of style in the command line environment. 的本地化字符串。
         /// </summary>
         internal static string OptionLongNameMustBePascalCaseMessage {
             get {

@@ -124,7 +124,7 @@
     <value>Convert to PascalCase</value>
   </data>
   <data name="OptionLongNameMustBePascalCaseMessage" xml:space="preserve">
-    <value>The option definition long name '{0}' must be PascalCase so that the CommandLine may not parse it correctly. Be relax, we just use the PascalCase to parse the command options, you can still pass other kinds of naming styles in the command-line.</value>
+    <value>The option definition long name '{0}' must be PascalCase, even though you can use any kind of style in the command line environment.</value>
   </data>
   <data name="OptionLongNameMustBePascalCaseTitle" xml:space="preserve">
     <value>Option long name must be PascalCase</value>

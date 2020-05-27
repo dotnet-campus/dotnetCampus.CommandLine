@@ -124,7 +124,7 @@
     <value>改成 Pascal 命名法</value>
   </data>
   <data name="OptionLongNameMustBePascalCaseMessage" xml:space="preserve">
-    <value>选项名称 {0} 必须使用 PascalCase 命名法命名，这样命名行解析器才可以进行正常解析。不过请放心，此命名法仅在开发阶段使用，真正在使用时输入命令行参数的时候，依然可以使用各种不同风格的命令行。</value>
+    <value>选项名称 {0} 必须使用 PascalCase 命名法命名，即使真实使用命令行传参的时候你可以使用任意风格，但定义必须是 PascalCase 风格。</value>
   </data>
   <data name="OptionLongNameMustBePascalCaseTitle" xml:space="preserve">
     <value>选项名称必须使用 Pascal 命名法</value>

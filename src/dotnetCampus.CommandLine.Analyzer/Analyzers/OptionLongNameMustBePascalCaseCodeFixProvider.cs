@@ -13,6 +13,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Rename;
 using Microsoft.CodeAnalysis.Text;
 using dotnetCampus.CommandLine.Properties;
+using System.Text;
+using System.Globalization;
 
 namespace dotnetCampus.CommandLine.Analyzers
 {
@@ -30,40 +32,116 @@ namespace dotnetCampus.CommandLine.Analyzers
         public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
         {
             var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
+            if (root is null)
+            {
+                return;
+            }
 
-            // TODO: Replace the following code with your own analysis, generating a CodeAction for each fix to suggest
             var diagnostic = context.Diagnostics.First();
             var diagnosticSpan = diagnostic.Location.SourceSpan;
 
-            // Find the type declaration identified by the diagnostic.
-            var declaration = root!.FindToken(diagnosticSpan.Start).Parent!.AncestorsAndSelf().OfType<TypeDeclarationSyntax>().First();
+            ExpressionSyntax? syntax = root.FindNode(diagnosticSpan) switch
+            {
+                AttributeArgumentSyntax attributeArgumentSyntax => attributeArgumentSyntax.Expression,
+                ExpressionSyntax expressionSyntax => expressionSyntax,
+                _ => null,
+            };
 
-            // Register a code action that will invoke the fix.
-            context.RegisterCodeFix(
-                CodeAction.Create(
-                    title: Resources.OptionLongNameMustBePascalCaseFix,
-                    createChangedSolution: c => MakeUppercaseAsync(context.Document, declaration, c),
-                    equivalenceKey: Resources.OptionLongNameMustBePascalCaseFix),
-                diagnostic);
+            if (syntax != null)
+            {
+                context.RegisterCodeFix(
+                    CodeAction.Create(
+                        title: Resources.OptionLongNameMustBePascalCaseFix,
+                        createChangedSolution: c => MakePascalCaseAsync(context.Document, syntax, c),
+                        equivalenceKey: Resources.OptionLongNameMustBePascalCaseFix),
+                    diagnostic);
+            }
         }
 
-        private async Task<Solution> MakeUppercaseAsync(Document document, TypeDeclarationSyntax typeDecl, CancellationToken cancellationToken)
+        private async Task<Solution> MakePascalCaseAsync(Document document, ExpressionSyntax expressionSyntax, CancellationToken cancellationToken)
         {
-            // Compute new uppercase name.
-            var identifierToken = typeDecl.Identifier;
-            var newName = identifierToken.Text.ToUpperInvariant();
+            var expression = expressionSyntax.ToString();
+            var oldName = expression.Substring(1, expression.Length - 2);
+            var newName = MakePascalCase(oldName);
 
-            // Get the symbol representing the type to be renamed.
-            var semanticModel = await document.GetSemanticModelAsync(cancellationToken);
-            var typeSymbol = semanticModel.GetDeclaredSymbol(typeDecl, cancellationToken);
+            var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
+            if (root is null)
+            {
+                return document.Project.Solution;
+            }
 
-            // Produce a new solution that has all references to that type renamed, including the declaration.
-            var originalSolution = document.Project.Solution;
-            var optionSet = originalSolution.Workspace.Options;
-            var newSolution = await Renamer.RenameSymbolAsync(document.Project.Solution, typeSymbol, newName, optionSet, cancellationToken).ConfigureAwait(false);
+            var newRoot = root.ReplaceNode(expressionSyntax,
+                SyntaxFactory.LiteralExpression(
+                    SyntaxKind.StringLiteralExpression,
+                    SyntaxFactory.Literal(newName)));
+            return document.Project.Solution.WithDocumentSyntaxRoot(document.Id, newRoot);
+        }
 
-            // Return the new solution with the now-uppercase type name.
-            return newSolution;
+        private string MakePascalCase(string oldName)
+        {
+            var builder = new StringBuilder();
+
+            var isFirstLetter = true;
+            var isWordStart = true;
+            foreach (char c in oldName)
+            {
+                if (!char.IsLetterOrDigit(c))
+                {
+                    // Append nothing because PascalCase has no special characters.
+                    isWordStart = true;
+                    continue;
+                }
+
+                if (isFirstLetter)
+                {
+                    if (char.IsDigit(c))
+                    {
+                        // PascalCase does not support digital as the first letter.
+                        isWordStart = true;
+                        continue;
+                    }
+                    else if (!char.IsUpper(c))
+                    {
+                        isFirstLetter = false;
+                        isWordStart = false;
+                        builder.Append(char.ToUpper(c, CultureInfo.InvariantCulture));
+                    }
+                    else
+                    {
+                        isFirstLetter = false;
+                        isWordStart = false;
+                        builder.Append(c);
+                    }
+                }
+                else
+                {
+                    if (char.IsDigit(c))
+                    {
+                        // PascalCase does not support digital as the first letter.
+                        isWordStart = true;
+                        builder.Append(c);
+                    }
+                    else if (!char.IsUpper(c))
+                    {
+                        if (isWordStart)
+                        {
+                            builder.Append(char.ToUpper(c, CultureInfo.InvariantCulture));
+                        }
+                        else
+                        {
+                            builder.Append(c);
+                        }
+                        isWordStart = false;
+                    }
+                    else
+                    {
+                        isWordStart = false;
+                        builder.Append(c);
+                    }
+                }
+            }
+
+            return builder.ToString();
         }
     }
 }
