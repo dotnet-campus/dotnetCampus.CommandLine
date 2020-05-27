@@ -4,17 +4,17 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 
-using dotnetCampus.CommandLine.Analyzer.Properties;
+using dotnetCampus.CommandLine.Properties;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace dotnetCampus.CommandLine.Analyzer
+namespace dotnetCampus.CommandLine.Analyzers
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class dotnetCampusCommandLineAnalyzerAnalyzer : DiagnosticAnalyzer
+    public class OptionLongNameMustBePascalCaseAnalyzer : DiagnosticAnalyzer
     {
         public const string DiagnosticId = "dotnetCampusCommandLineAnalyzer";
 
