@@ -1,7 +1,10 @@
 ﻿using BenchmarkDotNet.Attributes;
+
 using CommandLine;
+
 using dotnetCampus.Cli.Performance.Fakes;
 using dotnetCampus.Cli.Tests.Fakes;
+
 using static dotnetCampus.Cli.Tests.Fakes.CommandLineArgs;
 
 // ReSharper disable ReturnValueOfPureMethodIsNotUsed
