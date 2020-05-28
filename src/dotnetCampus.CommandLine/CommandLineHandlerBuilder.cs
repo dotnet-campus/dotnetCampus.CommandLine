@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
+
 using dotnetCampus.Cli.StateMachine;
+
 using static dotnetCampus.Cli.Utils.CommandLineHelpers;
 
 namespace dotnetCampus.Cli

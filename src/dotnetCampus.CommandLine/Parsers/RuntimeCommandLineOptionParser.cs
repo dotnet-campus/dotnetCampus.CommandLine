@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+
 using dotnetCampus.Cli.Core;
 
 namespace dotnetCampus.Cli.Parsers
@@ -51,7 +52,7 @@ namespace dotnetCampus.Cli.Parsers
             {
                 return isImmutable
                     ? new ImmutableRuntimeOptionParser<T>(verb, properties)
-                    : (RuntimeCommandLineOptionParser<T>) new RuntimeOptionParser<T>(verb, properties);
+                    : (RuntimeCommandLineOptionParser<T>)new RuntimeOptionParser<T>(verb, properties);
             }
 
             throw new NotSupportedException(@"运行时命令行解析器仅支持两种类型的命令行参数类型：

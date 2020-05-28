@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+
 using dotnetCampus.Cli.StateMachine;
+
 using static dotnetCampus.Cli.Utils.CommandLineHelpers;
 
 // ReSharper disable UnusedVariable
