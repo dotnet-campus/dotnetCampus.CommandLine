@@ -340,7 +340,7 @@ namespace dotnetCampus.Cli
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string DebuggerDisplay => string.Join(" ", _optionArgs.ForOptions().Select(pair =>
-            $"{(string.IsNullOrEmpty(pair.Key) ? "" : $"-{pair.Key} ")}{string.Join(" ", pair.Value ?? (IEnumerable<string>) new string[0])}"));
+            $"{(string.IsNullOrEmpty(pair.Key) ? "" : $"-{pair.Key} ")}{string.Join(" ", pair.Value ?? (IEnumerable<string>)new string[0])}"));
 
         private class CommandLineDebugView
         {
@@ -352,7 +352,7 @@ namespace dotnetCampus.Cli
             [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
             [SuppressMessage("ReSharper", "UnusedMember.Local")]
             private string[] Options => _owner._optionArgs.ForOptions().Select(pair =>
-                    $"{(string.IsNullOrEmpty(pair.Key) ? "" : $"-{pair.Key} ")}{string.Join(" ", pair.Value ?? (IEnumerable<string>) new string[0])}")
+                    $"{(string.IsNullOrEmpty(pair.Key) ? "" : $"-{pair.Key} ")}{string.Join(" ", pair.Value ?? (IEnumerable<string>)new string[0])}")
                 .ToArray();
         }
     }
