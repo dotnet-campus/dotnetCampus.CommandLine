@@ -29,7 +29,7 @@ namespace dotnetCampus.Cli
     /// </summary>
     [DebuggerDisplay("CommandLine: {DebuggerDisplay,nq}")]
     [DebuggerTypeProxy(typeof(CommandLineDebugView))]
-    public sealed class CommandLine : IEnumerable<ListGroupItem>
+    public sealed class CommandLine : ICommandLineHandlerBuilder, IEnumerable<ListGroupItem>
     {
         private readonly ListGroup<SingleOptimizedStrings> _optionArgs;
 
