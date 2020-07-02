@@ -87,6 +87,62 @@ namespace dotnetCampus.Cli.Tests
         }
 
         [ContractTestCase]
+        public void ParseToDictionary()
+        {
+            "命令行传入字典（一项），能接收到字典的所有值。".Test((string[] args) =>
+            {
+                // Arrange & Action
+                var commandLine = CommandLine.Parse(args);
+                var options = commandLine.As<DictionaryOptions>();
+
+                // Assert
+                Assert.AreEqual("1", options.Aaa["a"]);
+                Assert.AreEqual("1", options.Bbb["a"]);
+                Assert.AreEqual("1", options.Ccc["a"]);
+                Assert.AreEqual("a", options.Ddd.Key);
+                Assert.AreEqual("1", options.Ddd.Value);
+            }).WithArguments(
+                new[] { "-a", "a=1", "-b", "a=1", "-c", "a=1", "-d", "a=1"}
+                );
+
+            "命令行传入字典（三项），能接收到字典的所有值。".Test((string[] args) =>
+            {
+                // Arrange & Action
+                var commandLine = CommandLine.Parse(args);
+                var options = commandLine.As<DictionaryOptions>();
+
+                // Assert
+                Assert.AreEqual("1", options.Aaa["a"]);
+                Assert.AreEqual("2", options.Aaa["b"]);
+                Assert.AreEqual("3", options.Aaa["c"]);
+                Assert.AreEqual("1", options.Bbb["a"]);
+                Assert.AreEqual("2", options.Bbb["b"]);
+                Assert.AreEqual("3", options.Bbb["c"]);
+                Assert.AreEqual("1", options.Ccc["a"]);
+                Assert.AreEqual("2", options.Ccc["b"]);
+                Assert.AreEqual("3", options.Ccc["c"]);
+            }).WithArguments(
+                new[] { "-a", "a=1;b=2;c=3", "-b", "a=1;b=2;c=3", "-c", "a=1;b=2;c=3" }
+                );
+
+            "命令行传入字典，能正确处理参数中的空格。".Test((string[] args) =>
+            {
+                // Arrange & Action
+                var commandLine = CommandLine.Parse(args);
+                var options = commandLine.As<DictionaryOptions>();
+
+                // Assert
+                Assert.AreEqual("1", options.Aaa["a"]);
+                Assert.AreEqual("1  1", options.Bbb["a"]);
+                Assert.AreEqual("1", options.Ccc["a"]);
+                Assert.AreEqual("a", options.Ddd.Key);
+                Assert.AreEqual("1", options.Ddd.Value);
+            }).WithArguments(
+                new[] { "-a", "a = 1", "-b", "a=1  1", "-c", "  a=1  ", "-d", "a  =1" }
+                );
+        }
+
+        [ContractTestCase]
         public void ParseAsAmbiguously()
         {
             "命令行传入开关参数，或者传入带有 true/false 值的参数，可以赋值给 bool 类型。".Test((string[] args) =>

@@ -30,7 +30,7 @@ namespace dotnetCampus.Cli.Utils
             }
             else if (assignableType.IsAssignableFrom(typeof(KeyValuePair<string, string>)))
             {
-                return ParseArgsToDictionary(list);
+                return ParseArgsToDictionary(list).FirstOrDefault();
             }
             else if (assignableType.IsAssignableFrom(typeof(string[])))
             {
