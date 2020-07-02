@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 
 using dotnetCampus.Cli.StateMachine;
@@ -12,6 +13,7 @@ namespace dotnetCampus.Cli
     /// <summary>
     /// 包含命令行谓词处理相关的扩展方法。
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("此类型中所有方法的 API 设计不利于代码编写，所以此类型废弃。")]
     internal static class CommandLineVerbHandlers
     {

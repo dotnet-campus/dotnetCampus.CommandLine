@@ -303,12 +303,19 @@ namespace dotnetCampus.Cli.Tests
                 new[] { "Print", expectedFilePath });
         }
 
-        [ContractTestCase]
-        public void AddHandlerAndRun()
-        {
-            "添加一组参数处理器，然后执行最匹配的处理器。".Test(() =>
-            {
-            });
-        }
+        //[ContractTestCase]
+        //public void AddHandlerAndRun()
+        //{
+        //    "添加一组参数处理器，然后执行最匹配的处理器。".Test(async (string[] args) =>
+        //    {
+        //        var commandLine = CommandLine.Parse(args);
+
+        //        commandLine
+        //            .AddGnuStandardHandlers()
+        //            .AddHandler<Options>(o => { return Task.FromResult(0); })
+        //            .AddArgumentsVerifier()
+        //            .Run();
+        //    });
+        //}
     }
 }
