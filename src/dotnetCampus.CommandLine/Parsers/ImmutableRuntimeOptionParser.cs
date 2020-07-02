@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 
 using dotnetCampus.Cli.Core;
+using dotnetCampus.Cli.Utils;
 
 namespace dotnetCampus.Cli.Parsers
 {
@@ -110,7 +111,7 @@ namespace dotnetCampus.Cli.Parsers
             }
             else if (values != null)
             {
-                _values[index] = values.ToAssignableCollection(type);
+                _values[index] = values.ToAssignableValue(type);
             }
         }
 

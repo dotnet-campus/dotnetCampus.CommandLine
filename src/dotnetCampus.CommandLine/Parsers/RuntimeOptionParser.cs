@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 
 using dotnetCampus.Cli.Core;
+using dotnetCampus.Cli.Utils;
 
 namespace dotnetCampus.Cli.Parsers
 {
@@ -71,7 +72,7 @@ namespace dotnetCampus.Cli.Parsers
         {
             if (_shortNameDictionary.TryGetValue(shortName, out var property))
             {
-                property.SetValue(_options, values.ToAssignableCollection(property.PropertyType));
+                property.SetValue(_options, values.ToAssignableValue(property.PropertyType));
             }
         }
 
@@ -97,7 +98,7 @@ namespace dotnetCampus.Cli.Parsers
         {
             if (_longNameDictionary.TryGetValue(longName, out var property))
             {
-                property.SetValue(_options, values.ToAssignableCollection(property.PropertyType));
+                property.SetValue(_options, values.ToAssignableValue(property.PropertyType));
             }
         }
 
@@ -130,7 +131,7 @@ namespace dotnetCampus.Cli.Parsers
             }
             else if (values != null)
             {
-                property.SetValue(_options, values.ToAssignableCollection(type));
+                property.SetValue(_options, values.ToAssignableValue(type));
             }
         }
 
