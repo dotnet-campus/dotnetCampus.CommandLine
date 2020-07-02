@@ -50,7 +50,7 @@ namespace dotnetCampus.Cli.Tests
             }).WithArguments(
                 ("Windows", WindowsStyleArgs),
                 ("Cmd", CmdStyleArgs),
-                ("Cmd", Cmd2StyleArgs),
+                ("Cmd2", Cmd2StyleArgs),
                 ("Linux", LinuxStyleArgs),
                 ("Url", UrlArgs));
 
