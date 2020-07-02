@@ -50,6 +50,7 @@ namespace dotnetCampus.Cli.Tests
             }).WithArguments(
                 ("Windows", WindowsStyleArgs),
                 ("Cmd", CmdStyleArgs),
+                ("Cmd", Cmd2StyleArgs),
                 ("Linux", LinuxStyleArgs),
                 ("Url", UrlArgs));
 
@@ -102,7 +103,8 @@ namespace dotnetCampus.Cli.Tests
                 Assert.AreEqual("a", options.Ddd.Key);
                 Assert.AreEqual("1", options.Ddd.Value);
             }).WithArguments(
-                new[] { "-a", "a=1", "-b", "a=1", "-c", "a=1", "-d", "a=1"}
+                new[] { "-a", "a=1", "-b", "a=1", "-c", "a=1", "-d", "a=1" },
+                new[] { "-a:a=1", "-b:a=1", "-c:a=1", "-d:a=1" }
                 );
 
             "命令行传入字典（三项），能接收到字典的所有值。".Test((string[] args) =>
@@ -122,7 +124,8 @@ namespace dotnetCampus.Cli.Tests
                 Assert.AreEqual("2", options.Ccc["b"]);
                 Assert.AreEqual("3", options.Ccc["c"]);
             }).WithArguments(
-                new[] { "-a", "a=1;b=2;c=3", "-b", "a=1;b=2;c=3", "-c", "a=1;b=2;c=3" }
+                new[] { "-a", "a=1;b=2;c=3", "-b", "a=1;b=2;c=3", "-c", "a=1;b=2;c=3" },
+                new[] { "-a:a=1;b=2;c=3", "-b:a=1;b=2;c=3", "-c:a=1;b=2;c=3" }
                 );
 
             "命令行传入字典，能正确处理参数中的空格。".Test((string[] args) =>
@@ -138,7 +141,8 @@ namespace dotnetCampus.Cli.Tests
                 Assert.AreEqual("a", options.Ddd.Key);
                 Assert.AreEqual("1", options.Ddd.Value);
             }).WithArguments(
-                new[] { "-a", "a = 1", "-b", "a=1  1", "-c", "  a=1  ", "-d", "a  =1" }
+                new[] { "-a", "a = 1", "-b", "a=1  1", "-c", "  a=1  ", "-d", "a  =1" },
+                new[] { "-a:a = 1", "-b:a=1  1", "-c:  a=1  ", "-d:a  =1" }
                 );
         }
 
