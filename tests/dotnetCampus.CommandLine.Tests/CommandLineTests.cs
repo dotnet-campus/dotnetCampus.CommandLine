@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 
-using dotnetCampus.Cli.Standard;
 using dotnetCampus.Cli.Tests.Fakes;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
