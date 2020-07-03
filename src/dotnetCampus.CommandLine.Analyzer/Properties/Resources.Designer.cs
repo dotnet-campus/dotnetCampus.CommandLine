@@ -61,6 +61,33 @@ namespace dotnetCampus.CommandLine.Properties {
         }
         
         /// <summary>
+        ///   查找类似 This property has the type &apos;{0}&apos; which is not built-in supported. It&apos;s recommended to use bool/string/IList&lt;string&gt; or other types that the code fix will suggest you change instead or add a custom converter on your Value or Option attribute. 的本地化字符串。
+        /// </summary>
+        internal static string NotSupportedOptionPropertyTypeDescription {
+            get {
+                return ResourceManager.GetString("NotSupportedOptionPropertyTypeDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 This property has the type &apos;{0}&apos; which is not built-in supported. 的本地化字符串。
+        /// </summary>
+        internal static string NotSupportedOptionPropertyTypeMessage {
+            get {
+                return ResourceManager.GetString("NotSupportedOptionPropertyTypeMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Not supported property type 的本地化字符串。
+        /// </summary>
+        internal static string NotSupportedOptionPropertyTypeTitle {
+            get {
+                return ResourceManager.GetString("NotSupportedOptionPropertyTypeTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 The command-line option definition names must be PascalCase, even though you can use any kind of style in the command line environment. 的本地化字符串。
         /// </summary>
         internal static string OptionLongNameMustBePascalCaseDescription {

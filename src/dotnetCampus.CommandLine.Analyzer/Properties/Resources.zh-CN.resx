@@ -117,6 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="NotSupportedOptionPropertyTypeDescription" xml:space="preserve">
+    <value>作为命令行选项，此属性的类型 {0} 不被内置支持。 建议使用 bool / string / IList&lt;string&gt; 或代码修复会建议您更改的其他类型，或者在 Value / Option 特性上添加自定义转换器。</value>
+  </data>
+  <data name="NotSupportedOptionPropertyTypeMessage" xml:space="preserve">
+    <value>作为命令行选项，此属性的类型 {0} 不被内置支持。</value>
+  </data>
+  <data name="NotSupportedOptionPropertyTypeTitle" xml:space="preserve">
+    <value>不支持此类型的命令行属性</value>
+  </data>
   <data name="OptionLongNameMustBePascalCaseDescription" xml:space="preserve">
     <value>选项名称的定义必须使用 PascalCase 命名法命名，即使真实使用命令行传参的时候你可以使用任意风格，但定义必须是 PascalCase 风格。</value>
   </data>

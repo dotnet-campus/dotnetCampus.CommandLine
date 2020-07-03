@@ -117,6 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="NotSupportedOptionPropertyTypeDescription" xml:space="preserve">
+    <value>This property has the type '{0}' which is not built-in supported. It's recommended to use bool/string/IList&lt;string&gt; or other types that the code fix will suggest you change instead or add a custom converter on your Value or Option attribute.</value>
+  </data>
+  <data name="NotSupportedOptionPropertyTypeMessage" xml:space="preserve">
+    <value>This property has the type '{0}' which is not built-in supported.</value>
+  </data>
+  <data name="NotSupportedOptionPropertyTypeTitle" xml:space="preserve">
+    <value>Not supported property type</value>
+  </data>
   <data name="OptionLongNameMustBePascalCaseDescription" xml:space="preserve">
     <value>The command-line option definition names must be PascalCase, even though you can use any kind of style in the command line environment.</value>
   </data>
