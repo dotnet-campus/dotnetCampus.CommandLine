@@ -115,8 +115,19 @@ namespace dotnetCampus.Cli.StateMachine
 
         private void SetOption(string option)
         {
-            _currentOption = option;
-            _currentValues = null;
+            var valueSplitIndex = option.IndexOf(':');
+            if (valueSplitIndex < 0 || valueSplitIndex >= option.Length - 1)
+            {
+                // -k value
+                _currentOption = option;
+                _currentValues = null;
+            }
+            else
+            {
+                // -k:value
+                _currentOption = option.Substring(0, valueSplitIndex);
+                _currentValues = new SingleOptimizedStrings(option.Substring(valueSplitIndex + 1, option.Length - valueSplitIndex - 1));
+            }
         }
 
         private void AppendValue(string value)

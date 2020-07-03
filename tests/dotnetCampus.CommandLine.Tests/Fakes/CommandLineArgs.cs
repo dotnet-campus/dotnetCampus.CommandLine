@@ -41,6 +41,17 @@
             StartupSessionValue,
         };
 
+        internal static readonly string[] Cmd2StyleArgs =
+        {
+            FileValue,
+            "/Cloud",
+            "/Iwb",
+            $"/m:{ModeValue}",
+            "/s",
+            $"/p:{PlacementValue}",
+            $"/StartupSession:{StartupSessionValue}",
+        };
+
         internal static readonly string[] LinuxStyleArgs =
         {
             FileValue,
