@@ -55,7 +55,7 @@ namespace dotnetCampus.Cli.Parsers
 
         public override void SetValue(int index, string value)
         {
-            _values[_indexDictionary[_indexedValueDictionary[index]]] = value;
+            SetValueCore(_indexDictionary[_indexedValueDictionary[index]], value);
         }
 
         public override void SetValue(char shortName, bool value)
@@ -65,12 +65,12 @@ namespace dotnetCampus.Cli.Parsers
 
         public override void SetValue(char shortName, string value)
         {
-            _values[_indexDictionary[_shortNameDictionary[shortName]]] = value;
+            SetValueCore(_indexDictionary[_shortNameDictionary[shortName]], value);
         }
 
         public override void SetValue(char shortName, IReadOnlyList<string> values)
         {
-            _values[_indexDictionary[_shortNameDictionary[shortName]]] = values;
+            SetValueCore(_indexDictionary[_shortNameDictionary[shortName]], values);
         }
 
         public override void SetValue(string longName, bool value)
@@ -80,12 +80,12 @@ namespace dotnetCampus.Cli.Parsers
 
         public override void SetValue(string longName, string value)
         {
-            _values[_indexDictionary[_longNameDictionary[longName]]] = value;
+            SetValueCore(_indexDictionary[_longNameDictionary[longName]], value);
         }
 
         public override void SetValue(string longName, IReadOnlyList<string> values)
         {
-            _values[_indexDictionary[_longNameDictionary[longName]]] = values;
+            SetValueCore(_indexDictionary[_longNameDictionary[longName]], values);
         }
 
         public override void SetValue(char shortName, SingleOptimizedStrings? values)
@@ -98,16 +98,14 @@ namespace dotnetCampus.Cli.Parsers
             SetValueCore(_indexDictionary[_longNameDictionary[longName]], values);
         }
 
-        private void SetValueCore(int index, SingleOptimizedStrings? values)
+        private void SetValueCore(int index, string value) => SetValueCore(index, new[] { value });
+
+        private void SetValueCore(int index, IReadOnlyList<string>? values)
         {
             var type = _propertyTypes[index];
             if (type == typeof(bool))
             {
                 _values[index] = values is null ? true : (bool.TryParse(values[0], out var result) && result);
-            }
-            else if (type == typeof(string) && values != null)
-            {
-                _values[index] = values.Count == 1 ? values[0] : string.Join(" ", values);
             }
             else if (values != null)
             {
