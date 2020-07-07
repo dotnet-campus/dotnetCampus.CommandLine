@@ -31,7 +31,7 @@ namespace dotnetCampus.CommandLine.Analyzers
             DiagnosticIds.OptionLongNameMustBePascalCase,
             LocalizableStrings.Get(nameof(Resources.OptionLongNameMustBePascalCaseTitle)),
             LocalizableStrings.Get(nameof(Resources.OptionLongNameMustBePascalCaseMessage)),
-            "Naming",
+            "dotnetCampus.Naming",
             DiagnosticSeverity.Error,
             isEnabledByDefault: true,
             description: LocalizableStrings.Get(nameof(Resources.OptionLongNameMustBePascalCaseDescription)),

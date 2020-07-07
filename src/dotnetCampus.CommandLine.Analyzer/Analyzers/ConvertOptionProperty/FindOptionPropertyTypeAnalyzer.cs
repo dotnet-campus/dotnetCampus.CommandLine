@@ -10,14 +10,10 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace dotnetCampus.CommandLine.Analyzers
+namespace dotnetCampus.CommandLine.Analyzers.ConvertOptionProperty
 {
-    /// <summary>
-    /// [Option("LongName")]
-    /// The LongName must be PascalCase. If not, this analyzer report diagnostics.
-    /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class NotSupportedOptionPropertyTypeAnalyzer : DiagnosticAnalyzer
+    public class FindOptionPropertyTypeAnalyzer : DiagnosticAnalyzer
     {
         /// <summary>
         /// Recognize these attributes.
@@ -33,11 +29,24 @@ namespace dotnetCampus.CommandLine.Analyzers
         /// <summary>
         /// Supported diagnostics.
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+        private static readonly DiagnosticDescriptor ValidRule = new DiagnosticDescriptor(
+            DiagnosticIds.SupportedOptionPropertyType,
+            LocalizableStrings.Get(nameof(Resources.SupportedOptionPropertyTypeTitle)),
+            LocalizableStrings.Get(nameof(Resources.SupportedOptionPropertyTypeMessage)),
+            "dotnetCampus.Usage",
+            DiagnosticSeverity.Hidden,
+            isEnabledByDefault: true,
+            description: LocalizableStrings.Get(nameof(Resources.SupportedOptionPropertyTypeDescription)),
+            helpLinkUri: DiagnosticUrls.Get(DiagnosticIds.SupportedOptionPropertyType));
+
+        /// <summary>
+        /// Supported diagnostics.
+        /// </summary>
+        private static readonly DiagnosticDescriptor InvalidRule = new DiagnosticDescriptor(
             DiagnosticIds.NotSupportedOptionPropertyType,
             LocalizableStrings.Get(nameof(Resources.NotSupportedOptionPropertyTypeTitle)),
             LocalizableStrings.Get(nameof(Resources.NotSupportedOptionPropertyTypeMessage)),
-            "Naming",
+            "dotnetCampus.Usage",
             DiagnosticSeverity.Error,
             isEnabledByDefault: true,
             description: LocalizableStrings.Get(nameof(Resources.NotSupportedOptionPropertyTypeDescription)),
@@ -46,7 +55,7 @@ namespace dotnetCampus.CommandLine.Analyzers
         /// <summary>
         /// Supported diagnostics.
         /// </summary>
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(ValidRule, InvalidRule);
 
         /// <summary>
         /// Register property analyzer.
@@ -78,15 +87,26 @@ namespace dotnetCampus.CommandLine.Analyzers
 
                 if (attributeName != null && _attributeNames.Contains(attributeName))
                 {
-                    var (typeName, location) = AnalyzeOptionPropertyType(propertyNode);
-                    if (typeName != null && location != null)
-                    {
-                        var diagnostic = Diagnostic.Create(Rule, location, typeName);
-                        context.ReportDiagnostic(diagnostic);
-                    }
+                    var isValidPropertyUsage = AnalyzeOptionPropertyType(propertyNode);
+                    var diagnostic = CreateDiagnosticForTypeSyntax(
+                        isValidPropertyUsage ? ValidRule : InvalidRule, propertyNode);
+                    context.ReportDiagnostic(diagnostic);
                     break;
                 }
             }
+        }
+
+        private Diagnostic CreateDiagnosticForTypeSyntax(DiagnosticDescriptor rule, PropertyDeclarationSyntax propertySyntax)
+        {
+            var typeSyntax = propertySyntax.Type;
+            if (typeSyntax is NullableTypeSyntax nullableTypeSyntax)
+            {
+                // string?
+                typeSyntax = nullableTypeSyntax.ElementType;
+            }
+            string typeName = GetTypeName(typeSyntax);
+
+            return Diagnostic.Create(rule, typeSyntax.GetLocation(), typeName);
         }
 
         /// <summary>
@@ -97,7 +117,7 @@ namespace dotnetCampus.CommandLine.Analyzers
         /// typeName: the LongName value.
         /// location: the syntax tree location of the LongName argument value.
         /// </returns>
-        private (string? typeName, Location? location) AnalyzeOptionPropertyType(PropertyDeclarationSyntax propertySyntax)
+        private bool AnalyzeOptionPropertyType(PropertyDeclarationSyntax propertySyntax)
         {
             var propertyTypeSyntax = propertySyntax.Type;
             string typeName = GetTypeName(propertyTypeSyntax);
@@ -110,21 +130,21 @@ namespace dotnetCampus.CommandLine.Analyzers
                     && IsGenericKeyArgumentType(genericType0)
                     && IsGenericArgumentType(genericType1))
                 {
-                        return (null, null);
+                    return true;
                 }
                 else if (IsOneGenericType(typeName)
                     && genericType0 != null
                     && IsGenericArgumentType(genericType0))
                 {
-                    return (null, null);
+                    return true;
                 }
                 else if (IsNonGenericType(typeName))
                 {
-                    return (null, null);
+                    return true;
                 }
             }
 
-            return (propertyTypeSyntax.ToString(), propertyTypeSyntax.GetLocation());
+            return false;
         }
 
         private string GetTypeName(TypeSyntax typeSyntax)

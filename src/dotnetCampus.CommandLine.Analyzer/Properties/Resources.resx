@@ -117,6 +117,27 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ConvertOptionPropertyTypeToDictionaryFix" xml:space="preserve">
+    <value>Use `IReadOnlyDictionary&lt;string, string&gt;` type instead</value>
+  </data>
+  <data name="ConvertOptionPropertyTypeToDirectoryInfoFix" xml:space="preserve">
+    <value>Use 'DirectoryInfo' type instead</value>
+  </data>
+  <data name="ConvertOptionPropertyTypeToDoubleFix" xml:space="preserve">
+    <value>Use 'double' type instead</value>
+  </data>
+  <data name="ConvertOptionPropertyTypeToFileInfoFix" xml:space="preserve">
+    <value>Use 'FileInfo' type instead</value>
+  </data>
+  <data name="ConvertOptionPropertyTypeToInt32Fix" xml:space="preserve">
+    <value>Use 'int' type instead</value>
+  </data>
+  <data name="ConvertOptionPropertyTypeToListFix" xml:space="preserve">
+    <value>Use `IReadOnlyList&lt;string&gt;` type instead</value>
+  </data>
+  <data name="ConvertOptionPropertyTypeToStringFix" xml:space="preserve">
+    <value>Use 'string' type instead</value>
+  </data>
   <data name="NotSupportedOptionPropertyTypeDescription" xml:space="preserve">
     <value>This property has the type '{0}' which is not built-in supported. It's recommended to use bool/string/IList&lt;string&gt; or other types that the code fix will suggest you change instead or add a custom converter on your Value or Option attribute.</value>
   </data>
@@ -137,5 +158,14 @@
   </data>
   <data name="OptionLongNameMustBePascalCaseTitle" xml:space="preserve">
     <value>Option long name must be PascalCase</value>
+  </data>
+  <data name="SupportedOptionPropertyTypeDescription" xml:space="preserve">
+    <value>This property has a recommended option property type '{0}'.</value>
+  </data>
+  <data name="SupportedOptionPropertyTypeMessage" xml:space="preserve">
+    <value>This property has a recommended option property type '{0}'.</value>
+  </data>
+  <data name="SupportedOptionPropertyTypeTitle" xml:space="preserve">
+    <value>Recommended option property type</value>
   </data>
 </root>

@@ -13,6 +13,7 @@ namespace dotnetCampus.CommandLine
         public const string OptionLongNameMustBePascalCase = "DCL101";
 
         // Options Properties 201-299
-        public const string NotSupportedOptionPropertyType = "DCL201";
+        public const string SupportedOptionPropertyType = "DCL201";
+        public const string NotSupportedOptionPropertyType = "DCL202";
     }
 }
