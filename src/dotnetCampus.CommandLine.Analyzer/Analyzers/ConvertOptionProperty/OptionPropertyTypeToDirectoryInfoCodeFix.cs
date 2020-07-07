@@ -8,17 +8,18 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Simplification;
 
 namespace dotnetCampus.CommandLine.Analyzers.ConvertOptionProperty
 {
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(OptionPropertyTypeToInt32CodeFix)), Shared]
-    public class OptionPropertyTypeToInt32CodeFix : ConvertOptionPropertyTypeCodeFix
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(OptionPropertyTypeToDirectoryInfoCodeFix)), Shared]
+    public class OptionPropertyTypeToDirectoryInfoCodeFix : ConvertOptionPropertyTypeCodeFix
     {
         public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(
             DiagnosticIds.SupportedOptionPropertyType,
             DiagnosticIds.NotSupportedOptionPropertyType);
 
-        protected sealed override string CodeActionTitle => Resources.ConvertOptionPropertyTypeToInt32Fix;
+        protected sealed override string CodeActionTitle => Resources.ConvertOptionPropertyTypeToDirectoryInfoFix;
 
         protected sealed override CompilationUnitSyntax CreateTypeSyntaxNode(
             TypeSyntax oldTypeSyntax, CompilationUnitSyntax syntaxRoot, SemanticModel semanticModel,
@@ -26,8 +27,8 @@ namespace dotnetCampus.CommandLine.Analyzers.ConvertOptionProperty
         {
             return syntaxRoot.ReplaceNode(
                 oldTypeSyntax,
-                SyntaxFactory.PredefinedType(
-                    SyntaxFactory.Token(SyntaxKind.IntKeyword)));
+                SyntaxFactory.ParseName("global::System.IO.DirectoryInfo")
+                    .WithAdditionalAnnotations(new SyntaxAnnotation[] { Simplifier.Annotation }));
         }
     }
 }

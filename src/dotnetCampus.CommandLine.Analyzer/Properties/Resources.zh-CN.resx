@@ -130,7 +130,7 @@
     <value>命令行选项：改为小数类型 (double)</value>
   </data>
   <data name="ConvertOptionPropertyTypeToFileInfoFix" xml:space="preserve">
-    <value>命令行选项：改为文件类型 (DirectoryInfo)</value>
+    <value>命令行选项：改为文件类型 (FileInfo)</value>
   </data>
   <data name="ConvertOptionPropertyTypeToInt32Fix" xml:space="preserve">
     <value>命令行选项：改为整数类型 (int)</value>

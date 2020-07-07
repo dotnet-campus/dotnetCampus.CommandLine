@@ -20,12 +20,14 @@ namespace dotnetCampus.CommandLine.Analyzers.ConvertOptionProperty
 
         protected sealed override string CodeActionTitle => Resources.ConvertOptionPropertyTypeToStringFix;
 
-        protected sealed override SyntaxNode CreateTypeSyntaxNode(
+        protected sealed override CompilationUnitSyntax CreateTypeSyntaxNode(
             TypeSyntax oldTypeSyntax, CompilationUnitSyntax syntaxRoot, SemanticModel semanticModel,
             CancellationToken cancellationToken)
         {
-            return SyntaxFactory.PredefinedType(
-                SyntaxFactory.Token(SyntaxKind.StringKeyword));
+            return syntaxRoot.ReplaceNode(
+                oldTypeSyntax,
+                SyntaxFactory.PredefinedType(
+                    SyntaxFactory.Token(SyntaxKind.StringKeyword)));
         }
     }
 }

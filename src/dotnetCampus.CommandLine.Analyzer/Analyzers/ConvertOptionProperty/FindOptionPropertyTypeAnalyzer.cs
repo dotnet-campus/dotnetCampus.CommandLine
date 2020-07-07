@@ -15,7 +15,7 @@ namespace dotnetCampus.CommandLine.Analyzers.ConvertOptionProperty
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class FindOptionPropertyTypeAnalyzer : DiagnosticAnalyzer
     {
-        private readonly IList<string> _nonGenericTypeNames = new List<string> { "String", "string", "Boolean", "bool", "Byte", "byte", "Short", "short", "Int32", "int", "Int64", "long", "Single", "float", "Double", "double", "Decimal", "decimal", "IList", "ICollection", "IEnumerable" };
+        private readonly IList<string> _nonGenericTypeNames = new List<string> { "String", "string", "Boolean", "bool", "Byte", "byte", "Int16", "short", "UInt16", "ushort", "Int32", "int", "UInt32", "uint", "Int64", "long", "UInt64", "ulong", "Single", "float", "Double", "double", "Decimal", "decimal", "IList", "ICollection", "IEnumerable", "FileInfo", "DirectoryInfo" };
         private readonly IList<string> _oneGenericTypeNames = new List<string> { "[]", "List", "IList", "IReadOnlyList", "Collection", "ICollection", "IReadOnlyCollection", "IEnumerable" };
         private readonly IList<string> _twoGenericTypeNames = new List<string> { "Dictionary", "IDictionary", "IReadOnlyDictionary", "KeyValuePair" };
         private readonly IList<string> _genericKeyArgumentTypeNames = new List<string> { "String", "string" };

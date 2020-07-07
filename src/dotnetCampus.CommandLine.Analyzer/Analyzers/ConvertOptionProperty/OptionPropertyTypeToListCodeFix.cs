@@ -8,6 +8,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Simplification;
 
 namespace dotnetCampus.CommandLine.Analyzers.ConvertOptionProperty
 {
@@ -20,20 +21,14 @@ namespace dotnetCampus.CommandLine.Analyzers.ConvertOptionProperty
 
         protected sealed override string CodeActionTitle => Resources.ConvertOptionPropertyTypeToListFix;
 
-        protected sealed override SyntaxNode CreateTypeSyntaxNode(
+        protected sealed override CompilationUnitSyntax CreateTypeSyntaxNode(
             TypeSyntax oldTypeSyntax, CompilationUnitSyntax syntaxRoot, SemanticModel semanticModel,
             CancellationToken cancellationToken)
         {
-            //var oldUsing = syntaxRoot.Usings[1];
-            //var newUsing = oldUsing.WithName(
-            //    SyntaxFactory.QualifiedName(SyntaxFactory.QualifiedName(
-            //        SyntaxFactory.IdentifierName("System"),
-            //        SyntaxFactory.IdentifierName("Collections")),
-            //        SyntaxFactory.IdentifierName("Generic")));
-
-            //root = root.ReplaceNode(oldUsing, newUsing);
-
-            return SyntaxFactory.ParseTypeName("System.Collections.Generic.List<string>");
+            return syntaxRoot.ReplaceNode(
+                oldTypeSyntax,
+                SyntaxFactory.ParseName("global::System.Collections.Generic.IReadOnlyList<string>")
+                    .WithAdditionalAnnotations(new SyntaxAnnotation[] { Simplifier.Annotation }));
         }
     }
 }

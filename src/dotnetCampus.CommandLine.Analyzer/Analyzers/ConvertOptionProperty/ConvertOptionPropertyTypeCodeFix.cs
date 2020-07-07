@@ -52,11 +52,11 @@ namespace dotnetCampus.CommandLine.Analyzers.ConvertOptionProperty
                 return document.Project.Solution;
             }
 
-            var newRoot = root.ReplaceNode(typeSyntax, CreateTypeSyntaxNode(typeSyntax, root, semanticModel, cancellationToken));
+            var newRoot = CreateTypeSyntaxNode(typeSyntax, root, semanticModel, cancellationToken);
             return document.Project.Solution.WithDocumentSyntaxRoot(document.Id, newRoot);
         }
 
-        protected abstract SyntaxNode CreateTypeSyntaxNode(
+        protected abstract CompilationUnitSyntax CreateTypeSyntaxNode(
             TypeSyntax oldTypeSyntax, CompilationUnitSyntax syntaxRoot, SemanticModel semanticModel,
             CancellationToken cancellationToken);
     }
