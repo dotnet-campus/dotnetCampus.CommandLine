@@ -23,7 +23,8 @@ namespace dotnetCampus.Cli.Utils
                 var boolValue = values != null && bool.TryParse(values[0], out var boolParseResult)
                     ? boolParseResult
                     : (bool?)null;
-                return boolValue is true;
+                // 对于开关型的命令行选项，只要不是制定为 false，都应该是 true。要不然就不要指定。
+                return !(boolValue is false);
             }
 
             // 使用方写了个属性，assignableType 类型的，我们要将子类赋值给它。
@@ -57,6 +58,16 @@ namespace dotnetCampus.Cli.Utils
             {
                 uint.TryParse(MergeList(values), NumberStyles.Integer, CultureInfo.InvariantCulture, out var @int);
                 return @int;
+            }
+            else if (assignableType.IsAssignableFrom(typeof(long)))
+            {
+                long.TryParse(MergeList(values), NumberStyles.Integer, CultureInfo.InvariantCulture, out var @long);
+                return @long;
+            }
+            else if (assignableType.IsAssignableFrom(typeof(ulong)))
+            {
+                ulong.TryParse(MergeList(values), NumberStyles.Integer, CultureInfo.InvariantCulture, out var @ulong);
+                return @ulong;
             }
             else if (assignableType.IsAssignableFrom(typeof(float)))
             {

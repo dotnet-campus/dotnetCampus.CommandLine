@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 using dotnetCampus.Cli.Tests.Fakes;
@@ -85,6 +86,50 @@ namespace dotnetCampus.Cli.Tests
                 Assert.AreEqual(PlacementValue, options.Placement);
                 Assert.AreEqual(StartupSessionValue, options.StartupSession);
             });
+        }
+
+        [ContractTestCase]
+        public void ParseToPrimary()
+        {
+            "命令行传入数值，可以解析为数值类型。".Test((string[] args) =>
+            {
+                // Arrange & Action
+                var commandLine = CommandLine.Parse(args);
+                var options = commandLine.As<PrimaryOptions>();
+
+                // Assert
+                Assert.AreEqual((byte)1, options.Aaa);
+                Assert.AreEqual((short)2, options.Bbb);
+                Assert.AreEqual((ushort)3, options.Ccc);
+                Assert.AreEqual((int)4, options.Ddd);
+                Assert.AreEqual((uint)5, options.Eee);
+                Assert.AreEqual((long)6, options.Fff);
+                Assert.AreEqual((ulong)7, options.Ggg);
+                Assert.AreEqual((float)8, options.Hhh);
+                Assert.AreEqual((double)9, options.Iii);
+                Assert.AreEqual((decimal)10, options.Jjj);
+            }).WithArguments(
+                new[] { "-a", "1", "-b", "2", "-c", "3", "-d", "4", "-e", "5", "-f", "6", "-g", "7", "-h", "8", "-i", "9", "-j", "10" },
+                new[] { "-a", "1", "-b", "2", "-c", "3", "-d", "4", "-e", "5", "-f", "6", "-g", "7", "-h", "8.0", "-i", "9.0", "-j", "10.0" }
+                );
+        }
+
+        [ContractTestCase]
+        public void ParseToIO()
+        {
+            "命令行传入文件路径，可以解析为文件路径类型。".Test((string[] args) =>
+            {
+                // Arrange & Action
+                var commandLine = CommandLine.Parse(args);
+                var options = commandLine.As<IOOptions>();
+
+                // Assert
+                Assert.AreEqual(Path.Combine(Directory.GetCurrentDirectory(), "a.txt"), options.File.FullName);
+                Assert.AreEqual(Path.Combine(Directory.GetCurrentDirectory(), "b"), options.Directory.FullName);
+            }).WithArguments(
+                new[] { "-f", "a.txt", "-d", "b" },
+                new[] { "-f", "   a.txt   ", "-d", "   b  " }
+                );
         }
 
         [ContractTestCase]
