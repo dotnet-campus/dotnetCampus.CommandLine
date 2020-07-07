@@ -52,10 +52,9 @@ namespace dotnetCampus.Cli.Parsers
 
         public override void SetValue(char shortName, bool value)
         {
-            if (_shortNameDictionary.TryGetValue(shortName, out var property)
-                && property.PropertyType == typeof(bool))
+            if (_shortNameDictionary.TryGetValue(shortName, out var property))
             {
-                property.SetValue(_options, value);
+                SetValueCore(property, "");
             }
         }
 
@@ -118,19 +117,13 @@ namespace dotnetCampus.Cli.Parsers
             }
         }
 
-        private void SetValueCore(PropertyInfo property, string value) => SetValueCore(property, new[] { value });
+        private void SetValueCore(PropertyInfo property, string value)
+            => SetValueCore(property, string.IsNullOrEmpty(value) ? null : new[] { value });
 
         private void SetValueCore(PropertyInfo property, IReadOnlyList<string>? values)
         {
             var type = property.PropertyType;
-            if (type == typeof(bool))
-            {
-                property.SetValue(_options, values is null ? true : (bool.TryParse(values[0], out var result) && result));
-            }
-            else if (values != null)
-            {
-                property.SetValue(_options, values.ToAssignableValue(type));
-            }
+            property.SetValue(_options, values.ToAssignableValue(type));
         }
 
         public override T Commit()

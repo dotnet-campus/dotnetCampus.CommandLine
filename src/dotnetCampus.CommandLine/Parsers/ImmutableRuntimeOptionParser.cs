@@ -98,19 +98,13 @@ namespace dotnetCampus.Cli.Parsers
             SetValueCore(_indexDictionary[_longNameDictionary[longName]], values);
         }
 
-        private void SetValueCore(int index, string value) => SetValueCore(index, new[] { value });
+        private void SetValueCore(int index, string value)
+            => SetValueCore(index, string.IsNullOrEmpty(value) ? null : new[] { value });
 
         private void SetValueCore(int index, IReadOnlyList<string>? values)
         {
             var type = _propertyTypes[index];
-            if (type == typeof(bool))
-            {
-                _values[index] = values is null ? true : (bool.TryParse(values[0], out var result) && result);
-            }
-            else if (values != null)
-            {
-                _values[index] = values.ToAssignableValue(type);
-            }
+            _values[index] = values.ToAssignableValue(type);
         }
 
         public override T Commit()
