@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
@@ -71,6 +72,14 @@ namespace dotnetCampus.Cli.Utils
             {
                 decimal.TryParse(MergeList(values), NumberStyles.Float, CultureInfo.InvariantCulture, out var @decimal);
                 return @decimal;
+            }
+            else if (assignableType.IsAssignableFrom(typeof(FileInfo)))
+            {
+                return new FileInfo(MergeList(values).Trim());
+            }
+            else if (assignableType.IsAssignableFrom(typeof(DirectoryInfo)))
+            {
+                return new DirectoryInfo(MergeList(values).Trim());
             }
             else if (assignableType.IsAssignableFrom(typeof(string[])))
             {
