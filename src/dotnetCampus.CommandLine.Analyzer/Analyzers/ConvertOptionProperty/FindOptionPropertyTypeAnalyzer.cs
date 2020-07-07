@@ -15,11 +15,6 @@ namespace dotnetCampus.CommandLine.Analyzers.ConvertOptionProperty
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class FindOptionPropertyTypeAnalyzer : DiagnosticAnalyzer
     {
-        /// <summary>
-        /// Recognize these attributes.
-        /// </summary>
-        private readonly IList<string> _attributeNames = new List<string> { "Option", "OptionAttribute", "Value", "ValueAttribute" };
-
         private readonly IList<string> _nonGenericTypeNames = new List<string> { "String", "string", "Boolean", "bool", "Byte", "byte", "Short", "short", "Int32", "int", "Int64", "long", "Single", "float", "Double", "double", "Decimal", "decimal", "IList", "ICollection", "IEnumerable" };
         private readonly IList<string> _oneGenericTypeNames = new List<string> { "[]", "List", "IList", "IReadOnlyList", "Collection", "ICollection", "IReadOnlyCollection", "IEnumerable" };
         private readonly IList<string> _twoGenericTypeNames = new List<string> { "Dictionary", "IDictionary", "IReadOnlyDictionary", "KeyValuePair" };
@@ -75,6 +70,13 @@ namespace dotnetCampus.CommandLine.Analyzers.ConvertOptionProperty
         private void AnalyzeProperty(SyntaxNodeAnalysisContext context)
         {
             var propertyNode = (PropertyDeclarationSyntax)context.Node;
+            var optionTypes = context.Compilation is null
+                ? Array.Empty<INamedTypeSymbol>()
+                : new[]
+                {
+                    context.Compilation.GetTypeByMetadataName("dotnetCampus.Cli.OptionAttribute"),
+                    context.Compilation.GetTypeByMetadataName("dotnetCampus.Cli.ValueAttribute"),
+                };
 
             foreach (var attributeSyntax in propertyNode.AttributeLists.SelectMany(x => x.Attributes))
             {
@@ -85,13 +87,18 @@ namespace dotnetCampus.CommandLine.Analyzers.ConvertOptionProperty
                     _ => null,
                 };
 
-                if (attributeName != null && _attributeNames.Contains(attributeName))
+                if (attributeName != null)
                 {
-                    var isValidPropertyUsage = AnalyzeOptionPropertyType(propertyNode);
-                    var diagnostic = CreateDiagnosticForTypeSyntax(
-                        isValidPropertyUsage ? ValidRule : InvalidRule, propertyNode);
-                    context.ReportDiagnostic(diagnostic);
-                    break;
+                    var attributeType = context.SemanticModel.GetTypeInfo(attributeSyntax).Type;
+                    var isTheAttributeType = optionTypes.Any(x => SymbolEqualityComparer.Default.Equals(x, attributeType));
+                    if (isTheAttributeType)
+                    {
+                        var isValidPropertyUsage = AnalyzeOptionPropertyType(propertyNode);
+                        var diagnostic = CreateDiagnosticForTypeSyntax(
+                            isValidPropertyUsage ? ValidRule : InvalidRule, propertyNode);
+                        context.ReportDiagnostic(diagnostic);
+                        break;
+                    }
                 }
             }
         }

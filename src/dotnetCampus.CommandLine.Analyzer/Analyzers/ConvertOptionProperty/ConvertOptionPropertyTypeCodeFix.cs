@@ -38,23 +38,26 @@ namespace dotnetCampus.CommandLine.Analyzers.ConvertOptionProperty
                     CodeAction.Create(
                         title: CodeActionTitle,
                         createChangedSolution: c => ConvertPropertyTypeAsync(context.Document, typeSyntax, c),
-                        equivalenceKey: Resources.OptionLongNameMustBePascalCaseFix),
+                        equivalenceKey: GetType().FullName),
                     diagnostic);
             }
         }
 
         private async Task<Solution> ConvertPropertyTypeAsync(Document document, TypeSyntax typeSyntax, CancellationToken cancellationToken)
         {
-            var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
-            if (root is null)
+            var root = (CompilationUnitSyntax?)await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
+            var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+            if (root is null || semanticModel is null)
             {
                 return document.Project.Solution;
             }
 
-            var newRoot = root.ReplaceNode(typeSyntax, CreateTypeSyntaxNode(typeSyntax));
+            var newRoot = root.ReplaceNode(typeSyntax, CreateTypeSyntaxNode(typeSyntax, root, semanticModel, cancellationToken));
             return document.Project.Solution.WithDocumentSyntaxRoot(document.Id, newRoot);
         }
 
-        protected abstract SyntaxNode CreateTypeSyntaxNode(TypeSyntax oldTypeSyntax);
+        protected abstract SyntaxNode CreateTypeSyntaxNode(
+            TypeSyntax oldTypeSyntax, CompilationUnitSyntax syntaxRoot, SemanticModel semanticModel,
+            CancellationToken cancellationToken);
     }
 }

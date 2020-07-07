@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Composition;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 using dotnetCampus.CommandLine.Properties;
 
@@ -15,8 +11,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace dotnetCampus.CommandLine.Analyzers.ConvertOptionProperty
 {
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(NotSupportedOptionPropertyTypeToStringCodeFix)), Shared]
-    public class NotSupportedOptionPropertyTypeToStringCodeFix : ConvertOptionPropertyTypeCodeFix
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(OptionPropertyTypeToStringCodeFix)), Shared]
+    public class OptionPropertyTypeToStringCodeFix : ConvertOptionPropertyTypeCodeFix
     {
         public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(
             DiagnosticIds.SupportedOptionPropertyType,
@@ -24,7 +20,9 @@ namespace dotnetCampus.CommandLine.Analyzers.ConvertOptionProperty
 
         protected sealed override string CodeActionTitle => Resources.ConvertOptionPropertyTypeToStringFix;
 
-        protected sealed override SyntaxNode CreateTypeSyntaxNode(TypeSyntax oldTypeSyntax)
+        protected sealed override SyntaxNode CreateTypeSyntaxNode(
+            TypeSyntax oldTypeSyntax, CompilationUnitSyntax syntaxRoot, SemanticModel semanticModel,
+            CancellationToken cancellationToken)
         {
             return SyntaxFactory.PredefinedType(
                 SyntaxFactory.Token(SyntaxKind.StringKeyword));

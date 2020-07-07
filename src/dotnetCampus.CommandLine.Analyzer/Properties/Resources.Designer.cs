@@ -61,6 +61,15 @@ namespace dotnetCampus.CommandLine.Properties {
         }
         
         /// <summary>
+        ///   查找类似 Use &apos;bool&apos; type instead 的本地化字符串。
+        /// </summary>
+        internal static string ConvertOptionPropertyTypeToBooleanFix {
+            get {
+                return ResourceManager.GetString("ConvertOptionPropertyTypeToBooleanFix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Use `IReadOnlyDictionary&lt;string, string&gt;` type instead 的本地化字符串。
         /// </summary>
         internal static string ConvertOptionPropertyTypeToDictionaryFix {
