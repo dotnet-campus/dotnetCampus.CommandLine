@@ -31,7 +31,7 @@ namespace dotnetCampus.CommandLine.Analyzers
             DiagnosticIds.OptionLongNameMustBePascalCase,
             LocalizableStrings.Get(nameof(Resources.OptionLongNameMustBePascalCaseTitle)),
             LocalizableStrings.Get(nameof(Resources.OptionLongNameMustBePascalCaseMessage)),
-            "Naming",
+            "dotnetCampus.Naming",
             DiagnosticSeverity.Error,
             isEnabledByDefault: true,
             description: LocalizableStrings.Get(nameof(Resources.OptionLongNameMustBePascalCaseDescription)),
@@ -64,7 +64,6 @@ namespace dotnetCampus.CommandLine.Analyzers
         private void AnalyzeProperty(SyntaxNodeAnalysisContext context)
         {
             var propertyNode = (PropertyDeclarationSyntax)context.Node;
-            var list = propertyNode.AttributeLists.FirstOrDefault(x => x.Attributes.Any(y => y.Name.ToString() == "Option"));
 
             foreach (var attributeSyntax in propertyNode.AttributeLists.SelectMany(x => x.Attributes))
             {

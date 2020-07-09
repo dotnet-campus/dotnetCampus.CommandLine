@@ -61,6 +61,105 @@ namespace dotnetCampus.CommandLine.Properties {
         }
         
         /// <summary>
+        ///   查找类似 Use &apos;bool&apos; type instead 的本地化字符串。
+        /// </summary>
+        internal static string ConvertOptionPropertyTypeToBooleanFix {
+            get {
+                return ResourceManager.GetString("ConvertOptionPropertyTypeToBooleanFix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Use `IReadOnlyDictionary&lt;string, string&gt;` type instead 的本地化字符串。
+        /// </summary>
+        internal static string ConvertOptionPropertyTypeToDictionaryFix {
+            get {
+                return ResourceManager.GetString("ConvertOptionPropertyTypeToDictionaryFix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Use &apos;DirectoryInfo&apos; type instead 的本地化字符串。
+        /// </summary>
+        internal static string ConvertOptionPropertyTypeToDirectoryInfoFix {
+            get {
+                return ResourceManager.GetString("ConvertOptionPropertyTypeToDirectoryInfoFix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Use &apos;double&apos; type instead 的本地化字符串。
+        /// </summary>
+        internal static string ConvertOptionPropertyTypeToDoubleFix {
+            get {
+                return ResourceManager.GetString("ConvertOptionPropertyTypeToDoubleFix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Use &apos;FileInfo&apos; type instead 的本地化字符串。
+        /// </summary>
+        internal static string ConvertOptionPropertyTypeToFileInfoFix {
+            get {
+                return ResourceManager.GetString("ConvertOptionPropertyTypeToFileInfoFix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Use &apos;int&apos; type instead 的本地化字符串。
+        /// </summary>
+        internal static string ConvertOptionPropertyTypeToInt32Fix {
+            get {
+                return ResourceManager.GetString("ConvertOptionPropertyTypeToInt32Fix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Use `IReadOnlyList&lt;string&gt;` type instead 的本地化字符串。
+        /// </summary>
+        internal static string ConvertOptionPropertyTypeToListFix {
+            get {
+                return ResourceManager.GetString("ConvertOptionPropertyTypeToListFix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Use &apos;string&apos; type instead 的本地化字符串。
+        /// </summary>
+        internal static string ConvertOptionPropertyTypeToStringFix {
+            get {
+                return ResourceManager.GetString("ConvertOptionPropertyTypeToStringFix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 This property has the type &apos;{0}&apos; which is not built-in supported. It&apos;s recommended to use bool/string/IList&lt;string&gt; or other types that the code fix will suggest you change instead or add a custom converter on your Value or Option attribute. 的本地化字符串。
+        /// </summary>
+        internal static string NotSupportedOptionPropertyTypeDescription {
+            get {
+                return ResourceManager.GetString("NotSupportedOptionPropertyTypeDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 This property has the type &apos;{0}&apos; which is not built-in supported. 的本地化字符串。
+        /// </summary>
+        internal static string NotSupportedOptionPropertyTypeMessage {
+            get {
+                return ResourceManager.GetString("NotSupportedOptionPropertyTypeMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Not supported property type 的本地化字符串。
+        /// </summary>
+        internal static string NotSupportedOptionPropertyTypeTitle {
+            get {
+                return ResourceManager.GetString("NotSupportedOptionPropertyTypeTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 The command-line option definition names must be PascalCase, even though you can use any kind of style in the command line environment. 的本地化字符串。
         /// </summary>
         internal static string OptionLongNameMustBePascalCaseDescription {
@@ -93,6 +192,33 @@ namespace dotnetCampus.CommandLine.Properties {
         internal static string OptionLongNameMustBePascalCaseTitle {
             get {
                 return ResourceManager.GetString("OptionLongNameMustBePascalCaseTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 This property has a recommended option property type &apos;{0}&apos;. 的本地化字符串。
+        /// </summary>
+        internal static string SupportedOptionPropertyTypeDescription {
+            get {
+                return ResourceManager.GetString("SupportedOptionPropertyTypeDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 This property has a recommended option property type &apos;{0}&apos;. 的本地化字符串。
+        /// </summary>
+        internal static string SupportedOptionPropertyTypeMessage {
+            get {
+                return ResourceManager.GetString("SupportedOptionPropertyTypeMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Recommended option property type 的本地化字符串。
+        /// </summary>
+        internal static string SupportedOptionPropertyTypeTitle {
+            get {
+                return ResourceManager.GetString("SupportedOptionPropertyTypeTitle", resourceCulture);
             }
         }
     }
