@@ -13,7 +13,7 @@ using static dotnetCampus.Cli.Tests.Fakes.CommandLineArgs;
 namespace dotnetCampus.Cli.Tests
 {
     [TestClass]
-    public class CommandLineTests
+    public partial class CommandLineTests
     {
         [ContractTestCase]
         public void ParseAs()
