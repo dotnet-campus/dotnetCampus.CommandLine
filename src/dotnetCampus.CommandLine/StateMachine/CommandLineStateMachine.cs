@@ -26,6 +26,11 @@ namespace dotnetCampus.Cli.StateMachine
         private Action<string, SingleOptimizedStrings?>? _optionCollectedAction;
 
         /// <summary>
+        /// 状态机执行时，如果碰到了 -- 选项结束符，那么随后的所有参数都视为值。
+        /// </summary>
+        private bool _isOptionSectionEnded;
+
+        /// <summary>
         /// 状态机执行时，如果有新的选项生成，则设置到此字段中。此字段仅在状态机开始执行时才会初始化。
         /// </summary>
         private string? _currentOption;
@@ -71,16 +76,31 @@ namespace dotnetCampus.Cli.StateMachine
             // 执行状态机。
             foreach (var arg in _commandLineArgs)
             {
-                if (string.IsNullOrEmpty(arg))
+                if (_isOptionSectionEnded)
+                {
+                    // 如果已使用 -- 结束选项，则后续全视为值。
+                    AppendValue(arg);
+                }
+                else if (string.IsNullOrEmpty(arg))
                 {
                     // 如果此参数是空字符串，则将值加入。
                     AppendValue(arg);
                 }
                 else if (arg[0] == _optionPrefix)
                 {
-                    // 如果此参数是选项，则作为选项。
-                    Commit();
-                    SetOption(arg);
+                    if (_optionPrefix == '-' && arg.Length == 2 && arg[1] == _optionPrefix)
+                    {
+                        // 如果此参数已被 -- 分隔，则标记选项结束。
+                        _isOptionSectionEnded = true;
+                        Commit();
+                        SetOption(null);
+                    }
+                    else
+                    {
+                        // 如果此参数是选项，则作为选项。
+                        Commit();
+                        SetOption(arg);
+                    }
                 }
                 else
                 {
@@ -95,6 +115,7 @@ namespace dotnetCampus.Cli.StateMachine
             _currentOption = null;
             _currentValues = null;
             _optionCollectedAction = null;
+            _isOptionSectionEnded = false;
 
             // 返回结果。
             return parsedArgs;
@@ -113,8 +134,15 @@ namespace dotnetCampus.Cli.StateMachine
             }
         }
 
-        private void SetOption(string option)
+        private void SetOption(string? option)
         {
+            if (option is null)
+            {
+                _currentOption = null;
+                _currentValues = null;
+                return;
+            }
+
             var valueSplitIndex = option.IndexOf(':');
             if (valueSplitIndex < 0 || valueSplitIndex >= option.Length - 1)
             {

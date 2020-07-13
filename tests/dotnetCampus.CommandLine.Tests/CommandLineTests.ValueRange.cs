@@ -53,7 +53,7 @@ namespace dotnetCampus.Cli.Tests
                 // Assert
                 Assert.AreEqual("foo", options.Section);
                 Assert.AreEqual(8, options.Count);
-                CollectionAssert.AreEqual(new[] { "dcl.exe", "8", "--foo", "xyz", "-s", "some", "2" }, (ICollection)options.Args);
+                CollectionAssert.AreEqual(new[] { "dcl.exe", "--foo", "xyz", "-s", "some", "2" }, (ICollection)options.Args);
             }).WithArguments(
                 new[] { "-s", "foo", "--", "8", "dcl.exe", "--foo", "xyz", "-s", "some", "2" }
             );

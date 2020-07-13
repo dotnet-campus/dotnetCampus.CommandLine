@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 using dotnetCampus.Cli.Core;
@@ -10,7 +11,7 @@ namespace dotnetCampus.Cli.Parsers
     internal class RuntimeOptionParser<T> : RuntimeCommandLineOptionParser<T>
     {
         private readonly T _options;
-        private readonly Dictionary<int, PropertyInfo> _indexedValueDictionary = new Dictionary<int, PropertyInfo>();
+        private readonly SortedList<int, (int length, PropertyInfo property)> _indexedValueDictionary = new SortedList<int, (int, PropertyInfo)>();
         private readonly Dictionary<char, PropertyInfo> _shortNameDictionary = new Dictionary<char, PropertyInfo>();
         private readonly Dictionary<string, PropertyInfo> _longNameDictionary = new Dictionary<string, PropertyInfo>();
 
@@ -36,17 +37,28 @@ namespace dotnetCampus.Cli.Parsers
                 if (propertyInfo.IsDefined(typeof(ValueAttribute)))
                 {
                     var attribute = propertyInfo.GetCustomAttribute<ValueAttribute>();
-                    _indexedValueDictionary[attribute!.Index] = propertyInfo;
+                    _indexedValueDictionary[attribute!.Index] = (attribute.Length, propertyInfo);
                 }
             }
         }
 
-        public override void SetValue(int index, string value)
+        public override void SetValue(IReadOnlyList<string> values)
         {
-            if (_indexedValueDictionary.TryGetValue(index, out var property)
-                && property.PropertyType == typeof(string))
+            var indexOffset = 0;
+            foreach (var pair in _indexedValueDictionary)
             {
-                SetValueCore(property, value);
+                var index = pair.Key + indexOffset;
+                var (length, property) = pair.Value;
+                indexOffset += length - 1;
+
+                if (length == 1)
+                {
+                    SetValueCore(property, values[index]);
+                }
+                else
+                {
+                    SetValueCore(property, values.Skip(index).Take(length).ToList());
+                }
             }
         }
 
@@ -60,8 +72,7 @@ namespace dotnetCampus.Cli.Parsers
 
         public override void SetValue(char shortName, string value)
         {
-            if (_shortNameDictionary.TryGetValue(shortName, out var property)
-                && property.PropertyType == typeof(string))
+            if (_shortNameDictionary.TryGetValue(shortName, out var property))
             {
                 SetValueCore(property, value);
             }
@@ -86,8 +97,7 @@ namespace dotnetCampus.Cli.Parsers
 
         public override void SetValue(string longName, string value)
         {
-            if (_longNameDictionary.TryGetValue(longName, out var property)
-                && property.PropertyType == typeof(string))
+            if (_longNameDictionary.TryGetValue(longName, out var property))
             {
                 SetValueCore(property, value);
             }

@@ -143,11 +143,14 @@ namespace dotnetCampus.Cli
 
         string? ICommandLineOptionParser<T>.Verb => Verb;
 
-        void ICommandLineOptionParser<T>.SetValue(int index, string value)
+        void ICommandLineOptionParser<T>.SetValue(IReadOnlyList<string> values)
         {
-            if (_indexString.TryGetValue(index, out var action))
+            for (var i = 0; i < values.Count; i++)
             {
-                action(value);
+                if (_indexString.TryGetValue(i, out var action))
+                {
+                    action(values[i]);
+                }
             }
         }
 

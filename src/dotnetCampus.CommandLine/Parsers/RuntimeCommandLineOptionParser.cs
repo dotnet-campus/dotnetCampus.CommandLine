@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
 
 using dotnetCampus.Cli.Core;
 
@@ -16,7 +15,7 @@ namespace dotnetCampus.Cli.Parsers
         }
 
         public string? Verb { get; }
-        public abstract void SetValue(int index, string value);
+        public abstract void SetValue(IReadOnlyList<string> values);
         public abstract void SetValue(char shortName, bool value);
         public abstract void SetValue(char shortName, string value);
         public abstract void SetValue(char shortName, IReadOnlyList<string> values);

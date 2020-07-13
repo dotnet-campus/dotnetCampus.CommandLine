@@ -14,14 +14,9 @@ namespace dotnetCampus.Cli.Tests.Fakes
 
         public string Verb => null;
 
-        public void SetValue(int index, string value)
+        public void SetValue(IReadOnlyList<string> values)
         {
-            switch (index)
-            {
-                case 0:
-                    _filePath = value;
-                    break;
-            }
+            _filePath = values[0];
         }
 
         public void SetValue(char shortName, bool value)
