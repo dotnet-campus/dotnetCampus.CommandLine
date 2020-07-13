@@ -16,16 +16,4 @@ namespace dotnetCampus.Cli.Tests.Fakes
         [Value(2)]
         public int Int32Value { get; set; }
     }
-
-    public class UnlimitedValueOptions
-    {
-        [Option('s', nameof(Section))]
-        public string Section { get; set; }
-
-        [Value(0)]
-        public int Count { get; set; }
-
-        [Value(1, int.MaxValue)]
-        public IEnumerable<string> Args { get; set; }
-    }
 }
