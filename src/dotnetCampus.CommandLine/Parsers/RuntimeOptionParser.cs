@@ -11,7 +11,7 @@ namespace dotnetCampus.Cli.Parsers
     internal class RuntimeOptionParser<T> : RuntimeCommandLineOptionParser<T>
     {
         private readonly T _options;
-        private readonly SortedList<int, (int length, PropertyInfo property)> _indexedValueDictionary = new SortedList<int, (int, PropertyInfo)>();
+        private readonly SortedList<int, ValueTupleSlim<int, PropertyInfo>> _indexedValueDictionary = new SortedList<int, ValueTupleSlim<int, PropertyInfo>>();
         private readonly Dictionary<char, PropertyInfo> _shortNameDictionary = new Dictionary<char, PropertyInfo>();
         private readonly Dictionary<string, PropertyInfo> _longNameDictionary = new Dictionary<string, PropertyInfo>();
 
@@ -37,7 +37,7 @@ namespace dotnetCampus.Cli.Parsers
                 if (propertyInfo.IsDefined(typeof(ValueAttribute)))
                 {
                     var attribute = propertyInfo.GetCustomAttribute<ValueAttribute>();
-                    _indexedValueDictionary[attribute!.Index] = (attribute.Length, propertyInfo);
+                    _indexedValueDictionary[attribute!.Index] = new ValueTupleSlim<int, PropertyInfo>(attribute.Length, propertyInfo);
                 }
             }
         }

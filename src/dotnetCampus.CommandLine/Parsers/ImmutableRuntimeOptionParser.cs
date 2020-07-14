@@ -14,7 +14,7 @@ namespace dotnetCampus.Cli.Parsers
         private readonly Type[] _propertyTypes;
         private readonly object[] _values;
         private readonly Dictionary<PropertyInfo, int> _indexDictionary = new Dictionary<PropertyInfo, int>();
-        private readonly Dictionary<int, (int length, PropertyInfo property)> _indexedValueDictionary = new Dictionary<int, (int, PropertyInfo)>();
+        private readonly Dictionary<int, ValueTupleSlim<int, PropertyInfo>> _indexedValueDictionary = new Dictionary<int, ValueTupleSlim<int, PropertyInfo>>();
         private readonly Dictionary<char, PropertyInfo> _shortNameDictionary = new Dictionary<char, PropertyInfo>();
         private readonly Dictionary<string, PropertyInfo> _longNameDictionary = new Dictionary<string, PropertyInfo>();
 
@@ -48,7 +48,7 @@ namespace dotnetCampus.Cli.Parsers
                 if (propertyInfo.IsDefined(typeof(ValueAttribute)))
                 {
                     var attribute = propertyInfo.GetCustomAttribute<ValueAttribute>();
-                    _indexedValueDictionary[attribute!.Index] = (attribute.Length, propertyInfo);
+                    _indexedValueDictionary[attribute!.Index] = new ValueTupleSlim<int, PropertyInfo>(attribute.Length, propertyInfo);
                 }
             }
         }
@@ -62,7 +62,8 @@ namespace dotnetCampus.Cli.Parsers
                 var (length, property) = pair.Value;
                 indexOffset += length;
 
-                var storeIndex = _indexDictionary[_indexedValueDictionary[index].property];
+                var (_, propertyAsKey) = _indexedValueDictionary[index];
+                var storeIndex = _indexDictionary[propertyAsKey];
                 if (length == 1)
                 {
                     SetValueCore(storeIndex, values[index]);
