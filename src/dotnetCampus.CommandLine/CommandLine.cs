@@ -74,10 +74,16 @@ namespace dotnetCampus.Cli
                 {
                     // 没有选项，只有值。
                     // 包括此 if 分支之外的任何情况下，值都需要保持传入时的大小写。
-                    var verbOffset = parser.Verb is null ? 0 : 1;
-                    for (var i = verbOffset; i < valueCount; i++)
+                    if (valueCount > 0)
                     {
-                        parser.SetValue(i - verbOffset, values![i]);
+                        if (parser.Verb is null)
+                        {
+                            parser.SetValue(values!);
+                        }
+                        else
+                        {
+                            parser.SetValue(values!.Skip(1).ToList());
+                        }
                     }
                 }
                 else if (option.Length == 1)

@@ -14,7 +14,7 @@ namespace dotnetCampus.Cli.Parsers
         private readonly Type[] _propertyTypes;
         private readonly object[] _values;
         private readonly Dictionary<PropertyInfo, int> _indexDictionary = new Dictionary<PropertyInfo, int>();
-        private readonly Dictionary<int, PropertyInfo> _indexedValueDictionary = new Dictionary<int, PropertyInfo>();
+        private readonly Dictionary<int, (int length, PropertyInfo property)> _indexedValueDictionary = new Dictionary<int, (int, PropertyInfo)>();
         private readonly Dictionary<char, PropertyInfo> _shortNameDictionary = new Dictionary<char, PropertyInfo>();
         private readonly Dictionary<string, PropertyInfo> _longNameDictionary = new Dictionary<string, PropertyInfo>();
 
@@ -48,14 +48,30 @@ namespace dotnetCampus.Cli.Parsers
                 if (propertyInfo.IsDefined(typeof(ValueAttribute)))
                 {
                     var attribute = propertyInfo.GetCustomAttribute<ValueAttribute>();
-                    _indexedValueDictionary[attribute!.Index] = propertyInfo;
+                    _indexedValueDictionary[attribute!.Index] = (attribute.Length, propertyInfo);
                 }
             }
         }
 
-        public override void SetValue(int index, string value)
+        public override void SetValue(IReadOnlyList<string> values)
         {
-            SetValueCore(_indexDictionary[_indexedValueDictionary[index]], value);
+            var indexOffset = 0;
+            foreach (var pair in _indexedValueDictionary)
+            {
+                var index = pair.Key + indexOffset;
+                var (length, property) = pair.Value;
+                indexOffset += length;
+
+                var storeIndex = _indexDictionary[_indexedValueDictionary[index].property];
+                if (length == 1)
+                {
+                    SetValueCore(storeIndex, values[index]);
+                }
+                else
+                {
+                    SetValueCore(storeIndex, values.Skip(index).Take(length).ToList());
+                }
+            }
         }
 
         public override void SetValue(char shortName, bool value)

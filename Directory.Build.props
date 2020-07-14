@@ -8,6 +8,6 @@
     <PackageProjectUrl>https://github.com/dotnet-campus/dotnetCampus.CommandLine</PackageProjectUrl>
     <RepositoryUrl>https://github.com/dotnet-campus/dotnetCampus.CommandLine.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>2.2.0</Version>
+    <Version>3.0.0</Version>
   </PropertyGroup>
 </Project>

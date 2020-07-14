@@ -13,10 +13,11 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="3.0.0" PrivateAssets="all" />
-    <PackageReference Include="dotnetCampus.SourceYard" Version="0.1.19031-alpha" PrivateAssets="all" />
+    <PackageReference Include="dotnetCampus.SourceYard" Version="0.1.19099-alpha" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <Reference Include="System.Web" />
   </ItemGroup>
 

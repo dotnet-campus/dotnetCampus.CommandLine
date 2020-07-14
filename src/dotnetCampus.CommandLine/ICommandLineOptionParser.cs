@@ -15,11 +15,10 @@ namespace dotnetCampus.Cli
         string? Verb { get; }
 
         /// <summary>
-        /// 将一个无参数的指定索引处的值填充到命令行参数类型 <typeparamref name="T"/> 的实例中。
+        /// 将一个无参数的所有值填充到命令行参数类型 <typeparamref name="T"/> 的实例中。
         /// </summary>
-        /// <param name="index">值索引。</param>
-        /// <param name="value">值，保持传入的大小写。</param>
-        void SetValue(int index, string value);
+        /// <param name="values">值集合，保持传入的大小写。</param>
+        void SetValue(IReadOnlyList<string> values);
 
         /// <summary>
         /// 将短名称的布尔值填充到命令行参数类型 <typeparamref name="T"/> 的实例中。
