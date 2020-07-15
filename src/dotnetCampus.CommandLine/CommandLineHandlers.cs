@@ -24,17 +24,16 @@ namespace dotnetCampus.Cli
             this ICommandLineHandlerBuilder builder,
             Action<TVerb> handler, ICommandLineOptionParser<TVerb>? parser = null)
         {
-            if (builder is ICoreCommandLineHandlerBuilder coreBuilder)
+            if (builder is CommandLine commandLine)
+            {
+                return new CommandLineHandlerBuilder(commandLine).AddHandler(handler, parser);
+            }
+            else if (builder is ICoreCommandLineHandlerBuilder coreBuilder)
             {
                 if (builder is CommandLineHandlerBuilder commandLineBuilder)
                 {
                     coreBuilder.AddMatch(verb => MatchAndHandle(coreBuilder.CommandLine, verb, options => Invoke(handler, options), parser));
                     return commandLineBuilder;
-                }
-
-                if (builder is CommandLine commandLine)
-                {
-                    return new CommandLineHandlerBuilder(commandLine).AddHandler(handler, parser);
                 }
             }
 
@@ -54,17 +53,16 @@ namespace dotnetCampus.Cli
             this ICommandLineHandlerBuilder builder,
             Func<TVerb, int> handler, ICommandLineOptionParser<TVerb>? parser = null)
         {
-            if (builder is ICoreCommandLineHandlerBuilder coreBuilder)
+            if (builder is CommandLine commandLine)
+            {
+                return new CommandLineHandlerBuilder(commandLine).AddHandler(handler, parser);
+            }
+            else if (builder is ICoreCommandLineHandlerBuilder coreBuilder)
             {
                 if (builder is CommandLineHandlerBuilder commandLineBuilder)
                 {
                     coreBuilder.AddMatch(verb => MatchAndHandle(coreBuilder.CommandLine, verb, options => Invoke(handler, options), parser));
                     return commandLineBuilder;
-                }
-
-                if (builder is CommandLine commandLine)
-                {
-                    return new CommandLineHandlerBuilder(commandLine).AddHandler(handler, parser);
                 }
             }
 
@@ -84,17 +82,16 @@ namespace dotnetCampus.Cli
             this ICommandLineHandlerBuilder builder,
             Func<TVerb, Task> handler, ICommandLineOptionParser<TVerb>? parser = null)
         {
-            if (builder is ICoreCommandLineHandlerBuilder coreBuilder)
+            if (builder is CommandLine commandLine)
+            {
+                return new CommandLineAsyncHandlerBuilder(commandLine).AddHandler(handler, parser);
+            }
+            else if (builder is ICoreCommandLineHandlerBuilder coreBuilder)
             {
                 if (builder is CommandLineHandlerBuilder commandLineBuilder)
                 {
                     var asyncCommandLineBuilder = new CommandLineAsyncHandlerBuilder(coreBuilder.CommandLine, coreBuilder.MatchList);
                     return asyncCommandLineBuilder.AddHandler(handler, parser);
-                }
-
-                if (builder is CommandLine commandLine)
-                {
-                    return new CommandLineAsyncHandlerBuilder(commandLine).AddHandler(handler, parser);
                 }
             }
 
@@ -114,17 +111,16 @@ namespace dotnetCampus.Cli
             this ICommandLineHandlerBuilder builder,
             Func<TVerb, Task<int>> handler, ICommandLineOptionParser<TVerb>? parser = null)
         {
-            if (builder is ICoreCommandLineHandlerBuilder coreBuilder)
+            if (builder is CommandLine commandLine)
+            {
+                return new CommandLineAsyncHandlerBuilder(commandLine).AddHandler(handler, parser);
+            }
+            else if (builder is ICoreCommandLineHandlerBuilder coreBuilder)
             {
                 if (builder is CommandLineHandlerBuilder commandLineBuilder)
                 {
                     var asyncCommandLineBuilder = new CommandLineAsyncHandlerBuilder(coreBuilder.CommandLine, coreBuilder.MatchList);
                     return asyncCommandLineBuilder.AddHandler(handler, parser);
-                }
-
-                if (builder is CommandLine commandLine)
-                {
-                    return new CommandLineAsyncHandlerBuilder(commandLine).AddHandler(handler, parser);
                 }
             }
 
