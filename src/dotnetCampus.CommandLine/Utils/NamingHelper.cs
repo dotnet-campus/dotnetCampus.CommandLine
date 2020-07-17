@@ -113,7 +113,7 @@ namespace dotnetCampus.Cli.Utils
             {
                 if (!char.IsLetterOrDigit(c))
                 {
-                    // Append nothing because PascalCase has no special characters.
+                    // Append nothing because kebab-case has no special characters.
                     isWordStart = true;
                     continue;
                 }
@@ -122,7 +122,7 @@ namespace dotnetCampus.Cli.Utils
                 {
                     if (char.IsDigit(c))
                     {
-                        // PascalCase does not support digital as the first letter.
+                        // kebab-case does not support digital as the first letter.
                         isWordStart = true;
                         continue;
                     }
@@ -143,7 +143,7 @@ namespace dotnetCampus.Cli.Utils
                 {
                     if (char.IsDigit(c))
                     {
-                        // PascalCase does not support digital as the first letter.
+                        // kebab-case does not support digital as the first letter.
                         isWordStart = true;
                         builder.Append(c);
                     }
