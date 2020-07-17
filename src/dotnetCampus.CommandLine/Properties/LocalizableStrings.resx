@@ -129,4 +129,7 @@
   <data name="UsageHeader" xml:space="preserve">
     <value>Usage: </value>
   </data>
+  <data name="VersionOptionDescription" xml:space="preserve">
+    <value>Display version.</value>
+  </data>
 </root>

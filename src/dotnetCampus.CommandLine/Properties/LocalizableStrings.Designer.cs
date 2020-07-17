@@ -95,5 +95,14 @@ namespace dotnetCampus.Cli.Properties {
                 return ResourceManager.GetString("UsageHeader", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   查找类似 Display version. 的本地化字符串。
+        /// </summary>
+        internal static string VersionOptionDescription {
+            get {
+                return ResourceManager.GetString("VersionOptionDescription", resourceCulture);
+            }
+        }
     }
 }

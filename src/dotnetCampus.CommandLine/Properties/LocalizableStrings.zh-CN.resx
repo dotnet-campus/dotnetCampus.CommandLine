@@ -129,4 +129,7 @@
   <data name="UsageHeader" xml:space="preserve">
     <value>使用：</value>
   </data>
+  <data name="VersionOptionDescription" xml:space="preserve">
+    <value>显示版本。</value>
+  </data>
 </root>

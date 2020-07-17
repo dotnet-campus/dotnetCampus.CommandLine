@@ -102,5 +102,73 @@ namespace dotnetCampus.Cli.Utils
 
             return builder.ToString();
         }
+
+        internal static string MakeKebabCase(string oldName)
+        {
+            var builder = new StringBuilder();
+
+            var isFirstLetter = true;
+            var isWordStart = true;
+            foreach (char c in oldName)
+            {
+                if (!char.IsLetterOrDigit(c))
+                {
+                    // Append nothing because PascalCase has no special characters.
+                    isWordStart = true;
+                    continue;
+                }
+
+                if (isFirstLetter)
+                {
+                    if (char.IsDigit(c))
+                    {
+                        // PascalCase does not support digital as the first letter.
+                        isWordStart = true;
+                        continue;
+                    }
+                    else if (char.IsUpper(c))
+                    {
+                        isFirstLetter = false;
+                        isWordStart = false;
+                        builder.Append(char.ToLowerInvariant(c));
+                    }
+                    else
+                    {
+                        isFirstLetter = false;
+                        isWordStart = false;
+                        builder.Append(c);
+                    }
+                }
+                else
+                {
+                    if (char.IsDigit(c))
+                    {
+                        // PascalCase does not support digital as the first letter.
+                        isWordStart = true;
+                        builder.Append(c);
+                    }
+                    else if (char.IsUpper(c))
+                    {
+                        if (isWordStart)
+                        {
+                            builder.Append('-');
+                        }
+                        builder.Append(char.ToLowerInvariant(c));
+                        isWordStart = false;
+                    }
+                    else
+                    {
+                        if (isWordStart)
+                        {
+                            builder.Append('-');
+                        }
+                        builder.Append(c);
+                        isWordStart = false;
+                    }
+                }
+            }
+
+            return builder.ToString();
+        }
     }
 }

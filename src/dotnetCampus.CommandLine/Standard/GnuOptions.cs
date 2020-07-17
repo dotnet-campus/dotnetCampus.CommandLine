@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 using dotnetCampus.Cli.Properties;
 using dotnetCampus.Cli.StateMachine;
+using dotnetCampus.Cli.Utils;
 
 namespace dotnetCampus.Cli.Standard
 {
@@ -15,10 +16,10 @@ namespace dotnetCampus.Cli.Standard
     {
         private readonly ResourceManager? _resourceManager;
 
-        [Option(nameof(Version))]
+        [Option(nameof(Version), LocalizableDescription = nameof(LocalizableStrings.VersionOptionDescription))]
         public bool Version { get; private set; }
 
-        [Option('h', nameof(Help))]
+        [Option('h', nameof(Help), LocalizableDescription = nameof(LocalizableStrings.HelpOptionDescription))]
         public bool Help { get; private set; }
 
         internal GnuOptions(CommandLine? commandLine)
@@ -50,35 +51,61 @@ namespace dotnetCampus.Cli.Standard
 
         private void PrintHelpText(IReadOnlyList<CommandLineVerbMatch<Task<int>>> matches)
         {
-            var helpOptionText = "-h|--help";
-            var maxOptionTextLength = helpOptionText.Length;
-            var verbs = matches.Select(x => x.VerbType.GetCustomAttribute<VerbAttribute>()).OfType<VerbAttribute>().ToList();
-            var maxVerbTextLength = verbs.Count == 0 ? 0 : verbs.Max(x => x.VerbName.Length);
+            var selfAssembly = typeof(GnuOptions).Assembly;
+            var verbInfoList = matches
+                .Select(x => x.VerbType.GetCustomAttribute<VerbAttribute>())
+                .OfType<VerbAttribute>()
+                .Select(x => new { Name = x.VerbName, Description = GetLocalizedDescription(x, _resourceManager) })
+                .ToList();
+            var mergedOptionInfoList = matches
+                .Where(x => !x.VerbType.IsDefined(typeof(VerbAttribute)))
+                .SelectMany(x => x.VerbType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                    .Where(x => x.IsDefined(typeof(OptionAttribute)))
+                    .Select(x => new { Type = x.DeclaringType, Property = x, Attribute = x.GetCustomAttribute<OptionAttribute>() })
+                    .Select(x => new { x.Attribute!.ShortName, LongName = x.Attribute.LongName ?? x.Property.Name, x.Attribute, x.Type })
+                    .Select(x => new
+                    {
+                        Name = x.ShortName is null ? $"--{NamingHelper.MakeKebabCase(x.LongName)}" : $"-{x.ShortName}|--{NamingHelper.MakeKebabCase(x.LongName)}",
+                        Description = GetLocalizedDescription(x.Attribute, x.Type!.Assembly == selfAssembly ? LocalizableStrings.ResourceManager : _resourceManager)
+                    })
+                ).ToList();
+
+            var maxVerbTextLength = verbInfoList.Count == 0 ? 0 : verbInfoList.Max(x => x.Name.Length);
+            var maxOptionTextLength = mergedOptionInfoList.Count == 0 ? 0 : mergedOptionInfoList.Max(x => x.Name.Length);
             var columnLength = Math.Max(maxOptionTextLength, maxVerbTextLength);
+            columnLength = Math.Max(12, columnLength);
 
             Console.Write(LocalizableStrings.UsageHeader);
             Console.WriteLine("[options]");
+
             Console.WriteLine();
 
-            Console.WriteLine(LocalizableStrings.OptionsHeader);
-            Console.Write(GetColumnString(helpOptionText, columnLength));
-            Console.WriteLine(LocalizableStrings.HelpOptionDescription);
+            if (mergedOptionInfoList.Count > 0)
+            {
+                Console.WriteLine(LocalizableStrings.OptionsHeader);
+            }
+            foreach (var x in mergedOptionInfoList)
+            {
+                Console.Write(GetColumnString(x.Name, columnLength));
+                Console.WriteLine(x.Description);
+            }
+
             Console.WriteLine();
 
-            if (verbs.Count > 0)
+            if (verbInfoList.Count > 0)
             {
                 Console.WriteLine(LocalizableStrings.CommandHeader);
             }
-            foreach (var verbAttribute in verbs)
+            foreach (var x in verbInfoList)
             {
-                Console.Write(GetColumnString(verbAttribute.VerbName, columnLength));
-                Console.WriteLine(GetLocalizedDescription(verbAttribute));
+                Console.Write(GetColumnString(x.Name, columnLength));
+                Console.WriteLine(x.Description);
             }
         }
 
-        private static void PrintDetailHelpText(IReadOnlyList<CommandLineVerbMatch<Task<int>>> matches)
+        private void PrintDetailHelpText(IReadOnlyList<CommandLineVerbMatch<Task<int>>> matches)
         {
-            Console.WriteLine("详细用法（占位符）");
+            PrintHelpText(matches);
         }
 
         private static void PrintVersionText()
@@ -96,12 +123,12 @@ namespace dotnetCampus.Cli.Standard
             }
         }
 
-        private string GetColumnString(string originalString, int columnLength)
+        private static string GetColumnString(string originalString, int columnLength)
             => $"  {originalString.PadRight(columnLength, ' ')}  ";
 
-        private string GetLocalizedDescription(CommandLineAttribute attribute)
-            => _resourceManager != null && !string.IsNullOrWhiteSpace(attribute.LocalizableDescription)
-                ? _resourceManager.GetString(attribute.LocalizableDescription, CultureInfo.CurrentUICulture) ?? ""
+        private static string GetLocalizedDescription(CommandLineAttribute attribute, ResourceManager? resourceManager)
+            => resourceManager != null && !string.IsNullOrWhiteSpace(attribute.LocalizableDescription)
+                ? resourceManager.GetString(attribute.LocalizableDescription, CultureInfo.CurrentUICulture) ?? ""
                 : attribute.Description ?? "";
     }
 }
