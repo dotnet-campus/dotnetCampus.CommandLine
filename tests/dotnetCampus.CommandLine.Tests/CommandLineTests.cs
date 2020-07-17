@@ -271,9 +271,10 @@ namespace dotnetCampus.Cli.Tests
                 var commandLine = CommandLine.Parse(args);
 
                 // Action
-                var exitCode = commandLine.Handle<EditOptions, PrintOptions>(
-                    options => 0,
-                    options => 1);
+                var exitCode = commandLine
+                    .AddHandler<EditOptions>(options => 0)
+                    .AddHandler<PrintOptions>(options => 1)
+                    .Run();
 
                 // Assert
                 Assert.AreEqual(expectedExitCode, exitCode);
@@ -289,11 +290,12 @@ namespace dotnetCampus.Cli.Tests
                 var commandLine = CommandLine.Parse(args);
 
                 // Action
-                string filePath = null;
-                commandLine.Handle<EditOptions, PrintOptions, ShareOptions>(
-                    options => filePath = options.FilePath,
-                    options => filePath = options.FilePath,
-                    options => { });
+                string? filePath = null;
+                commandLine
+                    .AddHandler<EditOptions>(options => filePath = options.FilePath)
+                    .AddHandler<PrintOptions>(options => filePath = options.FilePath)
+                    .AddHandler<ShareOptions>(options => { })
+                    .Run();
 
                 // Assert
                 Assert.AreEqual(expectedFilePath, filePath);
@@ -308,10 +310,11 @@ namespace dotnetCampus.Cli.Tests
                 var commandLine = CommandLine.Parse(args);
 
                 // Action
-                string filePath = null;
-                commandLine.Handle<Options, PrintOptions>(
-                    options => filePath = options.FilePath,
-                    options => filePath = options.FilePath);
+                string? filePath = null;
+                commandLine
+                    .AddHandler<Options>(options => filePath = options.FilePath)
+                    .AddHandler<PrintOptions>(options => filePath = options.FilePath)
+                    .Run();
 
                 // Assert
                 Assert.AreEqual(expectedFilePath, filePath);
@@ -332,17 +335,18 @@ namespace dotnetCampus.Cli.Tests
                 var commandLine = CommandLine.Parse(args);
 
                 // Action
-                var exitCode = await commandLine.HandleAsync<EditOptions, PrintOptions>(
-                    async options =>
+                var exitCode = await commandLine
+                    .AddHandler<EditOptions>(async options =>
                     {
                         await Task.Delay(10).ConfigureAwait(false);
                         return 1;
-                    },
-                    async options =>
+                    })
+                    .AddHandler<PrintOptions>(async options =>
                     {
                         await Task.Delay(10).ConfigureAwait(false);
                         return 2;
-                    });
+                    })
+                    .RunAsync().ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(expectedExitCode, exitCode);
@@ -359,20 +363,23 @@ namespace dotnetCampus.Cli.Tests
 
                 // Action
                 string filePath = null;
-                await commandLine.HandleAsync<EditOptions, PrintOptions, ShareOptions>(
-                    async options =>
+                await commandLine
+                    .AddHandler<EditOptions>(async options =>
                     {
                         await Task.Delay(10).ConfigureAwait(false);
                         filePath = options.FilePath;
-                    },
-                    async options =>
+                    })
+                    .AddHandler<PrintOptions>(async options =>
                     {
                         await Task.Delay(10).ConfigureAwait(false);
                         filePath = options.FilePath;
-                    },
+                    })
+                    .AddHandler<ShareOptions>(
 #pragma warning disable 1998
-                    async options => { });
+                    async options => { }
 #pragma warning restore 1998
+                    )
+                    .RunAsync().ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(expectedFilePath, filePath);
@@ -387,18 +394,19 @@ namespace dotnetCampus.Cli.Tests
                 var commandLine = CommandLine.Parse(args);
 
                 // Action
-                string filePath = null;
-                await commandLine.HandleAsync<Options, PrintOptions>(
-                    async options =>
+                string? filePath = null;
+                await commandLine
+                    .AddHandler<Options>(async options =>
                     {
                         await Task.Delay(10).ConfigureAwait(false);
                         filePath = options.FilePath;
-                    },
-                    async options =>
+                    })
+                    .AddHandler<PrintOptions>(async options =>
                     {
                         await Task.Delay(10).ConfigureAwait(false);
                         filePath = options.FilePath;
-                    });
+                    })
+                    .RunAsync().ConfigureAwait(false);
 
                 // Assert
                 Assert.AreEqual(expectedFilePath, filePath);
@@ -407,20 +415,5 @@ namespace dotnetCampus.Cli.Tests
                 new[] { expectedFilePath },
                 new[] { "Print", expectedFilePath });
         }
-
-        //[ContractTestCase]
-        //public void AddHandlerAndRun()
-        //{
-        //    "添加一组参数处理器，然后执行最匹配的处理器。".Test(async (string[] args) =>
-        //    {
-        //        var commandLine = CommandLine.Parse(args);
-
-        //        commandLine
-        //            .AddGnuStandardHandlers()
-        //            .AddHandler<Options>(o => { return Task.FromResult(0); })
-        //            .AddArgumentsVerifier()
-        //            .Run();
-        //    });
-        //}
     }
 }
