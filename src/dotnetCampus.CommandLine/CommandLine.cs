@@ -191,7 +191,7 @@ namespace dotnetCampus.Cli
         /// 解析命令行参数，并返回解析后的 <see cref="CommandLine"/> 类型的新实例。
         /// 注意，暂不支持带有可执行程序路径的命令行参数，可查阅以下文章了解更多：
         /// <para>.NET 命令行参数包含应用程序路径吗？</para>
-        /// <para>https://walterlv.com/post/when-will-the-command-line-args-contain-the-executable-path.html</para>
+        /// <para>https://blog.walterlv.com/post/when-will-the-command-line-args-contain-the-executable-path.html</para>
         /// </summary>
         /// <param name="args">命令行参数。</param>
         /// <param name="protocolName">
