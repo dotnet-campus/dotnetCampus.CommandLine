@@ -39,7 +39,11 @@ namespace dotnetCampus.Cli.Parsers
                         _shortNameDictionary[attribute.ShortName.Value] = propertyInfo;
                     }
 
-                    if (!string.IsNullOrWhiteSpace(attribute.LongName))
+                    if (string.IsNullOrWhiteSpace(attribute.LongName))
+                    {
+                        _longNameDictionary[propertyInfo.Name] = propertyInfo;
+                    }
+                    else
                     {
                         _longNameDictionary[attribute.LongName] = propertyInfo;
                     }
