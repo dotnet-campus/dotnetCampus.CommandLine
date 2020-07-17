@@ -10,6 +10,10 @@
     "--version": {
       "commandName": "Project",
       "commandLineArgs": "--version"
+    },
+    "sample": {
+      "commandName": "Project",
+      "commandLineArgs": "sample --sample-property \"Hello World\""
     }
   }
 }
