@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics.Contracts;
+﻿using System.Diagnostics.Contracts;
 
 namespace dotnetCampus.Cli.Standard
 {
@@ -9,12 +8,12 @@ namespace dotnetCampus.Cli.Standard
     public static class GnuExtensions
     {
         /// <summary>
-        /// 添加支持 GNU 标准的命令行通用参数。
+        /// 添加支持 GNU 标准的命令行通用参数。这将在无参数，带 --help 参数和带 --version 参数时得到通用的响应。
         /// </summary>
         /// <param name="commandLine">构造器模式。</param>
         /// <returns>构造器模式。</returns>
         [Pure]
-        public static CommandLineHandlerBuilder AddGnuStandardHandlers(
+        public static CommandLineHandlerBuilder AddStandardHandlers(
             this ICommandLineHandlerBuilder commandLine)
         {
             var matches = (commandLine as ICoreCommandLineHandlerBuilder)?.Matches;
@@ -22,12 +21,12 @@ namespace dotnetCampus.Cli.Standard
         }
 
         /// <summary>
-        /// 添加支持 GNU 标准的命令行通用参数。
+        /// 添加支持 GNU 标准的命令行通用参数。这将在无参数，带 --help 参数和带 --version 参数时得到通用的响应。
         /// </summary>
         /// <param name="commandLine">构造器模式。</param>
         /// <returns>构造器模式。</returns>
         [Pure]
-        public static CommandLineAsyncHandlerBuilder AddGnuStandardHandlers(
+        public static CommandLineAsyncHandlerBuilder AddStandardHandlers(
             this ICommandLineAsyncHandlerBuilder commandLine)
         {
             var matches = (commandLine as ICoreCommandLineAsyncHandlerBuilder)?.Matches;

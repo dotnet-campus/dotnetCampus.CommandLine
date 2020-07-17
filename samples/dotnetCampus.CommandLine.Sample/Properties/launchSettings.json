@@ -1,5 +1,8 @@
 {
   "profiles": {
+    "Debug": {
+      "commandName": "Project"
+    },
     "--help": {
       "commandName": "Project",
       "commandLineArgs": "--help"

@@ -8,7 +8,7 @@ namespace dotnetCampus.Cli
         static void Main(string[] args)
         {
             CommandLine.Parse(args, LocalizableStrings.ResourceManager)
-                .AddGnuStandardHandlers()
+                .AddStandardHandlers()
                 .AddHandler<SampleOptions>(o => o.Run())
                 .Run();
         }

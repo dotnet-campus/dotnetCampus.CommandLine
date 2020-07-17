@@ -7,8 +7,10 @@ using dotnetCampus.Cli.StateMachine;
 
 namespace dotnetCampus.Cli.Standard
 {
-    public class GnuOptions : CommandLineOptionParser<GnuOptions>
+    internal class GnuOptions : CommandLineOptionParser<GnuOptions>
     {
+        private readonly List<CommandLineVerbMatch<Task<int>>>? _matches;
+
         [Option(nameof(Version))]
         public bool Version { get; private set; }
 
@@ -17,6 +19,8 @@ namespace dotnetCampus.Cli.Standard
 
         internal GnuOptions(List<CommandLineVerbMatch<Task<int>>>? matches)
         {
+            _matches = matches;
+
             AddMatch(nameof(Version), v => Version = v);
             AddMatch(nameof(Help), v => Help = v);
             SetResult(() => this);
@@ -26,17 +30,26 @@ namespace dotnetCampus.Cli.Standard
         {
             if (Help)
             {
-                PrintHelpText();
+                PrintDetailHelpText();
             }
             else if (Version)
             {
                 PrintVersionText();
             }
+            else
+            {
+                PrintHelpText();
+            }
         }
 
         private void PrintHelpText()
         {
+            Console.WriteLine("用法（占位符）");
+        }
 
+        private void PrintDetailHelpText()
+        {
+            Console.WriteLine("详细用法（占位符）");
         }
 
         private static void PrintVersionText()
