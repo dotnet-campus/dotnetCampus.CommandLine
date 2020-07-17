@@ -5,7 +5,7 @@
     <WarningsAsErrors>$(WarningsAsErrors);CS8600;CS8601;CS8602;CS8603;CS8604;CS8609;CS8610;CS8614;CS8616;CS8618;CS8619;CS8622;CS8625</WarningsAsErrors>
     <RootNamespace>dotnetCampus.Cli</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
     <Description>dotnetCampus.CommandLine is probably the fastest command line parser in all .NET open-source projects. Parsing a classical command line only takes 1091ns, thus 10 ticks.</Description>
   </PropertyGroup>
 
