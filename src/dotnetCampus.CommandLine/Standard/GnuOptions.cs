@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
-using dotnetCampus.Cli.Properties;
 using dotnetCampus.Cli.StateMachine;
 using dotnetCampus.Cli.Utils;
 
@@ -15,6 +17,9 @@ namespace dotnetCampus.Cli.Standard
     internal class GnuOptions : CommandLineOptionParser<GnuOptions>
     {
         private readonly ResourceManager? _resourceManager;
+
+        [NotNull]
+        private LocalizableStrings? _localizableStrings;
 
         [Option(nameof(Version), LocalizableDescription = nameof(LocalizableStrings.VersionOptionDescription))]
         public bool Version { get; private set; }
@@ -33,6 +38,7 @@ namespace dotnetCampus.Cli.Standard
 
         internal void Run(IReadOnlyList<CommandLineVerbMatch<Task<int>>>? matches)
         {
+            _localizableStrings = new LocalizableStrings();
             matches ??= new List<CommandLineVerbMatch<Task<int>>>();
 
             if (Help)
@@ -66,7 +72,9 @@ namespace dotnetCampus.Cli.Standard
                     .Select(x => new
                     {
                         Name = x.ShortName is null ? $"--{NamingHelper.MakeKebabCase(x.LongName)}" : $"-{x.ShortName}|--{NamingHelper.MakeKebabCase(x.LongName)}",
-                        Description = GetLocalizedDescription(x.Attribute, x.Type!.Assembly == selfAssembly ? LocalizableStrings.ResourceManager : _resourceManager)
+                        Description = x.Type!.Assembly == selfAssembly
+                            ? GetLocalizedDescription(x.Attribute, _localizableStrings)
+                            : GetLocalizedDescription(x.Attribute, _resourceManager),
                     })
                 ).ToList();
 
@@ -75,14 +83,21 @@ namespace dotnetCampus.Cli.Standard
             var columnLength = Math.Max(maxOptionTextLength, maxVerbTextLength);
             columnLength = Math.Max(12, columnLength);
 
-            Console.Write(LocalizableStrings.UsageHeader);
-            Console.WriteLine("[options]");
+            Console.Write(_localizableStrings.UsageHeader);
+            if (verbInfoList.Count > 0)
+            {
+                Console.WriteLine("[options] [command] [command-options] [arguments]");
+            }
+            else
+            {
+                Console.WriteLine("[options] [arguments]");
+            }
 
             Console.WriteLine();
 
             if (mergedOptionInfoList.Count > 0)
             {
-                Console.WriteLine(LocalizableStrings.OptionsHeader);
+                Console.WriteLine(_localizableStrings.OptionsHeader);
             }
             foreach (var x in mergedOptionInfoList)
             {
@@ -94,7 +109,7 @@ namespace dotnetCampus.Cli.Standard
 
             if (verbInfoList.Count > 0)
             {
-                Console.WriteLine(LocalizableStrings.CommandHeader);
+                Console.WriteLine(_localizableStrings.CommandHeader);
             }
             foreach (var x in verbInfoList)
             {
@@ -130,5 +145,75 @@ namespace dotnetCampus.Cli.Standard
             => resourceManager != null && !string.IsNullOrWhiteSpace(attribute.LocalizableDescription)
                 ? resourceManager.GetString(attribute.LocalizableDescription, CultureInfo.CurrentUICulture) ?? ""
                 : attribute.Description ?? "";
+
+        private static string GetLocalizedDescription(CommandLineAttribute attribute, LocalizableStrings resourceManager)
+            => !string.IsNullOrWhiteSpace(attribute.LocalizableDescription)
+                ? resourceManager.GetString(attribute.LocalizableDescription, CultureInfo.CurrentUICulture) ?? ""
+                : attribute.Description ?? "";
+
+        /// <summary>
+        /// 为了避免引用此 NuGet 包带来大量的本地化附属库的引用，我们不能使用会生成额外程序集的本地化方案。
+        /// </summary>
+        private class LocalizableStrings
+        {
+            private Dictionary<string, string> _defaultDictionary = new Dictionary<string, string>
+            {
+                { "", "" },
+            };
+
+            internal string VersionOptionDescription => GetString(Thread.CurrentThread.CurrentUICulture);
+            internal Dictionary<string, string> _versionOptionDescription = new Dictionary<string, string>
+            {
+                {  "", "Display version." },
+                { "zh-CN", "显示版本。" },
+            };
+
+            internal string HelpOptionDescription => GetString(Thread.CurrentThread.CurrentUICulture);
+            internal Dictionary<string, string> _helpOptionDescription = new Dictionary<string, string>
+            {
+                {  "", "Display help." },
+                { "zh-CN", "显示使用说明。" },
+            };
+
+            internal string UsageHeader => GetString(Thread.CurrentThread.CurrentUICulture);
+            internal Dictionary<string, string> _usageHeader = new Dictionary<string, string>
+            {
+                {  "", "Usage: " },
+                { "zh-CN", "使用：" },
+            };
+
+            internal string OptionsHeader => GetString(Thread.CurrentThread.CurrentUICulture);
+            internal Dictionary<string, string> _optionsHeader = new Dictionary<string, string>
+            {
+                {  "", "Options: " },
+                { "zh-CN", "选项：" },
+            };
+
+            internal string CommandHeader => GetString(Thread.CurrentThread.CurrentUICulture);
+            internal Dictionary<string, string> _commandHeader = new Dictionary<string, string>
+            {
+                {  "", "Commands: " },
+                { "zh-CN", "命令：" },
+            };
+
+            private string GetString(CultureInfo culture, [CallerMemberName] string? propertyName = null)
+                => GetString(propertyName!, culture) ?? "";
+
+            internal string? GetString(string name, CultureInfo currentUICulture)
+            {
+                var dictionary = name switch
+                {
+                    nameof(VersionOptionDescription) => _versionOptionDescription,
+                    nameof(HelpOptionDescription) => _helpOptionDescription,
+                    nameof(UsageHeader) => _usageHeader,
+                    nameof(OptionsHeader) => _optionsHeader,
+                    nameof(CommandHeader) => _commandHeader,
+                    _ => _defaultDictionary,
+                };
+                return dictionary.TryGetValue(currentUICulture.Name, out var text)
+                    ? text
+                    : dictionary[""];
+            }
+        }
     }
 }

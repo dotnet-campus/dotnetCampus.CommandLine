@@ -117,19 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CommandHeader" xml:space="preserve">
-    <value>命令：</value>
+  <data name="SamplePropertyDescription" xml:space="preserve">
+    <value>输出传入的任何类型的字符串。</value>
   </data>
-  <data name="HelpOptionDescription" xml:space="preserve">
-    <value>显示使用说明。</value>
-  </data>
-  <data name="OptionsHeader" xml:space="preserve">
-    <value>选项：</value>
-  </data>
-  <data name="UsageHeader" xml:space="preserve">
-    <value>使用：</value>
-  </data>
-  <data name="VersionOptionDescription" xml:space="preserve">
-    <value>显示版本。</value>
+  <data name="SampleVerbDescription" xml:space="preserve">
+    <value>执行示例命令。</value>
   </data>
 </root>
