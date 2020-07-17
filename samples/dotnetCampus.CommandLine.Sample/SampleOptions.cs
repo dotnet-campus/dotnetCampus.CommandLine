@@ -12,7 +12,6 @@ namespace dotnetCampus.Cli
 
         internal void Run()
         {
-
         }
     }
 }
