@@ -32,7 +32,7 @@ namespace dotnetCampus.Cli
             {
                 if (builder is CommandLineHandlerBuilder commandLineBuilder)
                 {
-                    coreBuilder.AddMatch(verb => MatchAndHandle(coreBuilder.CommandLine, verb, options => Invoke(handler, options), parser));
+                    coreBuilder.AddMatch<TVerb>(verb => MatchAndHandle(coreBuilder.CommandLine, verb, options => Invoke(handler, options), parser));
                     return commandLineBuilder;
                 }
             }
@@ -61,7 +61,7 @@ namespace dotnetCampus.Cli
             {
                 if (builder is CommandLineHandlerBuilder commandLineBuilder)
                 {
-                    coreBuilder.AddMatch(verb => MatchAndHandle(coreBuilder.CommandLine, verb, options => Invoke(handler, options), parser));
+                    coreBuilder.AddMatch<TVerb>(verb => MatchAndHandle(coreBuilder.CommandLine, verb, options => Invoke(handler, options), parser));
                     return commandLineBuilder;
                 }
             }
@@ -90,7 +90,7 @@ namespace dotnetCampus.Cli
             {
                 if (builder is CommandLineHandlerBuilder commandLineBuilder)
                 {
-                    var asyncCommandLineBuilder = new CommandLineAsyncHandlerBuilder(coreBuilder.CommandLine, coreBuilder.MatchList);
+                    var asyncCommandLineBuilder = new CommandLineAsyncHandlerBuilder(coreBuilder.CommandLine, coreBuilder.Matches);
                     return asyncCommandLineBuilder.AddHandler(handler, parser);
                 }
             }
@@ -119,7 +119,7 @@ namespace dotnetCampus.Cli
             {
                 if (builder is CommandLineHandlerBuilder commandLineBuilder)
                 {
-                    var asyncCommandLineBuilder = new CommandLineAsyncHandlerBuilder(coreBuilder.CommandLine, coreBuilder.MatchList);
+                    var asyncCommandLineBuilder = new CommandLineAsyncHandlerBuilder(coreBuilder.CommandLine, coreBuilder.Matches);
                     return asyncCommandLineBuilder.AddHandler(handler, parser);
                 }
             }
@@ -144,7 +144,7 @@ namespace dotnetCampus.Cli
             {
                 if (builder is CommandLineAsyncHandlerBuilder commandLineBuilder)
                 {
-                    coreBuilder.AddMatch(verb => MatchAndHandle(coreBuilder.CommandLine, verb, options => Invoke(handler, options), parser));
+                    coreBuilder.AddMatch<TVerb>(verb => MatchAndHandle(coreBuilder.CommandLine, verb, options => Invoke(handler, options), parser));
                     return commandLineBuilder;
                 }
             }
@@ -169,7 +169,7 @@ namespace dotnetCampus.Cli
             {
                 if (builder is CommandLineAsyncHandlerBuilder commandLineBuilder)
                 {
-                    coreBuilder.AddMatch(verb => MatchAndHandle(coreBuilder.CommandLine, verb, options => Invoke(handler, options), parser));
+                    coreBuilder.AddMatch<TVerb>(verb => MatchAndHandle(coreBuilder.CommandLine, verb, options => Invoke(handler, options), parser));
                     return commandLineBuilder;
                 }
             }
@@ -194,7 +194,7 @@ namespace dotnetCampus.Cli
             {
                 if (builder is CommandLineAsyncHandlerBuilder commandLineBuilder)
                 {
-                    coreBuilder.AddMatch(verb => MatchAndHandle(coreBuilder.CommandLine, verb, options => Invoke(handler, options), parser));
+                    coreBuilder.AddMatch<TVerb>(verb => MatchAndHandle(coreBuilder.CommandLine, verb, options => Invoke(handler, options), parser));
                     return commandLineBuilder;
                 }
             }
@@ -219,7 +219,7 @@ namespace dotnetCampus.Cli
             {
                 if (builder is CommandLineAsyncHandlerBuilder commandLineBuilder)
                 {
-                    coreBuilder.AddMatch(verb => MatchAndHandle(coreBuilder.CommandLine, verb, options => Invoke(handler, options), parser));
+                    coreBuilder.AddMatch<TVerb>(verb => MatchAndHandle(coreBuilder.CommandLine, verb, options => Invoke(handler, options), parser));
                     return commandLineBuilder;
                 }
             }

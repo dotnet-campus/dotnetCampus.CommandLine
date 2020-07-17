@@ -27,9 +27,9 @@ namespace dotnetCampus.Cli
     {
         CommandLine CommandLine { get; }
 
-        List<Func<string, MatchHandleResult<Task<int>>>> MatchList { get; }
+        List<CommandLineVerbMatch<Task<int>>> Matches { get; }
 
-        void AddMatch(Func<string, MatchHandleResult<Task<int>>> match);
+        void AddMatch<TVerb>(Func<string?, MatchHandleResult<Task<int>>> match);
     }
 
     /// <summary>
@@ -39,8 +39,8 @@ namespace dotnetCampus.Cli
     {
         CommandLine CommandLine { get; }
 
-        List<Func<string, MatchHandleResult<Task<int>>>> MatchList { get; }
+        List<CommandLineVerbMatch<Task<int>>> Matches { get; }
 
-        void AddMatch(Func<string, MatchHandleResult<Task<int>>> match);
+        void AddMatch<TVerb>(Func<string?, MatchHandleResult<Task<int>>> match);
     }
 }
