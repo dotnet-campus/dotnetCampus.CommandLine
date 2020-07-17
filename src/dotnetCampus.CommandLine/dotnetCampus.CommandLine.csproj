@@ -2,18 +2,22 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;netstandard2.0;net45</TargetFrameworks>
-    <Nullable>enable</Nullable>
     <WarningsAsErrors>$(WarningsAsErrors);CS8600;CS8601;CS8602;CS8603;CS8604;CS8609;CS8610;CS8614;CS8616;CS8618;CS8619;CS8622;CS8625</WarningsAsErrors>
     <RootNamespace>dotnetCampus.Cli</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
     <Description>dotnetCampus.CommandLine is probably the fastest command line parser in all .NET open-source projects. Parsing a classical command line only takes 1091ns, thus 10 ticks.</Description>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' Or '$(TargetFramework)' == 'netstandard2.0' ">
+    <WarningLevel>0</WarningLevel>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="3.0.0" PrivateAssets="all" />
     <PackageReference Include="dotnetCampus.SourceYard" Version="0.1.19099-alpha" PrivateAssets="all" />
+    <PackageReference Include="Walterlv.NullableAttributes.Source" Version="5.7.1" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">

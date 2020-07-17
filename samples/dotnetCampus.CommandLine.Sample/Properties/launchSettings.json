@@ -1,0 +1,19 @@
+{
+  "profiles": {
+    "Debug": {
+      "commandName": "Project"
+    },
+    "--help": {
+      "commandName": "Project",
+      "commandLineArgs": "--help"
+    },
+    "--version": {
+      "commandName": "Project",
+      "commandLineArgs": "--version"
+    },
+    "sample": {
+      "commandName": "Project",
+      "commandLineArgs": "sample --sample-property \"Hello World\""
+    }
+  }
+}

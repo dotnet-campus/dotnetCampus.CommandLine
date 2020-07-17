@@ -10,6 +10,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using dotnetCampus.CommandLine.Properties;
 using System.Text;
+using dotnetCampus.Cli.Utils;
 
 namespace dotnetCampus.CommandLine.Analyzers
 {
@@ -61,7 +62,7 @@ namespace dotnetCampus.CommandLine.Analyzers
         {
             var expression = expressionSyntax.ToString();
             var oldName = expression.Substring(1, expression.Length - 2);
-            var newName = MakePascalCase(oldName);
+            var newName = NamingHelper.MakePascalCase(oldName);
 
             var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
             if (root is null)
@@ -74,68 +75,6 @@ namespace dotnetCampus.CommandLine.Analyzers
                     SyntaxKind.StringLiteralExpression,
                     SyntaxFactory.Literal(newName)));
             return document.Project.Solution.WithDocumentSyntaxRoot(document.Id, newRoot);
-        }
-
-        private static string MakePascalCase(string oldName)
-        {
-            var builder = new StringBuilder();
-
-            var isFirstLetter = true;
-            var isWordStart = true;
-            foreach (char c in oldName)
-            {
-                if (!char.IsLetterOrDigit(c))
-                {
-                    // Append nothing because PascalCase has no special characters.
-                    isWordStart = true;
-                    continue;
-                }
-
-                if (isFirstLetter)
-                {
-                    if (char.IsDigit(c))
-                    {
-                        // PascalCase does not support digital as the first letter.
-                        isWordStart = true;
-                        continue;
-                    }
-                    else if (!char.IsUpper(c))
-                    {
-                        isFirstLetter = false;
-                        isWordStart = false;
-                        builder.Append(char.ToUpperInvariant(c));
-                    }
-                    else
-                    {
-                        isFirstLetter = false;
-                        isWordStart = false;
-                        builder.Append(c);
-                    }
-                }
-                else
-                {
-                    if (char.IsDigit(c))
-                    {
-                        // PascalCase does not support digital as the first letter.
-                        isWordStart = true;
-                        builder.Append(c);
-                    }
-                    else if (!char.IsUpper(c))
-                    {
-                        builder.Append(isWordStart
-                            ? char.ToUpperInvariant(c)
-                            : c);
-                        isWordStart = false;
-                    }
-                    else
-                    {
-                        isWordStart = false;
-                        builder.Append(c);
-                    }
-                }
-            }
-
-            return builder.ToString();
         }
     }
 }

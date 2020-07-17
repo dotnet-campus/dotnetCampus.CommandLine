@@ -86,7 +86,7 @@ namespace dotnetCampus.Cli.Utils
             if (string.Equals(possibleVerb, parser.Verb, StringComparison.InvariantCultureIgnoreCase))
             {
                 var options = commandLine.As(parser);
-                return handler(options);
+                return new MatchHandleResult<int>(handler(options));
             }
 
             if (parser.Verb is null)
@@ -94,7 +94,7 @@ namespace dotnetCampus.Cli.Utils
                 return new MatchHandleResult<int>(() => handler(commandLine.As(parser)));
             }
 
-            return VerbMatchingResult.NotMatched;
+            return new MatchHandleResult<int>(VerbMatchingResult.NotMatched);
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace dotnetCampus.Cli.Utils
             if (string.Equals(possibleVerb, parser.Verb, StringComparison.InvariantCultureIgnoreCase))
             {
                 var options = commandLine.As(parser);
-                return handler(options);
+                return new MatchHandleResult<Task<int>>(handler(options));
             }
 
             if (parser.Verb is null)
@@ -140,7 +140,7 @@ namespace dotnetCampus.Cli.Utils
                 return new MatchHandleResult<Task<int>>(() => handler(commandLine.As(parser)));
             }
 
-            return VerbMatchingResult.NotMatched;
+            return new MatchHandleResult<Task<int>>(VerbMatchingResult.NotMatched);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -163,8 +163,7 @@ namespace dotnetCampus.Cli.Utils
                 throw new ArgumentNullException(nameof(handler));
             }
 
-            handler(options);
-            return Task.FromResult(0);
+            return Task.FromResult(handler(options));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -177,6 +176,17 @@ namespace dotnetCampus.Cli.Utils
 
             await handler(options).ConfigureAwait(false);
             return 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static async Task<int> Invoke<TVerb>(Func<TVerb, Task<int>> handler, TVerb options)
+        {
+            if (handler is null)
+            {
+                throw new ArgumentNullException(nameof(handler));
+            }
+
+            return await handler(options).ConfigureAwait(false);
         }
 
         /// <summary>

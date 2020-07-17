@@ -24,20 +24,19 @@ namespace dotnetCampus.Cli
             this ICommandLineHandlerBuilder builder,
             Action<TVerb> handler, ICommandLineOptionParser<TVerb>? parser = null)
         {
-            if (builder is CommandLine commandLine)
+            if (builder is null)
             {
-                return new CommandLineHandlerBuilder(commandLine).AddHandler(handler, parser);
-            }
-            else if (builder is ICoreCommandLineHandlerBuilder coreBuilder)
-            {
-                if (builder is CommandLineHandlerBuilder commandLineBuilder)
-                {
-                    coreBuilder.AddMatch(verb => MatchAndHandle(coreBuilder.CommandLine, verb, options => Invoke(handler, options), parser));
-                    return commandLineBuilder;
-                }
+                throw new ArgumentNullException(nameof(builder));
             }
 
-            throw new NotSupportedException($"接口 {nameof(ICommandLineHandlerBuilder)} 不支持第三方实现。");
+            builder.CommandLine.AddMatch<TVerb>(verb => MatchAndHandle(builder.CommandLine, verb, options => Invoke(handler, options), parser));
+
+            return builder switch
+            {
+                CommandLineHandlerBuilder commandLineBuilder => commandLineBuilder,
+                CommandLine commandLine => new CommandLineHandlerBuilder(commandLine),
+                _ => throw new NotSupportedException($"接口 {nameof(ICommandLineHandlerBuilder)} 不支持第三方实现。"),
+            };
         }
 
         /// <summary>
@@ -53,20 +52,19 @@ namespace dotnetCampus.Cli
             this ICommandLineHandlerBuilder builder,
             Func<TVerb, int> handler, ICommandLineOptionParser<TVerb>? parser = null)
         {
-            if (builder is CommandLine commandLine)
+            if (builder is null)
             {
-                return new CommandLineHandlerBuilder(commandLine).AddHandler(handler, parser);
-            }
-            else if (builder is ICoreCommandLineHandlerBuilder coreBuilder)
-            {
-                if (builder is CommandLineHandlerBuilder commandLineBuilder)
-                {
-                    coreBuilder.AddMatch(verb => MatchAndHandle(coreBuilder.CommandLine, verb, options => Invoke(handler, options), parser));
-                    return commandLineBuilder;
-                }
+                throw new ArgumentNullException(nameof(builder));
             }
 
-            throw new NotSupportedException($"接口 {nameof(ICommandLineHandlerBuilder)} 不支持第三方实现。");
+            builder.CommandLine.AddMatch<TVerb>(verb => MatchAndHandle(builder.CommandLine, verb, options => Invoke(handler, options), parser));
+
+            return builder switch
+            {
+                CommandLineHandlerBuilder commandLineBuilder => commandLineBuilder,
+                CommandLine commandLine => new CommandLineHandlerBuilder(commandLine),
+                _ => throw new NotSupportedException($"接口 {nameof(ICommandLineHandlerBuilder)} 不支持第三方实现。"),
+            };
         }
 
         /// <summary>
@@ -82,20 +80,21 @@ namespace dotnetCampus.Cli
             this ICommandLineHandlerBuilder builder,
             Func<TVerb, Task> handler, ICommandLineOptionParser<TVerb>? parser = null)
         {
-            if (builder is CommandLine commandLine)
+            if (builder is null)
             {
-                return new CommandLineAsyncHandlerBuilder(commandLine).AddHandler(handler, parser);
-            }
-            else if (builder is ICoreCommandLineHandlerBuilder coreBuilder)
-            {
-                if (builder is CommandLineHandlerBuilder commandLineBuilder)
-                {
-                    var asyncCommandLineBuilder = new CommandLineAsyncHandlerBuilder(coreBuilder.CommandLine, coreBuilder.MatchList);
-                    return asyncCommandLineBuilder.AddHandler(handler, parser);
-                }
+                throw new ArgumentNullException(nameof(builder));
             }
 
-            throw new NotSupportedException($"接口 {nameof(ICommandLineHandlerBuilder)} 不支持第三方实现。");
+            var commandLine = builder.CommandLine;
+            var newBuilder = new CommandLineAsyncHandlerBuilder(commandLine);
+            commandLine.AddMatch<TVerb>(verb => MatchAndHandle(commandLine, verb, options => Invoke(handler, options), parser));
+
+            return builder switch
+            {
+                CommandLineHandlerBuilder _ => new CommandLineAsyncHandlerBuilder(commandLine),
+                CommandLine _ => new CommandLineAsyncHandlerBuilder(commandLine),
+                _ => throw new NotSupportedException($"接口 {nameof(ICommandLineHandlerBuilder)} 不支持第三方实现。"),
+            };
         }
 
         /// <summary>
@@ -111,20 +110,21 @@ namespace dotnetCampus.Cli
             this ICommandLineHandlerBuilder builder,
             Func<TVerb, Task<int>> handler, ICommandLineOptionParser<TVerb>? parser = null)
         {
-            if (builder is CommandLine commandLine)
+            if (builder is null)
             {
-                return new CommandLineAsyncHandlerBuilder(commandLine).AddHandler(handler, parser);
-            }
-            else if (builder is ICoreCommandLineHandlerBuilder coreBuilder)
-            {
-                if (builder is CommandLineHandlerBuilder commandLineBuilder)
-                {
-                    var asyncCommandLineBuilder = new CommandLineAsyncHandlerBuilder(coreBuilder.CommandLine, coreBuilder.MatchList);
-                    return asyncCommandLineBuilder.AddHandler(handler, parser);
-                }
+                throw new ArgumentNullException(nameof(builder));
             }
 
-            throw new NotSupportedException($"接口 {nameof(ICommandLineHandlerBuilder)} 不支持第三方实现。");
+            var commandLine = builder.CommandLine;
+            var newBuilder = new CommandLineAsyncHandlerBuilder(commandLine);
+            commandLine.AddMatch<TVerb>(verb => MatchAndHandle(commandLine, verb, options => Invoke(handler, options), parser));
+
+            return builder switch
+            {
+                CommandLineHandlerBuilder _ => new CommandLineAsyncHandlerBuilder(commandLine),
+                CommandLine _ => new CommandLineAsyncHandlerBuilder(commandLine),
+                _ => throw new NotSupportedException($"接口 {nameof(ICommandLineHandlerBuilder)} 不支持第三方实现。"),
+            };
         }
 
         /// <summary>
@@ -140,16 +140,18 @@ namespace dotnetCampus.Cli
             this ICommandLineAsyncHandlerBuilder builder,
             Action<TVerb> handler, ICommandLineOptionParser<TVerb>? parser = null)
         {
-            if (builder is ICoreCommandLineAsyncHandlerBuilder coreBuilder)
+            if (builder is null)
             {
-                if (builder is CommandLineAsyncHandlerBuilder commandLineBuilder)
-                {
-                    coreBuilder.AddMatch(verb => MatchAndHandle(coreBuilder.CommandLine, verb, options => Invoke(handler, options), parser));
-                    return commandLineBuilder;
-                }
+                throw new ArgumentNullException(nameof(builder));
             }
 
-            throw new NotSupportedException($"接口 {nameof(ICommandLineHandlerBuilder)} 不支持第三方实现。");
+            builder.CommandLine.AddMatch<TVerb>(verb => MatchAndHandle(builder.CommandLine, verb, options => Invoke(handler, options), parser));
+
+            return builder switch
+            {
+                CommandLineAsyncHandlerBuilder commandLineBuilder => commandLineBuilder,
+                _ => throw new NotSupportedException($"接口 {nameof(ICommandLineHandlerBuilder)} 不支持第三方实现。"),
+            };
         }
 
         /// <summary>
@@ -165,16 +167,18 @@ namespace dotnetCampus.Cli
             this ICommandLineAsyncHandlerBuilder builder,
             Func<TVerb, int> handler, ICommandLineOptionParser<TVerb>? parser = null)
         {
-            if (builder is ICoreCommandLineAsyncHandlerBuilder coreBuilder)
+            if (builder is null)
             {
-                if (builder is CommandLineAsyncHandlerBuilder commandLineBuilder)
-                {
-                    coreBuilder.AddMatch(verb => MatchAndHandle(coreBuilder.CommandLine, verb, options => Invoke(handler, options), parser));
-                    return commandLineBuilder;
-                }
+                throw new ArgumentNullException(nameof(builder));
             }
 
-            throw new NotSupportedException($"接口 {nameof(ICommandLineHandlerBuilder)} 不支持第三方实现。");
+            builder.CommandLine.AddMatch<TVerb>(verb => MatchAndHandle(builder.CommandLine, verb, options => Invoke(handler, options), parser));
+
+            return builder switch
+            {
+                CommandLineAsyncHandlerBuilder commandLineBuilder => commandLineBuilder,
+                _ => throw new NotSupportedException($"接口 {nameof(ICommandLineHandlerBuilder)} 不支持第三方实现。"),
+            };
         }
 
         /// <summary>
@@ -190,16 +194,18 @@ namespace dotnetCampus.Cli
             this ICommandLineAsyncHandlerBuilder builder,
             Func<TVerb, Task> handler, ICommandLineOptionParser<TVerb>? parser = null)
         {
-            if (builder is ICoreCommandLineAsyncHandlerBuilder coreBuilder)
+            if (builder is null)
             {
-                if (builder is CommandLineAsyncHandlerBuilder commandLineBuilder)
-                {
-                    coreBuilder.AddMatch(verb => MatchAndHandle(coreBuilder.CommandLine, verb, options => Invoke(handler, options), parser));
-                    return commandLineBuilder;
-                }
+                throw new ArgumentNullException(nameof(builder));
             }
 
-            throw new NotSupportedException($"接口 {nameof(ICommandLineHandlerBuilder)} 不支持第三方实现。");
+            builder.CommandLine.AddMatch<TVerb>(verb => MatchAndHandle(builder.CommandLine, verb, options => Invoke(handler, options), parser));
+
+            return builder switch
+            {
+                CommandLineAsyncHandlerBuilder commandLineBuilder => commandLineBuilder,
+                _ => throw new NotSupportedException($"接口 {nameof(ICommandLineHandlerBuilder)} 不支持第三方实现。"),
+            };
         }
 
         /// <summary>
@@ -215,16 +221,18 @@ namespace dotnetCampus.Cli
             this ICommandLineAsyncHandlerBuilder builder,
             Func<TVerb, Task<int>> handler, ICommandLineOptionParser<TVerb>? parser = null)
         {
-            if (builder is ICoreCommandLineAsyncHandlerBuilder coreBuilder)
+            if (builder is null)
             {
-                if (builder is CommandLineAsyncHandlerBuilder commandLineBuilder)
-                {
-                    coreBuilder.AddMatch(verb => MatchAndHandle(coreBuilder.CommandLine, verb, options => Invoke(handler, options), parser));
-                    return commandLineBuilder;
-                }
+                throw new ArgumentNullException(nameof(builder));
             }
 
-            throw new NotSupportedException($"接口 {nameof(ICommandLineHandlerBuilder)} 不支持第三方实现。");
+            builder.CommandLine.AddMatch<TVerb>(verb => MatchAndHandle(builder.CommandLine, verb, options => Invoke(handler, options), parser));
+
+            return builder switch
+            {
+                CommandLineAsyncHandlerBuilder commandLineBuilder => commandLineBuilder,
+                _ => throw new NotSupportedException($"接口 {nameof(ICommandLineHandlerBuilder)} 不支持第三方实现。"),
+            };
         }
     }
 }

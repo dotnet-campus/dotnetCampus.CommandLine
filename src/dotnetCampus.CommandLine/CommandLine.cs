@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
+using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 
 using dotnetCampus.Cli.Core;
@@ -25,16 +28,30 @@ namespace dotnetCampus.Cli
     /// <summary>
     /// 为应用程序提供统一的命令行参数解析功能。
     /// <para>支持的命令行格式风格有 Windows 和 Linux 的主流风格，以及从 URL 协议关联传入的命令行。</para>
-    /// <para>当使用 <see cref="Parse"/> 方法生成此类型的实例后，无论是哪一种命令行风格，都会转换为标准的 PascalCase 风格的命令行选项。</para>
+    /// <para>当使用 <see cref="Parse(string[], ResourceManager)"/> 方法生成此类型的实例后，无论是哪一种命令行风格，都会转换为标准的 PascalCase 风格的命令行选项。</para>
     /// </summary>
     [DebuggerDisplay("CommandLine: {DebuggerDisplay,nq}")]
     [DebuggerTypeProxy(typeof(CommandLineDebugView))]
     public sealed class CommandLine : ICommandLineHandlerBuilder, IEnumerable<ListGroupItem>
     {
         private readonly ListGroup<SingleOptimizedStrings> _optionArgs;
+        private readonly List<CommandLineVerbMatch<Task<int>>> _toMatchList = new List<CommandLineVerbMatch<Task<int>>>();
 
-        private CommandLine(ListGroup<SingleOptimizedStrings> optionArgs)
-            => _optionArgs = optionArgs ?? throw new ArgumentNullException(nameof(optionArgs));
+        private CommandLine(ListGroup<SingleOptimizedStrings> optionArgs, ResourceManager? resourceManager)
+        {
+            _optionArgs = optionArgs ?? throw new ArgumentNullException(nameof(optionArgs));
+            ResourceManager = resourceManager;
+        }
+
+        /// <summary>
+        /// 获取本地化字符串的资源管理器。
+        /// </summary>
+        internal ResourceManager? ResourceManager { get; }
+
+        /// <summary>
+        /// 收集的谓词处理方法。
+        /// </summary>
+        internal IReadOnlyList<CommandLineVerbMatch<Task<int>>> ToMatchList => _toMatchList;
 
         /// <summary>
         /// 自动查找命令行类型 <typeparamref name="T"/> 的解析器，然后解析出参数 <typeparamref name="T"/> 的一个新实例。
@@ -153,6 +170,9 @@ namespace dotnetCampus.Cli
             return parser.Commit();
         }
 
+        internal void AddMatch<TVerb>(Func<string?, MatchHandleResult<Task<int>>> match)
+            => _toMatchList.Add(new CommandLineVerbMatch<Task<int>>(typeof(TVerb), match));
+
         /// <summary>
         /// 将命令行参数转换为字符串值的字典。Key 为选项，Value 为选项后面的值。
         /// 对于布尔类型，Value 为空字符串；对于字符串集合，Value 为此集合拼接的字符串。
@@ -165,11 +185,13 @@ namespace dotnetCampus.Cli
 
         IEnumerator IEnumerable.GetEnumerator() => _optionArgs.GetEnumerator();
 
+        CommandLine ICommandLineHandlerBuilder.CommandLine => this;
+
         /// <summary>
         /// 解析命令行参数，并返回解析后的 <see cref="CommandLine"/> 类型的新实例。
         /// 注意，暂不支持带有可执行程序路径的命令行参数，可查阅以下文章了解更多：
         /// <para>.NET 命令行参数包含应用程序路径吗？</para>
-        /// <para>https://walterlv.com/post/when-will-the-command-line-args-contain-the-executable-path.html</para>
+        /// <para>https://blog.walterlv.com/post/when-will-the-command-line-args-contain-the-executable-path.html</para>
         /// </summary>
         /// <param name="args">命令行参数。</param>
         /// <param name="protocolName">
@@ -179,11 +201,46 @@ namespace dotnetCampus.Cli
         /// </param>
         /// <returns>包含命令行解析后结果的 <see cref="CommandLine"/> 类型的新实例。</returns>
         [Pure]
-        public static CommandLine Parse(string[] args, string? protocolName = null)
+        public static CommandLine Parse(string[] args, string? protocolName = null) => Parse(args, protocolName, null);
+
+        /// <summary>
+        /// 解析命令行参数，并返回解析后的 <see cref="CommandLine"/> 类型的新实例。
+        /// 注意，暂不支持带有可执行程序路径的命令行参数，可查阅以下文章了解更多：
+        /// <para>.NET 命令行参数包含应用程序路径吗？</para>
+        /// <para>https://blog.walterlv.com/post/when-will-the-command-line-args-contain-the-executable-path.html</para>
+        /// </summary>
+        /// <param name="args">命令行参数。</param>
+        /// <param name="resourceManager">
+        /// 用于本地化命令行参数的资源。
+        /// 例如，当你建了 Resources.resx、Resources.zh-CN.resx 等文件后，可通过 Resources.ResourceManager 传入来获得本地化支持。
+        /// </param>
+        /// <returns>包含命令行解析后结果的 <see cref="CommandLine"/> 类型的新实例。</returns>
+        [Pure]
+        public static CommandLine Parse(string[] args, ResourceManager resourceManager) => Parse(args, null, resourceManager);
+
+        /// <summary>
+        /// 解析命令行参数，并返回解析后的 <see cref="CommandLine"/> 类型的新实例。
+        /// 注意，暂不支持带有可执行程序路径的命令行参数，可查阅以下文章了解更多：
+        /// <para>.NET 命令行参数包含应用程序路径吗？</para>
+        /// <para>https://blog.walterlv.com/post/when-will-the-command-line-args-contain-the-executable-path.html</para>
+        /// </summary>
+        /// <param name="args">命令行参数。</param>
+        /// <param name="protocolName">
+        /// 协议名称
+        /// <para>如果需要支持 URL 协议解析，请传入 <paramref name="protocolName"/> 参数：
+        /// 对于 `walterlv://open/?id=ff` 这样的 URL，其协议名为 `walterlv`。</para>
+        /// </param>
+        /// <param name="resourceManager">
+        /// 用于本地化命令行参数的资源。
+        /// 例如，当你建了 Resources.resx、Resources.zh-CN.resx 等文件后，可通过 Resources.ResourceManager 传入来获得本地化支持。
+        /// </param>
+        /// <returns>包含命令行解析后结果的 <see cref="CommandLine"/> 类型的新实例。</returns>
+        [Pure]
+        public static CommandLine Parse(string[] args, string? protocolName, ResourceManager? resourceManager)
         {
             if (args is null || args.Length == 0)
             {
-                return new CommandLine(new ListGroup<SingleOptimizedStrings>());
+                return new CommandLine(new ListGroup<SingleOptimizedStrings>(), resourceManager);
             }
 
             if (!string.IsNullOrWhiteSpace(protocolName)
@@ -200,7 +257,7 @@ namespace dotnetCampus.Cli
             var parsedArgs = stateMachine.Run();
             NormalizeParsedArgs(parsedArgs, optionPrefix);
 
-            return new CommandLine(parsedArgs);
+            return new CommandLine(parsedArgs, resourceManager);
         }
 
         /// <summary>
@@ -359,7 +416,7 @@ namespace dotnetCampus.Cli
             public CommandLineDebugView(CommandLine owner) => _owner = owner;
 
             [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
-            [SuppressMessage("ReSharper", "UnusedMember.Local")]
+            [SuppressMessage("VisualStudio", "IDE0051")]
             private string[] Options => _owner._optionArgs.ForOptions().Select(pair =>
                     $"{(string.IsNullOrEmpty(pair.Key) ? "" : $"-{pair.Key} ")}{string.Join(" ", pair.Value ?? (IEnumerable<string>)new string[0])}")
                 .ToArray();

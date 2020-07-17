@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-using dotnetCampus.Cli.StateMachine;
-
-namespace dotnetCampus.Cli
+﻿namespace dotnetCampus.Cli
 {
     /// <summary>
     /// 对 <see cref="CommandLine"/> 和 <see cref="CommandLineHandlerBuilder"/> 提供抽象。
     /// </summary>
     public interface ICommandLineHandlerBuilder
     {
+        /// <summary>
+        /// 获取此命令行构造器所关联的命令行。
+        /// </summary>
+        CommandLine CommandLine { get; }
     }
 
     /// <summary>
@@ -18,29 +16,5 @@ namespace dotnetCampus.Cli
     /// </summary>
     public interface ICommandLineAsyncHandlerBuilder : ICommandLineHandlerBuilder
     {
-    }
-
-    /// <summary>
-    /// 为 <see cref="CommandLineHandlerBuilder"/> 提供仅限内部使用的方法。
-    /// </summary>
-    internal interface ICoreCommandLineHandlerBuilder : ICommandLineHandlerBuilder
-    {
-        CommandLine CommandLine { get; }
-
-        List<Func<string, MatchHandleResult<Task<int>>>> MatchList { get; }
-
-        void AddMatch(Func<string, MatchHandleResult<Task<int>>> match);
-    }
-
-    /// <summary>
-    /// 为 <see cref="CommandLineAsyncHandlerBuilder"/> 提供仅限内部使用的方法。
-    /// </summary>
-    internal interface ICoreCommandLineAsyncHandlerBuilder : ICommandLineAsyncHandlerBuilder
-    {
-        CommandLine CommandLine { get; }
-
-        List<Func<string, MatchHandleResult<Task<int>>>> MatchList { get; }
-
-        void AddMatch(Func<string, MatchHandleResult<Task<int>>> match);
     }
 }

@@ -1,5 +1,4 @@
-﻿#nullable disable // 因为要兼容低版本的框架且不能引入依赖，所以只好禁用可空类型
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
@@ -18,7 +17,7 @@ namespace dotnetCampus.Cli.StateMachine
         /// <summary>
         /// 记录处理器真实的返回值（或者异步处理器的异步返回值）。
         /// </summary>
-        //[MaybeNull, AllowNull]
+        [MaybeNull, AllowNull]
         public readonly T Value;
 
         /// <summary>
@@ -51,11 +50,5 @@ namespace dotnetCampus.Cli.StateMachine
             MatchingResult = VerbMatchingResult.Default;
             Handler = handler;
         }
-
-        public static implicit operator MatchHandleResult<T>(T value)
-            => new MatchHandleResult<T>(value);
-
-        public static implicit operator MatchHandleResult<T>(VerbMatchingResult verbMatchingResult)
-            => new MatchHandleResult<T>(verbMatchingResult);
     }
 }

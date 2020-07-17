@@ -25,27 +25,27 @@ namespace dotnetCampus.Cli.StateMachine
     /// 对于同步处理器，使用处理器返回值 int；
     /// 对于异步处理器，使用处理器返回值 Task&lt;int&gt;。
     /// </typeparam>
-    internal class HandleVerbStateMachine<T>
+    internal class HandleVerbStateMachine<T> where T : notnull
     {
         /// <summary>
         /// 记录所有的处理器。会依次执行，如果执行结束依然没有返回，那么会从中挑选出默认处理器再执行一次。
         /// </summary>
-        private readonly IEnumerable<Func<string?, MatchHandleResult<T>>> _handlers;
+        private readonly IEnumerable<CommandLineVerbMatch<T>> _verbMatches;
 
         /// <summary>
         /// 传入一组处理器，用于匹配并执行。
         /// </summary>
-        public HandleVerbStateMachine(params Func<string?, MatchHandleResult<T>>[] handlers)
+        public HandleVerbStateMachine(params CommandLineVerbMatch<T>[] handlers)
         {
-            _handlers = handlers;
+            _verbMatches = handlers;
         }
 
         /// <summary>
         /// 传入一组处理器，用于匹配并执行。
         /// </summary>
-        public HandleVerbStateMachine(IEnumerable<Func<string?, MatchHandleResult<T>>> handlers)
+        public HandleVerbStateMachine(IEnumerable<CommandLineVerbMatch<T>> handlers)
         {
-            _handlers = handlers;
+            _verbMatches = handlers;
         }
 
         /// <summary>
@@ -57,10 +57,10 @@ namespace dotnetCampus.Cli.StateMachine
             Func<T>? @default = null;
 
             // 现在，开始依次匹配。
-            foreach (var handler in _handlers)
+            foreach (var match in _verbMatches)
             {
                 // 尝试匹配。
-                var result = handler(verb);
+                var result = match.Handler(verb);
 
                 // 检查匹配结果。
                 switch (result.MatchingResult)
@@ -75,7 +75,7 @@ namespace dotnetCampus.Cli.StateMachine
                     case VerbMatchingResult.Matched:
                         // 如果匹配成功，那么进入 foreach 区域内部。
                         yield return result.Value;
-                        // 但是，进入 foreach 之后仅执行依次代码后就立即退出 foreach 区域。
+                        // 但是，进入 foreach 之后仅执行一次代码后就立即退出 foreach 区域。
                         yield break;
                 }
             }

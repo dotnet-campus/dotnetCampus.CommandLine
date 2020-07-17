@@ -16,7 +16,16 @@ namespace dotnetCampus.Cli
         /// <summary>
         /// 获取命令行长名称。
         /// </summary>
-        public string LongName { get; }
+        public string? LongName { get; }
+
+        /// <summary>
+        /// 标记此属性是一个命令行选项，其长名称就是属性名称。
+        /// </summary>
+        public OptionAttribute()
+        {
+            ShortName = null;
+            LongName = null;
+        }
 
         /// <summary>
         /// 将此属性与命令行参数的一个长名称进行绑定。

@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>dotnetCampus.CommandLine</RootNamespace>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +16,10 @@
   <ItemGroup>
     <EmbeddedResource Update="Properties\Resources.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Resources.Designer.cs" />
     <Compile Update="Properties\Resources.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="Resources.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\dotnetCampus.CommandLine\Utils\NamingHelper.cs" Link="Utils\NamingHelper.cs" />
   </ItemGroup>
 
 </Project>
