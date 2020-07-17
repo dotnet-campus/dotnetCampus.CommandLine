@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
+using dotnetCampus.Cli.Utils;
 using dotnetCampus.CommandLine.Properties;
 
 using Microsoft.CodeAnalysis;
@@ -111,7 +112,7 @@ namespace dotnetCampus.CommandLine.Analyzers
                         var value = expression.Substring(1, expression.Length - 2);
                         if (value.Length >= 2)
                         {
-                            var isPascalCase = CheckIsPascalCase(value);
+                            var isPascalCase = NamingHelper.CheckIsPascalCase(value);
                             if (!isPascalCase)
                             {
                                 return (value, expressionSyntax.GetLocation());
@@ -122,39 +123,6 @@ namespace dotnetCampus.CommandLine.Analyzers
                 }
             }
             return (null, null);
-        }
-
-        /// <summary>
-        /// Check if the specified <paramref name="value"/> is a PascalCase string.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        private static bool CheckIsPascalCase(string value)
-        {
-            var first = value[0];
-            if (!char.IsUpper(first))
-            {
-                return false;
-            }
-
-            foreach (var letter in value)
-            {
-                if (!char.IsLetterOrDigit(letter))
-                {
-                    return false;
-                }
-            }
-
-            if (value.Length >= 3)
-            {
-                var allUpper = value.All(x => char.IsUpper(x));
-                if (allUpper)
-                {
-                    return false;
-                }
-            }
-
-            return true;
         }
     }
 }

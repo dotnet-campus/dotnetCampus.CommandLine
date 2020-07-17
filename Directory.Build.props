@@ -1,13 +1,17 @@
 <Project>
+
+  <Import Project="build\Version.props" />
+
   <PropertyGroup>
     <PackageOutputPath>$(MSBuildThisFileDirectory)bin\$(Configuration)</PackageOutputPath>
     <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
     <Authors>walterlv</Authors>
     <Company>dotnet-campus</Company>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/dotnet-campus/dotnetCampus.CommandLine</PackageProjectUrl>
     <RepositoryUrl>https://github.com/dotnet-campus/dotnetCampus.CommandLine.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>3.1.1</Version>
   </PropertyGroup>
+
 </Project>
