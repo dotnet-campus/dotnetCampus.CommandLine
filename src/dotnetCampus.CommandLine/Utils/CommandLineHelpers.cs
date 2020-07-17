@@ -163,8 +163,7 @@ namespace dotnetCampus.Cli.Utils
                 throw new ArgumentNullException(nameof(handler));
             }
 
-            handler(options);
-            return Task.FromResult(0);
+            return Task.FromResult(handler(options));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -177,6 +176,17 @@ namespace dotnetCampus.Cli.Utils
 
             await handler(options).ConfigureAwait(false);
             return 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static async Task<int> Invoke<TVerb>(Func<TVerb, Task<int>> handler, TVerb options)
+        {
+            if (handler is null)
+            {
+                throw new ArgumentNullException(nameof(handler));
+            }
+
+            return await handler(options).ConfigureAwait(false);
         }
 
         /// <summary>
