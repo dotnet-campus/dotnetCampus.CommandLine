@@ -61,20 +61,38 @@ namespace dotnetCampus.Cli.Properties {
         }
         
         /// <summary>
-        ///   查找类似 Output any text passed to this option. 的本地化字符串。
+        ///   查找类似 Commands: 的本地化字符串。
         /// </summary>
-        internal static string SamplePropertyDescription {
+        internal static string CommandHeader {
             get {
-                return ResourceManager.GetString("SamplePropertyDescription", resourceCulture);
+                return ResourceManager.GetString("CommandHeader", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 Use sample command line action to output some text. 的本地化字符串。
+        ///   查找类似 Display help. 的本地化字符串。
         /// </summary>
-        internal static string SampleVerbDescription {
+        internal static string HelpOptionDescription {
             get {
-                return ResourceManager.GetString("SampleVerbDescription", resourceCulture);
+                return ResourceManager.GetString("HelpOptionDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Options: 的本地化字符串。
+        /// </summary>
+        internal static string OptionsHeader {
+            get {
+                return ResourceManager.GetString("OptionsHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Usage:  的本地化字符串。
+        /// </summary>
+        internal static string UsageHeader {
+            get {
+                return ResourceManager.GetString("UsageHeader", resourceCulture);
             }
         }
     }

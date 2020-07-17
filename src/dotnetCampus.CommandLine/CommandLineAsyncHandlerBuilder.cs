@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using dotnetCampus.Cli.StateMachine;
@@ -11,47 +10,19 @@ namespace dotnetCampus.Cli
     /// <summary>
     /// 用于收集命令行的异步谓词处理方法。
     /// </summary>
-    public class CommandLineAsyncHandlerBuilder : ICoreCommandLineAsyncHandlerBuilder
+    public class CommandLineAsyncHandlerBuilder : ICommandLineAsyncHandlerBuilder
     {
-        /// <summary>
-        /// 收集所对应的命令行。
-        /// </summary>
-        private readonly CommandLine _commandLine;
-
-        /// <summary>
-        /// 收集的谓词处理方法。
-        /// </summary>
-        private readonly List<CommandLineVerbMatch<Task<int>>> _toMatchList
-            = new List<CommandLineVerbMatch<Task<int>>>();
-
         /// <summary>
         /// 创建一个 <see cref="CommandLineAsyncHandlerBuilder"/> 的新实例。
         /// </summary>
         /// <param name="commandLine">命令行参数。</param>
         internal CommandLineAsyncHandlerBuilder(CommandLine commandLine)
-            => _commandLine = commandLine ?? throw new ArgumentNullException(nameof(commandLine));
+            => CommandLine = commandLine ?? throw new ArgumentNullException(nameof(commandLine));
 
         /// <summary>
-        /// 创建一个 <see cref="CommandLineAsyncHandlerBuilder"/> 的新实例。
+        /// 收集所对应的命令行。
         /// </summary>
-        /// <param name="commandLine">命令行参数。</param>
-        /// <param name="toMatchList">在同步版本的收集中已收集的谓词处理方法。</param>
-        internal CommandLineAsyncHandlerBuilder(CommandLine commandLine,
-            List<CommandLineVerbMatch<Task<int>>> toMatchList)
-        {
-            _commandLine = commandLine ?? throw new ArgumentNullException(nameof(commandLine));
-            _toMatchList = toMatchList;
-        }
-
-        /// <inheritdoc />
-        CommandLine ICoreCommandLineAsyncHandlerBuilder.CommandLine => _commandLine;
-
-        /// <inheritdoc />
-        List<CommandLineVerbMatch<Task<int>>> ICoreCommandLineAsyncHandlerBuilder.Matches => _toMatchList;
-
-        /// <inheritdoc />
-        void ICoreCommandLineAsyncHandlerBuilder.AddMatch<TVerb>(Func<string?, MatchHandleResult<Task<int>>> match)
-            => _toMatchList.Add(new CommandLineVerbMatch<Task<int>>(typeof(TVerb), match));
+        public CommandLine CommandLine { get; }
 
         /// <summary>
         /// 开始匹配谓词，如果谓词与任何一个已收集的谓词处理方法匹配，则执行此处理方法，然后返回其处理后的退出代码（没有指定退出代码则返回 0）。
@@ -65,8 +36,8 @@ namespace dotnetCampus.Cli
         /// <returns>用于异步等待谓词处理方法退出代码的异步任务。</returns>
         public Task<int> RunAsync()
         {
-            var possibleVerb = FindPossibleVerb(_commandLine);
-            foreach (var exitCode in new HandleVerbStateMachine<Task<int>>(_toMatchList).Run(possibleVerb))
+            var possibleVerb = FindPossibleVerb(CommandLine);
+            foreach (var exitCode in new HandleVerbStateMachine<Task<int>>(CommandLine.ToMatchList).Run(possibleVerb))
             {
                 return exitCode;
             }

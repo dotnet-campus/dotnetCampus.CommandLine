@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 
 using dotnetCampus.Cli.Core;
@@ -32,14 +34,24 @@ namespace dotnetCampus.Cli
     [DebuggerTypeProxy(typeof(CommandLineDebugView))]
     public sealed class CommandLine : ICommandLineHandlerBuilder, IEnumerable<ListGroupItem>
     {
-        private readonly ResourceManager? _resourceManager;
         private readonly ListGroup<SingleOptimizedStrings> _optionArgs;
+        private readonly List<CommandLineVerbMatch<Task<int>>> _toMatchList = new List<CommandLineVerbMatch<Task<int>>>();
 
         private CommandLine(ListGroup<SingleOptimizedStrings> optionArgs, ResourceManager? resourceManager)
         {
             _optionArgs = optionArgs ?? throw new ArgumentNullException(nameof(optionArgs));
-            _resourceManager = resourceManager;
+            ResourceManager = resourceManager;
         }
+
+        /// <summary>
+        /// 获取本地化字符串的资源管理器。
+        /// </summary>
+        internal ResourceManager? ResourceManager { get; }
+
+        /// <summary>
+        /// 收集的谓词处理方法。
+        /// </summary>
+        internal IReadOnlyList<CommandLineVerbMatch<Task<int>>> ToMatchList => _toMatchList;
 
         /// <summary>
         /// 自动查找命令行类型 <typeparamref name="T"/> 的解析器，然后解析出参数 <typeparamref name="T"/> 的一个新实例。
@@ -158,6 +170,9 @@ namespace dotnetCampus.Cli
             return parser.Commit();
         }
 
+        internal void AddMatch<TVerb>(Func<string?, MatchHandleResult<Task<int>>> match)
+            => _toMatchList.Add(new CommandLineVerbMatch<Task<int>>(typeof(TVerb), match));
+
         /// <summary>
         /// 将命令行参数转换为字符串值的字典。Key 为选项，Value 为选项后面的值。
         /// 对于布尔类型，Value 为空字符串；对于字符串集合，Value 为此集合拼接的字符串。
@@ -169,6 +184,8 @@ namespace dotnetCampus.Cli
         IEnumerator<ListGroupItem> IEnumerable<ListGroupItem>.GetEnumerator() => _optionArgs.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => _optionArgs.GetEnumerator();
+
+        CommandLine ICommandLineHandlerBuilder.CommandLine => this;
 
         /// <summary>
         /// 解析命令行参数，并返回解析后的 <see cref="CommandLine"/> 类型的新实例。

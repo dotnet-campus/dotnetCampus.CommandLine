@@ -117,10 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="SamplePropertyDescription" xml:space="preserve">
-    <value>Output any text passed to this option.</value>
+  <data name="CommandHeader" xml:space="preserve">
+    <value>Commands:</value>
   </data>
-  <data name="SampleVerbDescription" xml:space="preserve">
-    <value>Use sample command line action to output some text.</value>
+  <data name="HelpOptionDescription" xml:space="preserve">
+    <value>Display help.</value>
+  </data>
+  <data name="OptionsHeader" xml:space="preserve">
+    <value>Options:</value>
+  </data>
+  <data name="UsageHeader" xml:space="preserve">
+    <value>Usage: </value>
   </data>
 </root>

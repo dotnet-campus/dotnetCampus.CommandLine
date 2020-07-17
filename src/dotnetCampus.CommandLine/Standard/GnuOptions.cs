@@ -1,36 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Reflection;
+using System.Resources;
 using System.Threading.Tasks;
 
+using dotnetCampus.Cli.Properties;
 using dotnetCampus.Cli.StateMachine;
 
 namespace dotnetCampus.Cli.Standard
 {
     internal class GnuOptions : CommandLineOptionParser<GnuOptions>
     {
-        private readonly List<CommandLineVerbMatch<Task<int>>>? _matches;
+        private readonly ResourceManager? _resourceManager;
 
         [Option(nameof(Version))]
         public bool Version { get; private set; }
 
-        [Option(nameof(Help))]
+        [Option('h', nameof(Help))]
         public bool Help { get; private set; }
 
-        internal GnuOptions(List<CommandLineVerbMatch<Task<int>>>? matches)
+        internal GnuOptions(CommandLine? commandLine)
         {
-            _matches = matches;
+            _resourceManager = commandLine?.ResourceManager;
 
             AddMatch(nameof(Version), v => Version = v);
             AddMatch(nameof(Help), v => Help = v);
             SetResult(() => this);
         }
 
-        internal void Run()
+        internal void Run(IReadOnlyList<CommandLineVerbMatch<Task<int>>>? matches)
         {
+            matches ??= new List<CommandLineVerbMatch<Task<int>>>();
+
             if (Help)
             {
-                PrintDetailHelpText();
+                PrintDetailHelpText(matches);
             }
             else if (Version)
             {
@@ -38,16 +44,39 @@ namespace dotnetCampus.Cli.Standard
             }
             else
             {
-                PrintHelpText();
+                PrintHelpText(matches);
             }
         }
 
-        private void PrintHelpText()
+        private void PrintHelpText(IReadOnlyList<CommandLineVerbMatch<Task<int>>> matches)
         {
-            Console.WriteLine("用法（占位符）");
+            var helpOptionText = "-h|--help";
+            var maxOptionTextLength = helpOptionText.Length;
+            var verbs = matches.Select(x => x.VerbType.GetCustomAttribute<VerbAttribute>()).OfType<VerbAttribute>().ToList();
+            var maxVerbTextLength = verbs.Count == 0 ? 0 : verbs.Max(x => x.VerbName.Length);
+            var columnLength = Math.Max(maxOptionTextLength, maxVerbTextLength);
+
+            Console.Write(LocalizableStrings.UsageHeader);
+            Console.WriteLine("[options]");
+            Console.WriteLine();
+
+            Console.WriteLine(LocalizableStrings.OptionsHeader);
+            Console.Write(GetColumnString(helpOptionText, columnLength));
+            Console.WriteLine(LocalizableStrings.HelpOptionDescription);
+            Console.WriteLine();
+
+            if (verbs.Count > 0)
+            {
+                Console.WriteLine(LocalizableStrings.CommandHeader);
+            }
+            foreach (var verbAttribute in verbs)
+            {
+                Console.Write(GetColumnString(verbAttribute.VerbName, columnLength));
+                Console.WriteLine(GetLocalizedDescription(verbAttribute));
+            }
         }
 
-        private void PrintDetailHelpText()
+        private static void PrintDetailHelpText(IReadOnlyList<CommandLineVerbMatch<Task<int>>> matches)
         {
             Console.WriteLine("详细用法（占位符）");
         }
@@ -66,5 +95,13 @@ namespace dotnetCampus.Cli.Standard
                 Console.WriteLine(version);
             }
         }
+
+        private string GetColumnString(string originalString, int columnLength)
+            => $"  {originalString.PadRight(columnLength, ' ')}  ";
+
+        private string GetLocalizedDescription(CommandLineAttribute attribute)
+            => _resourceManager != null && !string.IsNullOrWhiteSpace(attribute.LocalizableDescription)
+                ? _resourceManager.GetString(attribute.LocalizableDescription, CultureInfo.CurrentUICulture) ?? ""
+                : attribute.Description ?? "";
     }
 }
