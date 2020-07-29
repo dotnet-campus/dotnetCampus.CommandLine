@@ -41,7 +41,7 @@ namespace dotnetCampus.Cli.Standard
 
         public void Filter(ICommandLineFilterContext context)
         {
-            Run(context);
+            Run(context, false);
         }
 
         public void PostFilter(ICommandLineFilterContext context)
@@ -49,7 +49,7 @@ namespace dotnetCampus.Cli.Standard
             var verb = context.Verb;
             if (string.IsNullOrWhiteSpace(verb))
             {
-                Run(context);
+                Run(context, true);
             }
             else
             {
@@ -67,7 +67,7 @@ namespace dotnetCampus.Cli.Standard
             }
         }
 
-        private void Run(ICommandLineFilterContext context)
+        private void Run(ICommandLineFilterContext context, bool helpEmptyVerb)
         {
             var types = ((CommandLineFilterContext)context).EnumerateRelatedTypes().ToList();
             _localizableStrings = new LocalizableStrings();
@@ -81,6 +81,11 @@ namespace dotnetCampus.Cli.Standard
             {
                 context.SuppressFurtherHandlers(0);
                 PrintVersionText();
+            }
+            else if (helpEmptyVerb)
+            {
+                context.SuppressFurtherHandlers(0);
+                PrintHelpText(types);
             }
         }
 

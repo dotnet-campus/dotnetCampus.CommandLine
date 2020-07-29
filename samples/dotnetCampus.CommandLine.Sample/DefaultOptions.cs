@@ -4,15 +4,14 @@ using dotnetCampus.Cli.Properties;
 
 namespace dotnetCampus.Cli
 {
-    [Verb("sample", LocalizableDescription = nameof(LocalizableStrings.SampleVerbDescription))]
-    internal class SampleOptions
+    internal class DefaultOptions
     {
         [Option(LocalizableDescription = nameof(LocalizableStrings.SamplePropertyDescription))]
-        public string? SampleProperty { get; set; }
+        public string? DefaultProperty { get; set; }
 
         internal void Run()
         {
-            Console.WriteLine("示例行为执行……");
+            Console.WriteLine("默认行为执行……");
         }
     }
 }
