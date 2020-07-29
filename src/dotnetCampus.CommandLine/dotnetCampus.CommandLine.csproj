@@ -24,8 +24,8 @@
     <Reference Include="System.Web" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Condition=" '$(TargetFramework)' == 'netcoreapp3.1' " Include="..\dotnetCampus.CommandLine.Analyzer\dotnetCampus.CommandLine.Analyzer\dotnetCampus.CommandLine.Analyzer.csproj" ReferenceOutputAssembly="False" />
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
+    <ProjectReference Include="..\dotnetCampus.CommandLine.Analyzer\dotnetCampus.CommandLine.Analyzer.csproj" ReferenceOutputAssembly="False" />
   </ItemGroup>
 
   <Target Name="IncludeAllDependencies" BeforeTargets="_GetPackageFiles">

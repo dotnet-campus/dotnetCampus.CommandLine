@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable CA1303 // 请不要将文本作为本地化参数传递
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;

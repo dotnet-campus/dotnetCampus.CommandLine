@@ -19,7 +19,7 @@ namespace dotnetCampus.Cli.Core
         private List<T>? _restValues;
 
         /// <summary>
-        /// 创建带有一个值的 <see cref="SingleOptimizedList"/> 的实例。
+        /// 创建带有一个值的 <see cref="SingleOptimizedList{T}"/> 的实例。
         /// </summary>
         /// <param name="firstValue"></param>
         public SingleOptimizedList(T firstValue)
