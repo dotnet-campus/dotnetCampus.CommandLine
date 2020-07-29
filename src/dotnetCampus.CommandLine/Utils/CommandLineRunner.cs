@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using dotnetCampus.Cli.Core;
 using dotnetCampus.Cli.StateMachine;
@@ -25,10 +26,17 @@ namespace dotnetCampus.Cli.Utils
             var possibleVerb = FindPossibleVerb(commandLine);
 
             // 执行预过滤器。
+            var filterCache = new Dictionary<CommandLineFilterMatch, ICommandLineFilter>();
             var context = new CommandLineFilterContext(commandLine, possibleVerb);
-            if (TryFilter(commandLine, context))
+            foreach (var match in commandLine.FilterMatchList)
             {
-                return Task.FromResult(context.ExitCode);
+                var filter = match.FilterCreator();
+                filterCache[match] = filter;
+                filter.Filter(context);
+                if (context.AreFurtherHandlersSuppressed)
+                {
+                    return Task.FromResult(context.ExitCode);
+                }
             }
 
             // 执行命令行。
@@ -38,27 +46,19 @@ namespace dotnetCampus.Cli.Utils
             }
 
             // 执行后过滤器。
-            if (TryFilter(commandLine, context))
+            foreach (var match in commandLine.FilterMatchList)
             {
-                return Task.FromResult(context.ExitCode);
+                var filter = filterCache.TryGetValue(match, out var cache) ? cache : match.FilterCreator();
+                filter.PostFilter(context);
+                if (context.AreFurtherHandlersSuppressed)
+                {
+                    return Task.FromResult(context.ExitCode);
+                }
             }
 
             // 如果所有谓词均不匹配，则抛出异常。（如果不希望有异常，请加 AddStandardHandlers。）
             ThrowIfVerbNotMatchedAsync(possibleVerb);
             return Task.FromResult(0);
-        }
-
-        private static bool TryFilter(CommandLine commandLine, CommandLineFilterContext context)
-        {
-            foreach (var match in commandLine.FilterMatchList)
-            {
-                match.FilterCreator().Filter(context);
-                if (context.AreFurtherHandlersSuppressed)
-                {
-                    return true;
-                }
-            }
-            return false;
         }
     }
 }

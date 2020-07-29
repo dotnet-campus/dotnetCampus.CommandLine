@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
@@ -45,7 +46,25 @@ namespace dotnetCampus.Cli.Standard
 
         public void PostFilter(ICommandLineFilterContext context)
         {
-            Run(context);
+            var verb = context.Verb;
+            if (string.IsNullOrWhiteSpace(verb))
+            {
+                Run(context);
+            }
+            else
+            {
+                context.SuppressFurtherHandlers(0);
+                var assembly = Assembly.GetEntryAssembly();
+                if (assembly is null)
+                {
+                    Console.WriteLine(string.Format(CultureInfo.CurrentCulture, _localizableStrings.UnknownCommandFormat, verb));
+                }
+                else
+                {
+                    var name = Path.GetFileNameWithoutExtension(assembly.Location);
+                    Console.WriteLine(string.Format(CultureInfo.CurrentCulture, _localizableStrings.UnknownCommandFormat, name, verb));
+                }
+            }
         }
 
         private void Run(ICommandLineFilterContext context)
@@ -62,10 +81,6 @@ namespace dotnetCampus.Cli.Standard
             {
                 context.SuppressFurtherHandlers(0);
                 PrintVersionText();
-            }
-            else
-            {
-                PrintHelpText(types);
             }
         }
 
@@ -210,6 +225,20 @@ namespace dotnetCampus.Cli.Standard
                 { "zh-CN", "命令：" },
             };
 
+            internal string UnknownCommand => GetString(Thread.CurrentThread.CurrentUICulture);
+            internal Dictionary<string, string> _unknownCommand = new Dictionary<string, string>
+            {
+                {  "", "'{0}' is not an available command. See '--help'." },
+                { "zh-CN", "无法执行“{0}”命令，请参阅“--help”。" },
+            };
+
+            internal string UnknownCommandFormat => GetString(Thread.CurrentThread.CurrentUICulture);
+            internal Dictionary<string, string> _unknownCommandFormat = new Dictionary<string, string>
+            {
+                {  "", "{0}: '{1}' is not a {0} command. See '{0} --help'." },
+                { "zh-CN", "无法执行“{1}”命令，请参阅“{0} --help”。" },
+            };
+
             private string GetString(CultureInfo culture, [CallerMemberName] string? propertyName = null)
                 => GetString(propertyName!, culture) ?? "";
 
@@ -222,6 +251,8 @@ namespace dotnetCampus.Cli.Standard
                     nameof(UsageHeader) => _usageHeader,
                     nameof(OptionsHeader) => _optionsHeader,
                     nameof(CommandHeader) => _commandHeader,
+                    nameof(UnknownCommand) => _unknownCommand,
+                    nameof(UnknownCommandFormat) => _unknownCommandFormat,
                     _ => _defaultDictionary,
                 };
                 return dictionary.TryGetValue(currentUICulture.Name, out var text)

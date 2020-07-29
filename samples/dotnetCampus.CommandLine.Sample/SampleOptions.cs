@@ -2,7 +2,7 @@
 
 namespace dotnetCampus.Cli
 {
-    //[Verb("sample", LocalizableDescription = nameof(LocalizableStrings.SampleVerbDescription))]
+    [Verb("sample", LocalizableDescription = nameof(LocalizableStrings.SampleVerbDescription))]
     internal class SampleOptions
     {
         [Option(LocalizableDescription = nameof(LocalizableStrings.SamplePropertyDescription))]
