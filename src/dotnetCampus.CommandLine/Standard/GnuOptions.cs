@@ -149,7 +149,7 @@ namespace dotnetCampus.Cli.Standard
                 : attribute.Description ?? "";
 
         private static string GetLocalizedDescription(CommandLineAttribute attribute, LocalizableStrings resourceManager)
-            => !string.IsNullOrWhiteSpace(attribute.LocalizableDescription)
+            => attribute.LocalizableDescription != null && !string.IsNullOrWhiteSpace(attribute.LocalizableDescription)
                 ? resourceManager.GetString(attribute.LocalizableDescription, CultureInfo.CurrentUICulture) ?? ""
                 : attribute.Description ?? "";
 
