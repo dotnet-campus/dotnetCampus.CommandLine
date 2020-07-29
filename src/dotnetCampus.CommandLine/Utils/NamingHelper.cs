@@ -109,13 +109,13 @@ namespace dotnetCampus.Cli.Utils
             var builder = new StringBuilder();
 
             var isFirstLetter = true;
-            var isWordStart = true;
+            var isUpperOrLower = false;
             foreach (char c in oldName)
             {
                 if (!char.IsLetterOrDigit(c))
                 {
                     // Append nothing because kebab-case has no special characters.
-                    isWordStart = true;
+                    isUpperOrLower = false;
                     continue;
                 }
 
@@ -124,27 +124,27 @@ namespace dotnetCampus.Cli.Utils
                     if (char.IsDigit(c))
                     {
                         // kebab-case does not support digital as the first letter.
-                        isWordStart = true;
+                        isUpperOrLower = false;
                         continue;
                     }
                     else if (char.IsUpper(c))
                     {
                         // 大写字母。
                         isFirstLetter = false;
-                        isWordStart = false;
+                        isUpperOrLower = true;
                         builder.Append(char.ToLowerInvariant(c));
                     }
                     else if (char.IsLower(c))
                     {
                         // 小写字母。
                         isFirstLetter = false;
-                        isWordStart = false;
+                        isUpperOrLower = true;
                         builder.Append(c);
                     }
                     else
                     {
                         isFirstLetter = false;
-                        isWordStart = true;
+                        isUpperOrLower = false;
                         builder.Append(c);
                     }
                 }
@@ -153,24 +153,28 @@ namespace dotnetCampus.Cli.Utils
                     if (char.IsDigit(c))
                     {
                         // kebab-case does not support digital as the first letter.
-                        isWordStart = true;
+                        isUpperOrLower = false;
                         builder.Append(c);
                     }
                     else if (char.IsUpper(c))
                     {
                         builder.Append('-');
                         builder.Append(char.ToLowerInvariant(c));
-                        isWordStart = false;
+                        isUpperOrLower = true;
                     }
                     else if (char.IsLower(c))
                     {
                         builder.Append(c);
-                        isWordStart = false;
+                        isUpperOrLower = true;
                     }
                     else
                     {
+                        if (isUpperOrLower)
+                        {
+                            builder.Append('-');
+                        }
                         builder.Append(c);
-                        isWordStart = false;
+                        isUpperOrLower = false;
                     }
                 }
             }
