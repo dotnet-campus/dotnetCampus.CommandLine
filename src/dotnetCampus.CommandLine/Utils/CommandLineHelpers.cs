@@ -53,6 +53,13 @@ namespace dotnetCampus.Cli.Utils
             return possibleVerb;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static CommandLineFilterMatch MatchFilter<TFilter>(CommandLine commandLine, ICommandLineOptionParser<TFilter>? parser)
+            where TFilter : ICommandLineFilter
+        {
+            return new CommandLineFilterMatch(typeof(TFilter), () => commandLine.As(parser ?? FindParser<TFilter>()));
+        }
+
         /// <summary>
         /// 尝试匹配谓词并调用处理器函数。
         /// 如果匹配成功则执行处理器函数并返回退出代码，否则返回 null。
@@ -82,7 +89,7 @@ namespace dotnetCampus.Cli.Utils
             }
 
             // 为命令行参数类型寻找解析器。
-            parser = parser ?? FindParser<TVerb>();
+            parser ??= FindParser<TVerb>();
 
             // 尝试匹配谓词，并执行处理器代码。
             if (string.Equals(possibleVerb, parser.Verb, StringComparison.InvariantCultureIgnoreCase))
@@ -128,7 +135,7 @@ namespace dotnetCampus.Cli.Utils
             }
 
             // 为命令行参数类型寻找解析器。
-            parser = parser ?? FindParser<TVerb>();
+            parser ??= FindParser<TVerb>();
 
             // 尝试匹配谓词，并执行处理器代码。
             if (string.Equals(possibleVerb, parser.Verb, StringComparison.InvariantCultureIgnoreCase))

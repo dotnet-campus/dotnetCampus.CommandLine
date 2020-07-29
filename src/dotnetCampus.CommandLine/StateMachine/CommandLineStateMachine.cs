@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 
+using dotnetCampus.Cli.Compatibility;
 using dotnetCampus.Cli.Core;
 
 namespace dotnetCampus.Cli.StateMachine

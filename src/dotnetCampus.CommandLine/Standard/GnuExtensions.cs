@@ -21,9 +21,7 @@ namespace dotnetCampus.Cli.Standard
                 throw new System.ArgumentNullException(nameof(builder));
             }
 
-            return builder.AddHandler(
-                o => o.Run(builder.CommandLine.ToMatchList),
-                new GnuOptions(builder.CommandLine));
+            return builder.AddFilter(new GnuFilter(builder.CommandLine));
         }
 
         /// <summary>
@@ -40,9 +38,7 @@ namespace dotnetCampus.Cli.Standard
                 throw new System.ArgumentNullException(nameof(builder));
             }
 
-            return builder.AddHandler(
-                o => o.Run(builder.CommandLine.ToMatchList),
-                new GnuOptions(builder.CommandLine));
+            return builder.AddFilter(new GnuFilter(builder.CommandLine));
         }
     }
 }

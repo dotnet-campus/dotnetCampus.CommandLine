@@ -129,14 +129,22 @@ namespace dotnetCampus.Cli.Utils
                     }
                     else if (char.IsUpper(c))
                     {
+                        // 大写字母。
                         isFirstLetter = false;
                         isWordStart = false;
                         builder.Append(char.ToLowerInvariant(c));
                     }
+                    else if (char.IsLower(c))
+                    {
+                        // 小写字母。
+                        isFirstLetter = false;
+                        isWordStart = false;
+                        builder.Append(c);
+                    }
                     else
                     {
                         isFirstLetter = false;
-                        isWordStart = false;
+                        isWordStart = true;
                         builder.Append(c);
                     }
                 }
@@ -150,19 +158,17 @@ namespace dotnetCampus.Cli.Utils
                     }
                     else if (char.IsUpper(c))
                     {
-                        if (isWordStart)
-                        {
-                            builder.Append('-');
-                        }
+                        builder.Append('-');
                         builder.Append(char.ToLowerInvariant(c));
+                        isWordStart = false;
+                    }
+                    else if (char.IsLower(c))
+                    {
+                        builder.Append(c);
                         isWordStart = false;
                     }
                     else
                     {
-                        if (isWordStart)
-                        {
-                            builder.Append('-');
-                        }
                         builder.Append(c);
                         isWordStart = false;
                     }

@@ -9,14 +9,14 @@ using System.Reflection;
 using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Threading.Tasks;
 
-using dotnetCampus.Cli.StateMachine;
+using dotnetCampus.Cli.Core;
 using dotnetCampus.Cli.Utils;
 
 namespace dotnetCampus.Cli.Standard
 {
-    internal class GnuOptions : CommandLineOptionParser<GnuOptions>
+    [Filter]
+    internal class GnuFilter : CommandLineOptionParser<GnuFilter>, ICommandLineFilter
     {
         private readonly ResourceManager? _resourceManager;
 
@@ -29,7 +29,7 @@ namespace dotnetCampus.Cli.Standard
         [Option('h', nameof(Help), LocalizableDescription = nameof(LocalizableStrings.HelpOptionDescription))]
         public bool Help { get; private set; }
 
-        internal GnuOptions(CommandLine? commandLine)
+        internal GnuFilter(CommandLine? commandLine)
         {
             _resourceManager = commandLine?.ResourceManager;
 
@@ -38,36 +38,48 @@ namespace dotnetCampus.Cli.Standard
             SetResult(() => this);
         }
 
-        internal void Run(IReadOnlyList<CommandLineVerbMatch<Task<int>>>? matches)
+        public void Filter(ICommandLineFilterContext context)
         {
+            Run(context);
+        }
+
+        public void PostFilter(ICommandLineFilterContext context)
+        {
+            Run(context);
+        }
+
+        private void Run(ICommandLineFilterContext context)
+        {
+            var types = ((CommandLineFilterContext)context).EnumerateRelatedTypes().ToList();
             _localizableStrings = new LocalizableStrings();
-            matches ??= new List<CommandLineVerbMatch<Task<int>>>();
 
             if (Help)
             {
-                PrintDetailHelpText(matches);
+                context.SuppressFurtherHandlers(0);
+                PrintDetailHelpText(types);
             }
             else if (Version)
             {
+                context.SuppressFurtherHandlers(0);
                 PrintVersionText();
             }
             else
             {
-                PrintHelpText(matches);
+                PrintHelpText(types);
             }
         }
 
-        private void PrintHelpText(IReadOnlyList<CommandLineVerbMatch<Task<int>>> matches)
+        private void PrintHelpText(IReadOnlyList<Type> relatedTypes)
         {
-            var selfAssembly = typeof(GnuOptions).Assembly;
-            var verbInfoList = matches
-                .Select(x => x.VerbType.GetCustomAttribute<VerbAttribute>())
+            var selfAssembly = typeof(GnuFilter).Assembly;
+            var verbInfoList = relatedTypes
+                .Select(x => x.GetCustomAttribute<VerbAttribute>())
                 .OfType<VerbAttribute>()
                 .Select(x => new { Name = x.VerbName, Description = GetLocalizedDescription(x, _resourceManager) })
                 .ToList();
-            var mergedOptionInfoList = matches
-                .Where(x => !x.VerbType.IsDefined(typeof(VerbAttribute)))
-                .SelectMany(x => x.VerbType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+            var mergedOptionInfoList = relatedTypes
+                .Where(x => !x.IsDefined(typeof(VerbAttribute)))
+                .SelectMany(x => x.GetProperties(BindingFlags.Instance | BindingFlags.Public)
                     .Where(x => x.IsDefined(typeof(OptionAttribute)))
                     .Select(x => new { Type = x.DeclaringType, Property = x, Attribute = x.GetCustomAttribute<OptionAttribute>() })
                     .Select(x => new { x.Attribute!.ShortName, LongName = x.Attribute.LongName ?? x.Property.Name, x.Attribute, x.Type })
@@ -120,9 +132,9 @@ namespace dotnetCampus.Cli.Standard
             }
         }
 
-        private void PrintDetailHelpText(IReadOnlyList<CommandLineVerbMatch<Task<int>>> matches)
+        private void PrintDetailHelpText(IReadOnlyList<Type> relatedTypes)
         {
-            PrintHelpText(matches);
+            PrintHelpText(relatedTypes);
         }
 
         private static void PrintVersionText()
