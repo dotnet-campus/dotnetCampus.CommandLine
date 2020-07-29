@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable CA1303 // 请不要将文本作为本地化参数传递
+
+using System;
 using System.Collections.Generic;
 
 using dotnetCampus.Cli.Core;
@@ -143,7 +145,7 @@ namespace dotnetCampus.Cli.StateMachine
                 return;
             }
 
-            var valueSplitIndex = option.IndexOf(':');
+            var valueSplitIndex = option.IndexOf(':', StringComparison.OrdinalIgnoreCase);
             if (valueSplitIndex < 0 || valueSplitIndex >= option.Length - 1)
             {
                 // -k value

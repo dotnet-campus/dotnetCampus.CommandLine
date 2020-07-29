@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable CA1303 // 请不要将文本作为本地化参数传递
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -147,7 +149,7 @@ namespace dotnetCampus.Cli.Standard
                 : attribute.Description ?? "";
 
         private static string GetLocalizedDescription(CommandLineAttribute attribute, LocalizableStrings resourceManager)
-            => !string.IsNullOrWhiteSpace(attribute.LocalizableDescription)
+            => attribute.LocalizableDescription != null && !string.IsNullOrWhiteSpace(attribute.LocalizableDescription)
                 ? resourceManager.GetString(attribute.LocalizableDescription, CultureInfo.CurrentUICulture) ?? ""
                 : attribute.Description ?? "";
 

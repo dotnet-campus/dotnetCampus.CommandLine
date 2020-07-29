@@ -28,7 +28,7 @@ namespace dotnetCampus.Cli.Parsers
                         _shortNameDictionary[attribute.ShortName.Value] = propertyInfo;
                     }
 
-                    if (string.IsNullOrWhiteSpace(attribute.LongName))
+                    if (attribute.LongName is null || string.IsNullOrWhiteSpace(attribute.LongName))
                     {
                         _longNameDictionary[propertyInfo.Name] = propertyInfo;
                     }

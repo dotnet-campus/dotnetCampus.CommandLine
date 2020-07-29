@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable CA1303 // 请不要将文本作为本地化参数传递
+
+using System;
 using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 

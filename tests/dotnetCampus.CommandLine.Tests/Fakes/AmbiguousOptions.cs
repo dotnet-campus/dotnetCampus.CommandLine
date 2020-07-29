@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace dotnetCampus.Cli.Tests.Fakes
 {
@@ -19,18 +14,18 @@ namespace dotnetCampus.Cli.Tests.Fakes
         /// 命令行中传入 --string-boolean true 也可，会使得值为 true。
         /// </summary>
         [Option("StringBoolean")]
-        public string StringBoolean { get; set; }
+        public string? StringBoolean { get; set; }
 
         /// <summary>
         /// 命令行中传入 --string-array a 也可。
         /// </summary>
         [Option("StringArray")]
-        public string StringArray { get; set; }
+        public string? StringArray { get; set; }
 
         /// <summary>
         /// 命令行中传入 --string-array a 也可，传入 --string-array a b 也可。
         /// </summary>
         [Option("Array")]
-        public IReadOnlyList<string> Array { get; set; }
+        public IReadOnlyList<string>? Array { get; set; }
     }
 }

@@ -101,13 +101,18 @@ namespace dotnetCampus.CommandLine.Analyzers
             var argumentList = attributeSyntax.ChildNodes().OfType<AttributeArgumentListSyntax>().FirstOrDefault();
             if (argumentList != null)
             {
-                var expressions = argumentList.ChildNodes().OfType<AttributeArgumentSyntax>().Select(x => x.Expression);
-                foreach (var expressionSyntax in expressions)
+                var attributeArguments = argumentList.ChildNodes().OfType<AttributeArgumentSyntax>();
+                foreach (var attributeArgument in attributeArguments)
                 {
+                    var expressionSyntax = attributeArgument.Expression;
                     var expression = expressionSyntax.ToString();
+                    var nameEqualsExists = attributeArgument.ChildNodes().OfType<NameEqualsSyntax>().Any();
+                    var longNameEqualsExists = attributeArgument.ChildNodes().OfType<NameEqualsSyntax>().Any(x => x.Name.ToString() == "LongName");
+                    var mayBeLongName = !nameEqualsExists || longNameEqualsExists;
                     if (expression != null
                         && expression.StartsWith("\"", StringComparison.OrdinalIgnoreCase)
-                        && expression.EndsWith("\"", StringComparison.OrdinalIgnoreCase))
+                        && expression.EndsWith("\"", StringComparison.OrdinalIgnoreCase)
+                        && mayBeLongName)
                     {
                         var value = expression.Substring(1, expression.Length - 2);
                         if (value.Length >= 2)

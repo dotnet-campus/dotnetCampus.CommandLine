@@ -16,29 +16,13 @@ namespace dotnetCampus.Cli.Utils
         internal static bool CheckIsPascalCase(string value)
         {
             var first = value[0];
-            if (!char.IsUpper(first))
+            if (char.IsLower(first))
             {
                 return false;
             }
 
-            foreach (var letter in value)
-            {
-                if (!char.IsLetterOrDigit(letter))
-                {
-                    return false;
-                }
-            }
-
-            if (value.Length >= 3)
-            {
-                var allUpper = value.All(x => char.IsUpper(x));
-                if (allUpper)
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            var testName = MakePascalCase(value);
+            return string.Equals(value, testName, StringComparison.Ordinal);
         }
 
         internal static string MakePascalCase(string oldName)
@@ -64,16 +48,25 @@ namespace dotnetCampus.Cli.Utils
                         isWordStart = true;
                         continue;
                     }
-                    else if (!char.IsUpper(c))
+                    else if (char.IsLower(c))
                     {
+                        // 小写字母。
                         isFirstLetter = false;
                         isWordStart = false;
                         builder.Append(char.ToUpperInvariant(c));
                     }
-                    else
+                    else if (char.IsUpper(c))
                     {
+                        // 大写字母。
                         isFirstLetter = false;
                         isWordStart = false;
+                        builder.Append(c);
+                    }
+                    else
+                    {
+                        // 无大小写，但可作为标识符的字符（对 char 来说也视为字母）。
+                        isFirstLetter = false;
+                        isWordStart = true;
                         builder.Append(c);
                     }
                 }
@@ -85,16 +78,24 @@ namespace dotnetCampus.Cli.Utils
                         isWordStart = true;
                         builder.Append(c);
                     }
-                    else if (!char.IsUpper(c))
+                    else if (char.IsLower(c))
                     {
+                        // 小写字母。
                         builder.Append(isWordStart
                             ? char.ToUpperInvariant(c)
                             : c);
                         isWordStart = false;
                     }
+                    else if (char.IsUpper(c))
+                    {
+                        // 大写字母。
+                        isWordStart = false;
+                        builder.Append(c);
+                    }
                     else
                     {
-                        isWordStart = false;
+                        // 无大小写，但可作为标识符的字符（对 char 来说也视为字母）。
+                        isWordStart = true;
                         builder.Append(c);
                     }
                 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable CA1303 // 请不要将文本作为本地化参数传递
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -39,7 +41,7 @@ namespace dotnetCampus.Cli.Parsers
                         _shortNameDictionary[attribute.ShortName.Value] = propertyInfo;
                     }
 
-                    if (string.IsNullOrWhiteSpace(attribute.LongName))
+                    if (attribute.LongName is null || string.IsNullOrWhiteSpace(attribute.LongName))
                     {
                         _longNameDictionary[propertyInfo.Name] = propertyInfo;
                     }

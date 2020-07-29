@@ -271,7 +271,7 @@ namespace dotnetCampus.Cli
             if (url != null)
             {
                 url = HttpUtility.UrlDecode(url);
-                var start = url.IndexOf('?');
+                var start = url.IndexOf('?', StringComparison.OrdinalIgnoreCase);
                 if (start >= 0 && url != null)
                 {
                     var arguments = url.Substring(start + 1);
