@@ -12,9 +12,9 @@ namespace dotnetCampus.Cli.Tests.Fakes
         public AmbiguousOptionsParser()
         {
             bool boolean = false;
-            string stringBoolean = null;
-            string stringArray = null;
-            IReadOnlyList<string> array = null;
+            string? stringBoolean = null;
+            string? stringArray = null;
+            IReadOnlyList<string>? array = null;
 
             AddMatch("Boolean", value => boolean = value);
             AddMatch("StringBoolean", value => stringBoolean = value);

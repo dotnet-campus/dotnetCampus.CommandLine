@@ -5,14 +5,14 @@ namespace dotnetCampus.Cli.Tests.Fakes
     public class OptionsParser : ICommandLineOptionParser<Options>
     {
         private bool _isFromCloud;
-        private string _filePath;
-        private string _startupMode;
+        private string? _filePath;
+        private string? _startupMode;
         private bool _isSilence;
         private bool _isIwb;
-        private string _placement;
-        private string _startupSession;
+        private string? _placement;
+        private string? _startupSession;
 
-        public string Verb => null;
+        public string? Verb => null;
 
         public void SetValue(IReadOnlyList<string> values)
         {

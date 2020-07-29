@@ -5,13 +5,13 @@ namespace dotnetCampus.Cli.Tests.Fakes
     public class DictionaryOptions
     {
         [Option('a', "Aaa")]
-        public IReadOnlyDictionary<string, string> Aaa { get; set; }
+        public IReadOnlyDictionary<string, string>? Aaa { get; set; }
 
         [Option('b', "Bbb")]
-        public IDictionary<string, string> Bbb { get; set; }
+        public IDictionary<string, string>? Bbb { get; set; }
 
         [Option('c', "Ccc")]
-        public Dictionary<string, string> Ccc { get; set; }
+        public Dictionary<string, string>? Ccc { get; set; }
 
         [Option('d', "Ddd")]
         public KeyValuePair<string, string> Ddd { get; set; }

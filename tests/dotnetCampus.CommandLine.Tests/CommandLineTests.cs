@@ -124,8 +124,8 @@ namespace dotnetCampus.Cli.Tests
                 var options = commandLine.As<IOOptions>();
 
                 // Assert
-                Assert.AreEqual(Path.Combine(Directory.GetCurrentDirectory(), "a.txt"), options.File.FullName);
-                Assert.AreEqual(Path.Combine(Directory.GetCurrentDirectory(), "b"), options.Directory.FullName);
+                Assert.AreEqual(Path.Combine(Directory.GetCurrentDirectory(), "a.txt"), options.File!.FullName);
+                Assert.AreEqual(Path.Combine(Directory.GetCurrentDirectory(), "b"), options.Directory!.FullName);
             }).WithArguments(
                 new[] { "-f", "a.txt", "-d", "b" },
                 new[] { "-f", "   a.txt   ", "-d", "   b  " }
@@ -142,9 +142,9 @@ namespace dotnetCampus.Cli.Tests
                 var options = commandLine.As<DictionaryOptions>();
 
                 // Assert
-                Assert.AreEqual("1", options.Aaa["a"]);
-                Assert.AreEqual("1", options.Bbb["a"]);
-                Assert.AreEqual("1", options.Ccc["a"]);
+                Assert.AreEqual("1", options.Aaa!["a"]);
+                Assert.AreEqual("1", options.Bbb!["a"]);
+                Assert.AreEqual("1", options.Ccc!["a"]);
                 Assert.AreEqual("a", options.Ddd.Key);
                 Assert.AreEqual("1", options.Ddd.Value);
             }).WithArguments(
@@ -159,13 +159,13 @@ namespace dotnetCampus.Cli.Tests
                 var options = commandLine.As<DictionaryOptions>();
 
                 // Assert
-                Assert.AreEqual("1", options.Aaa["a"]);
+                Assert.AreEqual("1", options.Aaa!["a"]);
                 Assert.AreEqual("2", options.Aaa["b"]);
                 Assert.AreEqual("3", options.Aaa["c"]);
-                Assert.AreEqual("1", options.Bbb["a"]);
+                Assert.AreEqual("1", options.Bbb!["a"]);
                 Assert.AreEqual("2", options.Bbb["b"]);
                 Assert.AreEqual("3", options.Bbb["c"]);
-                Assert.AreEqual("1", options.Ccc["a"]);
+                Assert.AreEqual("1", options.Ccc!["a"]);
                 Assert.AreEqual("2", options.Ccc["b"]);
                 Assert.AreEqual("3", options.Ccc["c"]);
             }).WithArguments(
@@ -180,9 +180,9 @@ namespace dotnetCampus.Cli.Tests
                 var options = commandLine.As<DictionaryOptions>();
 
                 // Assert
-                Assert.AreEqual("1", options.Aaa["a"]);
-                Assert.AreEqual("1  1", options.Bbb["a"]);
-                Assert.AreEqual("1", options.Ccc["a"]);
+                Assert.AreEqual("1", options.Aaa!["a"]);
+                Assert.AreEqual("1  1", options.Bbb!["a"]);
+                Assert.AreEqual("1", options.Ccc!["a"]);
                 Assert.AreEqual("a", options.Ddd.Key);
                 Assert.AreEqual("1", options.Ddd.Value);
             }).WithArguments(
@@ -362,7 +362,7 @@ namespace dotnetCampus.Cli.Tests
                 var commandLine = CommandLine.Parse(args);
 
                 // Action
-                string filePath = null;
+                string? filePath = null;
                 await commandLine
                     .AddHandler<EditOptions>(async options =>
                     {

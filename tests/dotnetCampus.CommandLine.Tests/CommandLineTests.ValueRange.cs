@@ -22,7 +22,7 @@ namespace dotnetCampus.Cli.Tests
                 // Assert
                 Assert.AreEqual("foo", options.Foo);
                 Assert.AreEqual(8, options.LongValue);
-                CollectionAssert.AreEqual(new[] { "x", "y" }, (ICollection)options.Values);
+                CollectionAssert.AreEqual(new[] { "x", "y" }, (ICollection?)options.Values);
                 Assert.AreEqual(2, options.Int32Value);
             }).WithArguments(
                 new[] { "8", "x", "y", "2", "-f", "foo" },
@@ -38,7 +38,7 @@ namespace dotnetCampus.Cli.Tests
                 // Assert
                 Assert.AreEqual("foo", options.Foo);
                 Assert.AreEqual(-8, options.LongValue);
-                CollectionAssert.AreEqual(new[] { "-x", "-y" }, (ICollection)options.Values);
+                CollectionAssert.AreEqual(new[] { "-x", "-y" }, (ICollection?)options.Values);
                 Assert.AreEqual(-2, options.Int32Value);
             }).WithArguments(
                 new[] { "-f", "foo", "--", "-8", "-x", "-y", "-2" }
@@ -53,7 +53,7 @@ namespace dotnetCampus.Cli.Tests
                 // Assert
                 Assert.AreEqual("foo", options.Section);
                 Assert.AreEqual(8, options.Count);
-                CollectionAssert.AreEqual(new[] { "dcl.exe", "--foo", "xyz", "-s", "some", "2" }, (ICollection)options.Args);
+                CollectionAssert.AreEqual(new[] { "dcl.exe", "--foo", "xyz", "-s", "some", "2" }, (ICollection?)options.Args);
             }).WithArguments(
                 new[] { "-s", "foo", "--", "8", "dcl.exe", "--foo", "xyz", "-s", "some", "2" }
             );
