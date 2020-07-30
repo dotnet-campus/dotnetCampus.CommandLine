@@ -77,9 +77,43 @@ namespace dotnetCampus.Cli.Standard
             }
         }
 
-        private void PrintVerbHelpText(Type verbType)
+        private void PrintVerbHelpText(Type verbType, string? commandLineVerb)
         {
-            Console.WriteLine("--------------------------");
+            var verbAttribute = verbType.GetCustomAttribute<VerbAttribute>();
+            if (verbAttribute != null)
+            {
+                var verb = NamingHelper.MakeKebabCase(verbAttribute.VerbName);
+                
+                Console.Write(_localizableStrings.UsageHeader);
+                Console.WriteLine($"{verb} [options]");
+                Console.WriteLine();
+
+                var optionInfoList = verbType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                    .Where(x => x.IsDefined(typeof(OptionAttribute)))
+                    .Select(x => new { Type = x.DeclaringType, Property = x, Attribute = x.GetCustomAttribute<OptionAttribute>() })
+                    .Select(x => new { x.Attribute!.ShortName, LongName = x.Attribute.LongName ?? x.Property.Name, x.Attribute, x.Type })
+                    .Select(x => new
+                    {
+                        Name = x.ShortName is null ? $"--{NamingHelper.MakeKebabCase(x.LongName)}" : $"-{x.ShortName}|--{NamingHelper.MakeKebabCase(x.LongName)}",
+                        Description = GetLocalizedDescription(x.Attribute, _resourceManager),
+                    }).ToList();
+                var columnLength = optionInfoList.Count == 0 ? 0 : optionInfoList.Max(x => x.Name.Length);
+
+                if (optionInfoList.Count > 0)
+                {
+                    Console.WriteLine(_localizableStrings.OptionsHeader);
+                }
+                foreach (var x in optionInfoList)
+                {
+                    Console.Write(GetColumnString(x.Name, columnLength));
+                    Console.WriteLine(x.Description);
+                }
+
+            }
+            else if (!string.IsNullOrWhiteSpace(commandLineVerb))
+            {
+                PrintUnknownVerbHelpText(commandLineVerb);
+            }
         }
 
         private void PrintUnknownVerbHelpText(string? verb)

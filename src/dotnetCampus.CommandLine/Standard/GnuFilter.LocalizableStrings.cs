@@ -36,7 +36,7 @@ namespace dotnetCampus.Cli.Standard
             internal Dictionary<string, string> _usageHeader = new Dictionary<string, string>
             {
                 {  "", "Usage: " },
-                { "zh-CN", "使用：" },
+                { "zh-CN", "用法：" },
             };
 
             internal string OptionsHeader => GetString(Thread.CurrentThread.CurrentUICulture);

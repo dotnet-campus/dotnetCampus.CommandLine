@@ -62,7 +62,7 @@ namespace dotnetCampus.Cli.Standard
                 context.SuppressFurtherHandlers(0);
                 if (context.Verb is string verb && !string.IsNullOrWhiteSpace(verb))
                 {
-                    PrintVerbHelpText(context.GetVerbType()!);
+                    PrintVerbHelpText(context.GetVerbType()!, verb);
                 }
                 else
                 {
