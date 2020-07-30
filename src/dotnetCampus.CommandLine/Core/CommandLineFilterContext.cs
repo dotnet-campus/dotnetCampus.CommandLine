@@ -4,6 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
+
+using dotnetCampus.Cli.StateMachine;
 
 namespace dotnetCampus.Cli.Core
 {
@@ -43,6 +46,19 @@ namespace dotnetCampus.Cli.Core
         internal IEnumerable<Type> EnumerateRelatedTypes()
         {
             return CommandLine.FilterMatchList.Select(x => x.FilterType).Concat(CommandLine.VerbMatchList.Select(x => x.VerbType));
+        }
+
+        /// <summary>
+        /// 获取所有的谓词列表和对应的执行上下文。
+        /// </summary>
+        /// <returns>所有的谓词列表和对应的执行上下文。</returns>
+        internal Type? GetVerbType()
+        {
+            foreach (var match in new HandleVerbStateMachine<Task<int>>(CommandLine.VerbMatchList).Find(Verb))
+            {
+                return match.VerbType;
+            }
+            return null;
         }
 
         /// <inheritdoc />

@@ -1,17 +1,19 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace dotnetCampus.Cli.StateMachine
 {
     /// <summary>
-    /// 为 CommandLineHandlers.MatchAndHandle 方法提供返回值。用于记录三种不同的可能返回值。
+    /// 包装一个命令行处理器类型，这个类型将来可供谓词匹配并决定后续执行。
     /// </summary>
     /// <typeparam name="T">
     /// 对于同步处理器，使用处理器返回值 int；
     /// 对于异步处理器，使用处理器返回值 Task&lt;int&gt;。
     /// </typeparam>
     [StructLayout(LayoutKind.Auto)]
-    internal readonly struct CommandLineVerbMatch<T> where T : notnull
+    [DebuggerDisplay(nameof(CommandLineTypeMatcher<T>) + "->{VerbType}")]
+    internal readonly struct CommandLineTypeMatcher<T> where T : notnull
     {
         /// <summary>
         /// 记录定义此谓词的类型。
@@ -19,14 +21,14 @@ namespace dotnetCampus.Cli.StateMachine
         public Type VerbType { get; }
 
         /// <summary>
-        /// 执行此谓词的处理器函数，并返回匹配和执行结果。
+        /// 尝试匹配谓词，然后返回匹配结果和执行函数。
         /// </summary>
-        public readonly Func<string?, MatchHandleResult<T>> Handler { get; }
+        public readonly Func<string?, CommandLineTypeMatchResult<T>> Match { get; }
 
-        public CommandLineVerbMatch(Type verbType, Func<string?, MatchHandleResult<T>> handler)
+        public CommandLineTypeMatcher(Type verbType, Func<string?, CommandLineTypeMatchResult<T>> handler)
         {
             VerbType = verbType ?? throw new ArgumentNullException(nameof(verbType));
-            Handler = handler ?? throw new ArgumentNullException(nameof(handler));
+            Match = handler ?? throw new ArgumentNullException(nameof(handler));
         }
     }
 }

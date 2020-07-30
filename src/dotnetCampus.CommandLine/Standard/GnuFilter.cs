@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
@@ -67,15 +68,23 @@ namespace dotnetCampus.Cli.Standard
             }
         }
 
-        private void Run(ICommandLineFilterContext context, bool helpEmptyVerb)
+        private void Run(ICommandLineFilterContext contextInterface, bool helpEmptyVerb)
         {
-            var types = ((CommandLineFilterContext)context).EnumerateRelatedTypes().ToList();
-            _localizableStrings = new LocalizableStrings();
+            var context = (CommandLineFilterContext)contextInterface;
+            var types = context.EnumerateRelatedTypes().ToList();
+            _localizableStrings ??= new LocalizableStrings();
 
             if (Help)
             {
                 context.SuppressFurtherHandlers(0);
-                PrintDetailHelpText(types);
+                if (context.Verb is string verb && !string.IsNullOrWhiteSpace(verb))
+                {
+                    PrintVerbHelpText(context.GetVerbType()!);
+                }
+                else
+                {
+                    PrintDetailHelpText(types);
+                }
             }
             else if (Version)
             {
@@ -150,6 +159,11 @@ namespace dotnetCampus.Cli.Standard
                 Console.Write(GetColumnString(x.Name, columnLength));
                 Console.WriteLine(x.Description);
             }
+        }
+
+        private void PrintVerbHelpText(Type verbType)
+        {
+            Console.WriteLine("--------------------------");
         }
 
         private void PrintDetailHelpText(IReadOnlyList<Type> relatedTypes)

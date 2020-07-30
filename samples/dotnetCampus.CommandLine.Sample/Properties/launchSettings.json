@@ -19,9 +19,13 @@
       "commandName": "Project",
       "commandLineArgs": "sample --help"
     },
-    "Debug unknown --help": {
+    "Debug unknown": {
       "commandName": "Project",
       "commandLineArgs": "unknown --sample-property \"Hello World\""
+    },
+    "Debug unknown --help": {
+      "commandName": "Project",
+      "commandLineArgs": "unknown --help"
     },
     "Debug --options": {
       "commandName": "Project",

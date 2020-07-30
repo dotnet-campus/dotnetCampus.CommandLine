@@ -36,7 +36,7 @@ namespace dotnetCampus.Cli
     {
         private readonly ListGroup<SingleOptimizedStrings> _optionArgs;
         private readonly List<CommandLineFilterMatch> _filterCreatorList = new List<CommandLineFilterMatch>();
-        private readonly List<CommandLineVerbMatch<Task<int>>> _toMatchList = new List<CommandLineVerbMatch<Task<int>>>();
+        private readonly List<CommandLineTypeMatcher<Task<int>>> _toMatchList = new List<CommandLineTypeMatcher<Task<int>>>();
 
         private CommandLine(ListGroup<SingleOptimizedStrings> optionArgs, ResourceManager? resourceManager)
         {
@@ -57,7 +57,7 @@ namespace dotnetCampus.Cli
         /// <summary>
         /// 收集的谓词处理方法。
         /// </summary>
-        internal IReadOnlyList<CommandLineVerbMatch<Task<int>>> VerbMatchList => _toMatchList;
+        internal IReadOnlyList<CommandLineTypeMatcher<Task<int>>> VerbMatchList => _toMatchList;
 
         /// <summary>
         /// 自动查找命令行类型 <typeparamref name="T"/> 的解析器，然后解析出参数 <typeparamref name="T"/> 的一个新实例。
@@ -179,8 +179,11 @@ namespace dotnetCampus.Cli
         internal void AddMatch(CommandLineFilterMatch filterCreator)
             => _filterCreatorList.Add(filterCreator);
 
-        internal void AddMatch<TVerb>(Func<string?, MatchHandleResult<Task<int>>> match)
-            => _toMatchList.Add(new CommandLineVerbMatch<Task<int>>(typeof(TVerb), match));
+        internal void AddMatch<TVerb>(CommandLineTypeMatcher<Task<int>> matcher)
+            => _toMatchList.Add(matcher);
+
+        //internal void AddMatch<TVerb>(Func<string?, CommandLineTypeMatchResult<Task<int>>> match)
+        //    => _toMatchList.Add(new CommandLineTypeMatcher<Task<int>>(typeof(TVerb), match));
 
         /// <summary>
         /// 将命令行参数转换为字符串值的字典。Key 为选项，Value 为选项后面的值。

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace dotnetCampus.Cli.StateMachine
@@ -7,6 +8,7 @@ namespace dotnetCampus.Cli.StateMachine
     /// 包装 <see cref="ICommandLineFilter"/> 的元数据。
     /// </summary>
     [StructLayout(LayoutKind.Auto)]
+    [DebuggerDisplay(nameof(CommandLineFilterMatch) + "->{FilterType}")]
     internal readonly struct CommandLineFilterMatch
     {
         /// <summary>

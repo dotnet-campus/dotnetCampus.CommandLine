@@ -40,8 +40,9 @@ namespace dotnetCampus.Cli.Utils
             }
 
             // 执行命令行。
-            foreach (var exitCode in new HandleVerbStateMachine<Task<int>>(commandLine.VerbMatchList).Run(possibleVerb))
+            foreach (var match in new HandleVerbStateMachine<Task<int>>(commandLine.VerbMatchList).Find(possibleVerb))
             {
+                var exitCode = match.Handler!();
                 return exitCode;
             }
 

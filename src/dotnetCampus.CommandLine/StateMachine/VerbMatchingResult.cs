@@ -8,16 +8,16 @@
         /// <summary>
         /// 谓词没有匹配上。
         /// </summary>
-        NotMatched,
+        NotMatch,
 
         /// <summary>
-        /// 谓词匹配成功。
+        /// 谓词匹配成功（包括无谓词的匹配）。
         /// </summary>
         Matched,
 
         /// <summary>
-        /// 谓词没有匹配上，但这是这个选项包含默认谓词。
+        /// 本类型无谓词，如果所有谓词均无法匹配，则可作为回退方案匹配。
         /// </summary>
-        Default,
+        FallbackMatched,
     }
 }
