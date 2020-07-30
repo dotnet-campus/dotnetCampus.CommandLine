@@ -91,7 +91,6 @@ namespace dotnetCampus.Cli.Standard
                     Console.Write(GetColumnString(x.Name, columnLength));
                     Console.WriteLine(x.Description);
                 }
-
             }
             else if (!string.IsNullOrWhiteSpace(commandLineVerb))
             {
