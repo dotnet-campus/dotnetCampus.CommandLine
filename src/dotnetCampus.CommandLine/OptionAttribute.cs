@@ -6,7 +6,7 @@ namespace dotnetCampus.Cli
     /// 标记一个属性对应命令行中的一个参数。
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
-    public sealed class OptionAttribute : CommandLineAttribute
+    public sealed class OptionAttribute : CommandLinePropertyAttribute
     {
         /// <summary>
         /// 获取命令行短名称。
