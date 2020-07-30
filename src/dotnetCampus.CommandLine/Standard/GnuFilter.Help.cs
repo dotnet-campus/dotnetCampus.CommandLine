@@ -26,11 +26,11 @@ namespace dotnetCampus.Cli.Standard
                 .Where(x => !x.IsDefined(typeof(VerbAttribute)))
                 .SelectMany(x => x.GetProperties(BindingFlags.Instance | BindingFlags.Public)
                     .Where(x => x.IsDefined(typeof(OptionAttribute)))
-                    .Select(x => new { Type = x.DeclaringType, Property = x, Attribute = x.GetCustomAttribute<OptionAttribute>() })
-                    .Select(x => new { x.Attribute!.ShortName, LongName = x.Attribute.LongName ?? x.Property.Name, x.Attribute, x.Type })
+                    .Select(x => new { Type = x.DeclaringType!, x.PropertyType, Property = x, Attribute = x.GetCustomAttribute<OptionAttribute>() })
+                    .Select(x => new { x.Attribute!.ShortName, LongName = x.Attribute.LongName ?? x.Property.Name, x.Attribute, x.Type, TypeName = GetTypeName(x.PropertyType, x.Attribute.TypeName) })
                     .Select(x => new
                     {
-                        Name = x.ShortName is null ? $"--{NamingHelper.MakeKebabCase(x.LongName)}" : $"-{x.ShortName}|--{NamingHelper.MakeKebabCase(x.LongName)}",
+                        Name = $"{(x.ShortName is null ? "" : $"{x.ShortName}|")}--{NamingHelper.MakeKebabCase(x.LongName)}{(x.TypeName is null ? "" : $" <{x.TypeName}>")}",
                         Description = x.Type!.Assembly == selfAssembly
                             ? GetLocalizedDescription(x.Attribute, _localizableStrings)
                             : GetLocalizedDescription(x.Attribute, _resourceManager),
@@ -90,11 +90,11 @@ namespace dotnetCampus.Cli.Standard
 
                 var optionInfoList = verbType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
                     .Where(x => x.IsDefined(typeof(OptionAttribute)))
-                    .Select(x => new { Type = x.DeclaringType, Property = x, Attribute = x.GetCustomAttribute<OptionAttribute>() })
-                    .Select(x => new { x.Attribute!.ShortName, LongName = x.Attribute.LongName ?? x.Property.Name, x.Attribute, x.Type })
+                    .Select(x => new { Type = x.DeclaringType!, x.PropertyType, Property = x, Attribute = x.GetCustomAttribute<OptionAttribute>() })
+                    .Select(x => new { x.Attribute!.ShortName, LongName = x.Attribute.LongName ?? x.Property.Name, x.Attribute, x.Type, TypeName = GetTypeName(x.PropertyType, x.Attribute.TypeName) })
                     .Select(x => new
                     {
-                        Name = x.ShortName is null ? $"--{NamingHelper.MakeKebabCase(x.LongName)}" : $"-{x.ShortName}|--{NamingHelper.MakeKebabCase(x.LongName)}",
+                        Name = $"{(x.ShortName is null ? "" : $"{x.ShortName}|")}--{NamingHelper.MakeKebabCase(x.LongName)}{(x.TypeName is null ? "" : $" <{x.TypeName}>")}",
                         Description = GetLocalizedDescription(x.Attribute, _resourceManager),
                     }).ToList();
                 var columnLength = optionInfoList.Count == 0 ? 0 : optionInfoList.Max(x => x.Name.Length);
@@ -162,5 +162,15 @@ namespace dotnetCampus.Cli.Standard
             => attribute.LocalizableDescription != null && !string.IsNullOrWhiteSpace(attribute.LocalizableDescription)
                 ? resourceManager.GetString(attribute.LocalizableDescription, CultureInfo.CurrentUICulture) ?? ""
                 : attribute.Description ?? "";
+
+        private static string? GetTypeName(Type type, string? typeName)
+        {
+            if (typeName != null && !string.IsNullOrWhiteSpace(typeName))
+            {
+                return typeName;
+            }
+
+            return CommandLineAssigningExtensions.GetAssignableTypeName(type);
+        }
     }
 }

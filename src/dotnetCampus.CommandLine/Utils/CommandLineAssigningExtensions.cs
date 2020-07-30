@@ -119,6 +119,31 @@ Supported types are: bool, string?, string[]?, List<string>? and all it's interf
             }
         }
 
+        /// <summary>
+        /// 命令的属性的类型（或名称）解析成使用说明中的选项类型名称。
+        /// </summary>
+        /// <param name="assignableType">属性类型。</param>
+        /// <returns>此类型属性能接收的值。</returns>
+        public static string? GetAssignableTypeName(Type assignableType)
+        {
+            if (assignableType.IsEnum)
+            {
+                return assignableType.Name;
+            }
+            else if (assignableType.IsAssignableFrom(typeof(FileInfo)))
+            {
+                return $"FILE_PATH";
+            }
+            else if (assignableType.IsAssignableFrom(typeof(DirectoryInfo)))
+            {
+                return $"DIRECTORY_PATH";
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Dictionary<string, string> ParseArgsToDictionary(IReadOnlyList<string>? list) => MergeList(list)
             .Split(';')

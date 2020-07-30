@@ -48,6 +48,11 @@ namespace dotnetCampus.Cli
         /// </param>
         public ValueAttribute(int index, int length)
         {
+            if (index < 0)
+            {
+                throw new ArgumentException("命令中值的位置必须大于或等于 0。", nameof(length));
+            }
+
             if (length <= 0)
             {
                 throw new ArgumentException("命令中值的长度必须大于或等于 1。", nameof(length));
