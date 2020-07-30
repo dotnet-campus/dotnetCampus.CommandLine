@@ -25,7 +25,7 @@ namespace dotnetCampus.Cli.Standard
             _resourceManager = commandLine?.ResourceManager;
 
             AddMatch(nameof(Version), v => Version = v);
-            AddMatch(nameof(Help), v => Help = v);
+            AddMatch('h', nameof(Help), v => Help = v);
             SetResult(() => this);
         }
 
