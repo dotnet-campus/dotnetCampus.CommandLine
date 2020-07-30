@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 using dotnetCampus.Cli.Properties;
 
@@ -8,10 +9,14 @@ namespace dotnetCampus.Cli
     internal class SampleOptions
     {
         [Option(LocalizableDescription = nameof(LocalizableStrings.SamplePropertyDescription))]
-        public string? SampleProperty { get; set; }
+        public string? SampleText { get; set; }
+
+        [Option(LocalizableDescription = nameof(LocalizableStrings.SampleFilePropertyDescription))]
+        public FileInfo? SampleFile { get; set; }
 
         internal void Run()
         {
+            Console.WriteLine("示例行为执行……");
         }
     }
 }

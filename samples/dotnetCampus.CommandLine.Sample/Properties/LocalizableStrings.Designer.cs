@@ -61,6 +61,24 @@ namespace dotnetCampus.Cli.Properties {
         }
         
         /// <summary>
+        ///   查找类似 Pass any directory into this option. 的本地化字符串。
+        /// </summary>
+        internal static string SampleDirectoryPropertyDescription {
+            get {
+                return ResourceManager.GetString("SampleDirectoryPropertyDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Pass any file into this option. 的本地化字符串。
+        /// </summary>
+        internal static string SampleFilePropertyDescription {
+            get {
+                return ResourceManager.GetString("SampleFilePropertyDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Output any text passed to this option. 的本地化字符串。
         /// </summary>
         internal static string SamplePropertyDescription {

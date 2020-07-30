@@ -8,7 +8,7 @@ namespace dotnetCampus.Cli
     /// 标记一个属性对应命令行中的一个不带选项的值。
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
-    public sealed class ValueAttribute : Attribute
+    public sealed class ValueAttribute : CommandLinePropertyAttribute
     {
         /// <summary>
         /// 获取此值在所有命令行不带选项值中的位置。
@@ -48,6 +48,11 @@ namespace dotnetCampus.Cli
         /// </param>
         public ValueAttribute(int index, int length)
         {
+            if (index < 0)
+            {
+                throw new ArgumentException("命令中值的位置必须大于或等于 0。", nameof(length));
+            }
+
             if (length <= 0)
             {
                 throw new ArgumentException("命令中值的长度必须大于或等于 1。", nameof(length));

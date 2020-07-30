@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-using dotnetCampus.Cli.StateMachine;
-
-using static dotnetCampus.Cli.Utils.CommandLineHelpers;
+using static dotnetCampus.Cli.Utils.CommandLineRunner;
 
 namespace dotnetCampus.Cli
 {
@@ -34,16 +32,6 @@ namespace dotnetCampus.Cli
         /// 2. 最多只会有一个谓词处理方法被执行，此方法会返回唯一那个处理方法的退出代码。
         /// </remarks>
         /// <returns>用于异步等待谓词处理方法退出代码的异步任务。</returns>
-        public Task<int> RunAsync()
-        {
-            var possibleVerb = FindPossibleVerb(CommandLine);
-            foreach (var exitCode in new HandleVerbStateMachine<Task<int>>(CommandLine.ToMatchList).Run(possibleVerb))
-            {
-                return exitCode;
-            }
-
-            ThrowIfVerbNotMatchedAsync(possibleVerb);
-            return Task.FromResult(0);
-        }
+        public Task<int> RunAsync() => RunCoreAsync(CommandLine);
     }
 }

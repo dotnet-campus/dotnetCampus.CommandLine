@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace dotnetCampus.Cli.Core
 {
     /// <summary>
     /// 为 0 个和 1 个值特殊优化性能的列表。
     /// </summary>
+    [DebuggerDisplay(nameof(SingleOptimizedList<T>) + " {_firstValue,nq}, {_restValues}")]
     internal class SingleOptimizedList<T> : IReadOnlyList<T>
     {
         /// <summary>

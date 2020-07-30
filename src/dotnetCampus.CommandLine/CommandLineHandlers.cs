@@ -4,6 +4,8 @@ using System;
 using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 
+using dotnetCampus.Cli.StateMachine;
+
 using static dotnetCampus.Cli.Utils.CommandLineHelpers;
 
 namespace dotnetCampus.Cli
@@ -31,7 +33,8 @@ namespace dotnetCampus.Cli
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            builder.CommandLine.AddMatch<TVerb>(verb => MatchAndHandle(builder.CommandLine, verb, options => Invoke(handler, options), parser));
+            builder.CommandLine.AddMatch<TVerb>(new CommandLineTypeMatcher<Task<int>>(typeof(TVerb),
+                verb => MatchWithHandler(builder.CommandLine, verb, options => Invoke(handler, options), parser)));
 
             return builder switch
             {
@@ -59,7 +62,8 @@ namespace dotnetCampus.Cli
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            builder.CommandLine.AddMatch<TVerb>(verb => MatchAndHandle(builder.CommandLine, verb, options => Invoke(handler, options), parser));
+            builder.CommandLine.AddMatch<TVerb>(new CommandLineTypeMatcher<Task<int>>(typeof(TVerb),
+                verb => MatchWithHandler(builder.CommandLine, verb, options => Invoke(handler, options), parser)));
 
             return builder switch
             {
@@ -89,7 +93,9 @@ namespace dotnetCampus.Cli
 
             var commandLine = builder.CommandLine;
             var newBuilder = new CommandLineAsyncHandlerBuilder(commandLine);
-            commandLine.AddMatch<TVerb>(verb => MatchAndHandle(commandLine, verb, options => Invoke(handler, options), parser));
+
+            builder.CommandLine.AddMatch<TVerb>(new CommandLineTypeMatcher<Task<int>>(typeof(TVerb),
+                verb => MatchWithHandler(commandLine, verb, options => Invoke(handler, options), parser)));
 
             return builder switch
             {
@@ -119,7 +125,9 @@ namespace dotnetCampus.Cli
 
             var commandLine = builder.CommandLine;
             var newBuilder = new CommandLineAsyncHandlerBuilder(commandLine);
-            commandLine.AddMatch<TVerb>(verb => MatchAndHandle(commandLine, verb, options => Invoke(handler, options), parser));
+
+            builder.CommandLine.AddMatch<TVerb>(new CommandLineTypeMatcher<Task<int>>(typeof(TVerb),
+                verb => MatchWithHandler(commandLine, verb, options => Invoke(handler, options), parser)));
 
             return builder switch
             {
@@ -147,7 +155,8 @@ namespace dotnetCampus.Cli
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            builder.CommandLine.AddMatch<TVerb>(verb => MatchAndHandle(builder.CommandLine, verb, options => Invoke(handler, options), parser));
+            builder.CommandLine.AddMatch<TVerb>(new CommandLineTypeMatcher<Task<int>>(typeof(TVerb),
+                verb => MatchWithHandler(builder.CommandLine, verb, options => Invoke(handler, options), parser)));
 
             return builder switch
             {
@@ -174,7 +183,8 @@ namespace dotnetCampus.Cli
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            builder.CommandLine.AddMatch<TVerb>(verb => MatchAndHandle(builder.CommandLine, verb, options => Invoke(handler, options), parser));
+            builder.CommandLine.AddMatch<TVerb>(new CommandLineTypeMatcher<Task<int>>(typeof(TVerb),
+                verb => MatchWithHandler(builder.CommandLine, verb, options => Invoke(handler, options), parser)));
 
             return builder switch
             {
@@ -201,7 +211,8 @@ namespace dotnetCampus.Cli
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            builder.CommandLine.AddMatch<TVerb>(verb => MatchAndHandle(builder.CommandLine, verb, options => Invoke(handler, options), parser));
+            builder.CommandLine.AddMatch<TVerb>(new CommandLineTypeMatcher<Task<int>>(typeof(TVerb),
+                verb => MatchWithHandler(builder.CommandLine, verb, options => Invoke(handler, options), parser)));
 
             return builder switch
             {
@@ -228,7 +239,8 @@ namespace dotnetCampus.Cli
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            builder.CommandLine.AddMatch<TVerb>(verb => MatchAndHandle(builder.CommandLine, verb, options => Invoke(handler, options), parser));
+            builder.CommandLine.AddMatch<TVerb>(new CommandLineTypeMatcher<Task<int>>(typeof(TVerb),
+                verb => MatchWithHandler(builder.CommandLine, verb, options => Invoke(handler, options), parser)));
 
             return builder switch
             {

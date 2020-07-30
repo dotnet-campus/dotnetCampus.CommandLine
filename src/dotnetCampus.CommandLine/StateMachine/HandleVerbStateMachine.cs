@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace dotnetCampus.Cli.StateMachine
 {
@@ -30,61 +29,63 @@ namespace dotnetCampus.Cli.StateMachine
         /// <summary>
         /// 记录所有的处理器。会依次执行，如果执行结束依然没有返回，那么会从中挑选出默认处理器再执行一次。
         /// </summary>
-        private readonly IEnumerable<CommandLineVerbMatch<T>> _verbMatches;
+        private readonly IEnumerable<CommandLineTypeMatcher<T>> _verbMatches;
 
         /// <summary>
-        /// 传入一组处理器，用于匹配并执行。
+        /// 传入一组处理器，用于匹配以后续执行。
         /// </summary>
-        public HandleVerbStateMachine(params CommandLineVerbMatch<T>[] handlers)
+        public HandleVerbStateMachine(params CommandLineTypeMatcher<T>[] handlers)
         {
             _verbMatches = handlers;
         }
 
         /// <summary>
-        /// 传入一组处理器，用于匹配并执行。
+        /// 传入一组处理器，用于匹配以后续执行。
         /// </summary>
-        public HandleVerbStateMachine(IEnumerable<CommandLineVerbMatch<T>> handlers)
+        public HandleVerbStateMachine(IEnumerable<CommandLineTypeMatcher<T>> handlers)
         {
             _verbMatches = handlers;
         }
 
         /// <summary>
-        /// 使用 foreach 语法执行此状态机。
+        /// 使用 foreach 语法执行此状态机，以查找最匹配的处理器。
+        /// 在 foreach 语法中，只会返回最匹配的那一个，随后遍历便会结束。
+        /// 需要额外注意的是即使是最匹配的那一个，也可能有无法完全匹配的理由，可能需要后续进行校验（<see cref="ValueAttribute"/> 中的必要参数满足）后才执行。
         /// </summary>
-        public IEnumerable<T> Run(string? verb)
+        public IEnumerable<CommandLineTypeMatchResult<T>> Find(string? verb)
         {
             // 留一个空位，保存默认处理器。
-            Func<T>? @default = null;
+            CommandLineTypeMatchResult<T> @default = default;
 
             // 现在，开始依次匹配。
             foreach (var match in _verbMatches)
             {
                 // 尝试匹配。
-                var result = match.Handler(verb);
+                var result = match.Match(verb);
 
                 // 检查匹配结果。
-                switch (result.MatchingResult)
+                switch (result.MachingResult)
                 {
-                    case VerbMatchingResult.NotMatched:
+                    case VerbMatchingResult.NotMatch:
                         // 如果没有匹配上，且这个不是默认谓词，那么继续匹配下一个。
                         continue;
-                    case VerbMatchingResult.Default:
+                    case VerbMatchingResult.FallbackMatched:
                         // 如果没有匹配上，但这个是默认谓词，那么保存默认处理器，并继续匹配下一个。
-                        @default = result.Handler;
+                        @default = result;
                         continue;
                     case VerbMatchingResult.Matched:
                         // 如果匹配成功，那么进入 foreach 区域内部。
-                        yield return result.Value;
+                        yield return result;
                         // 但是，进入 foreach 之后仅执行一次代码后就立即退出 foreach 区域。
                         yield break;
                 }
             }
 
             // 如果遍历完成依然没有匹配，那么检查是否曾经遇到过带有默认谓词的处理器。
-            if (@default != null)
+            if (@default.MachingResult == VerbMatchingResult.FallbackMatched)
             {
                 // 如果有默认谓词，那么直接执行处理器而无视匹配。
-                yield return @default();
+                yield return @default;
             }
         }
     }

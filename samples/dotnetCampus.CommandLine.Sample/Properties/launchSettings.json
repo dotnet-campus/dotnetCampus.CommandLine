@@ -3,17 +3,33 @@
     "Debug": {
       "commandName": "Project"
     },
-    "--help": {
+    "Debug --help": {
       "commandName": "Project",
       "commandLineArgs": "--help"
     },
-    "--version": {
+    "Debug --version": {
       "commandName": "Project",
       "commandLineArgs": "--version"
     },
-    "sample": {
+    "Debug sample": {
       "commandName": "Project",
       "commandLineArgs": "sample --sample-property \"Hello World\""
+    },
+    "Debug sample --help": {
+      "commandName": "Project",
+      "commandLineArgs": "sample --help"
+    },
+    "Debug unknown": {
+      "commandName": "Project",
+      "commandLineArgs": "unknown --sample-property \"Hello World\""
+    },
+    "Debug unknown --help": {
+      "commandName": "Project",
+      "commandLineArgs": "unknown --help"
+    },
+    "Debug --options": {
+      "commandName": "Project",
+      "commandLineArgs": "--sample-property \"Hello World\""
     }
   }
 }

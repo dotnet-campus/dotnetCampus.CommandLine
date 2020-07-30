@@ -53,15 +53,22 @@ namespace dotnetCampus.Cli.Utils
             return possibleVerb;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static CommandLineFilterMatch MatchFilter<TFilter>(CommandLine commandLine, ICommandLineOptionParser<TFilter>? parser)
+            where TFilter : ICommandLineFilter
+        {
+            return new CommandLineFilterMatch(typeof(TFilter), () => commandLine.As(parser ?? FindParser<TFilter>()));
+        }
+
         /// <summary>
         /// 尝试匹配谓词并调用处理器函数。
         /// 如果匹配成功则执行处理器函数并返回退出代码，否则返回 null。
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static MatchHandleResult<int> MatchAndHandle<TVerb>(CommandLine commandLine, string? possibleVerb,
+        internal static CommandLineTypeMatchResult<int> MatchWithHandler<TVerb>(CommandLine commandLine, string? possibleVerb,
             Action<TVerb> handler, ICommandLineOptionParser<TVerb>? parser)
         {
-            return MatchAndHandle(commandLine, possibleVerb, verb =>
+            return MatchWithHandler(commandLine, possibleVerb, verb =>
             {
                 handler(verb);
                 return 0;
@@ -73,7 +80,7 @@ namespace dotnetCampus.Cli.Utils
         /// 如果匹配成功则执行处理器函数并返回退出代码，否则返回 null。
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static MatchHandleResult<int> MatchAndHandle<TVerb>(CommandLine commandLine, string? possibleVerb,
+        internal static CommandLineTypeMatchResult<int> MatchWithHandler<TVerb>(CommandLine commandLine, string? possibleVerb,
             Func<TVerb, int> handler, ICommandLineOptionParser<TVerb>? parser)
         {
             if (handler == null)
@@ -82,21 +89,23 @@ namespace dotnetCampus.Cli.Utils
             }
 
             // 为命令行参数类型寻找解析器。
-            parser = parser ?? FindParser<TVerb>();
+            parser ??= FindParser<TVerb>();
 
             // 尝试匹配谓词，并执行处理器代码。
             if (string.Equals(possibleVerb, parser.Verb, StringComparison.InvariantCultureIgnoreCase))
             {
-                var options = commandLine.As(parser);
-                return new MatchHandleResult<int>(handler(options));
+                return new CommandLineTypeMatchResult<int>(VerbMatchingResult.Matched,
+                    typeof(TVerb), possibleVerb, () => handler(commandLine.As(parser)));
             }
 
             if (parser.Verb is null)
             {
-                return new MatchHandleResult<int>(() => handler(commandLine.As(parser)));
+                return new CommandLineTypeMatchResult<int>(VerbMatchingResult.FallbackMatched,
+                    typeof(TVerb), possibleVerb, () => handler(commandLine.As(parser)));
             }
 
-            return new MatchHandleResult<int>(VerbMatchingResult.NotMatched);
+            return new CommandLineTypeMatchResult<int>(VerbMatchingResult.NotMatch,
+                typeof(TVerb), possibleVerb);
         }
 
         /// <summary>
@@ -104,10 +113,10 @@ namespace dotnetCampus.Cli.Utils
         /// 如果匹配成功则执行处理器函数并返回退出代码，否则返回 null。
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static MatchHandleResult<Task<int>> MatchAndHandle<TVerb>(CommandLine commandLine,
+        internal static CommandLineTypeMatchResult<Task<int>> MatchWithHandler<TVerb>(CommandLine commandLine,
             string? possibleVerb, Func<TVerb, Task> handler, ICommandLineOptionParser<TVerb>? parser)
         {
-            return MatchAndHandle(commandLine, possibleVerb, async verb =>
+            return MatchWithHandler(commandLine, possibleVerb, async verb =>
             {
                 await handler(verb).ConfigureAwait(false);
                 return 0;
@@ -119,7 +128,7 @@ namespace dotnetCampus.Cli.Utils
         /// 如果匹配成功则执行处理器函数并返回退出代码，否则返回 null。
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static MatchHandleResult<Task<int>> MatchAndHandle<TVerb>(CommandLine commandLine,
+        internal static CommandLineTypeMatchResult<Task<int>> MatchWithHandler<TVerb>(CommandLine commandLine,
             string? possibleVerb, Func<TVerb, Task<int>> handler, ICommandLineOptionParser<TVerb>? parser)
         {
             if (handler == null)
@@ -128,21 +137,23 @@ namespace dotnetCampus.Cli.Utils
             }
 
             // 为命令行参数类型寻找解析器。
-            parser = parser ?? FindParser<TVerb>();
+            parser ??= FindParser<TVerb>();
 
             // 尝试匹配谓词，并执行处理器代码。
             if (string.Equals(possibleVerb, parser.Verb, StringComparison.InvariantCultureIgnoreCase))
             {
-                var options = commandLine.As(parser);
-                return new MatchHandleResult<Task<int>>(handler(options));
+                return new CommandLineTypeMatchResult<Task<int>>(VerbMatchingResult.Matched,
+                    typeof(TVerb), possibleVerb, () => handler(commandLine.As(parser)));
             }
 
             if (parser.Verb is null)
             {
-                return new MatchHandleResult<Task<int>>(() => handler(commandLine.As(parser)));
+                return new CommandLineTypeMatchResult<Task<int>>(VerbMatchingResult.FallbackMatched,
+                    typeof(TVerb), possibleVerb, () => handler(commandLine.As(parser)));
             }
 
-            return new MatchHandleResult<Task<int>>(VerbMatchingResult.NotMatched);
+            return new CommandLineTypeMatchResult<Task<int>>(VerbMatchingResult.NotMatch,
+                typeof(TVerb), possibleVerb);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

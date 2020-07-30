@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
@@ -13,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
+using dotnetCampus.Cli.Compatibility;
 using dotnetCampus.Cli.Core;
 using dotnetCampus.Cli.StateMachine;
 
@@ -35,7 +35,8 @@ namespace dotnetCampus.Cli
     public sealed class CommandLine : ICommandLineHandlerBuilder, IEnumerable<ListGroupItem>
     {
         private readonly ListGroup<SingleOptimizedStrings> _optionArgs;
-        private readonly List<CommandLineVerbMatch<Task<int>>> _toMatchList = new List<CommandLineVerbMatch<Task<int>>>();
+        private readonly List<CommandLineFilterMatch> _filterCreatorList = new List<CommandLineFilterMatch>();
+        private readonly List<CommandLineTypeMatcher<Task<int>>> _toMatchList = new List<CommandLineTypeMatcher<Task<int>>>();
 
         private CommandLine(ListGroup<SingleOptimizedStrings> optionArgs, ResourceManager? resourceManager)
         {
@@ -49,9 +50,14 @@ namespace dotnetCampus.Cli
         internal ResourceManager? ResourceManager { get; }
 
         /// <summary>
+        /// 收集的过滤器。
+        /// </summary>
+        internal IReadOnlyList<CommandLineFilterMatch> FilterMatchList => _filterCreatorList;
+
+        /// <summary>
         /// 收集的谓词处理方法。
         /// </summary>
-        internal IReadOnlyList<CommandLineVerbMatch<Task<int>>> ToMatchList => _toMatchList;
+        internal IReadOnlyList<CommandLineTypeMatcher<Task<int>>> VerbMatchList => _toMatchList;
 
         /// <summary>
         /// 自动查找命令行类型 <typeparamref name="T"/> 的解析器，然后解析出参数 <typeparamref name="T"/> 的一个新实例。
@@ -170,8 +176,14 @@ namespace dotnetCampus.Cli
             return parser.Commit();
         }
 
-        internal void AddMatch<TVerb>(Func<string?, MatchHandleResult<Task<int>>> match)
-            => _toMatchList.Add(new CommandLineVerbMatch<Task<int>>(typeof(TVerb), match));
+        internal void AddMatch(CommandLineFilterMatch filterCreator)
+            => _filterCreatorList.Add(filterCreator);
+
+        internal void AddMatch<TVerb>(CommandLineTypeMatcher<Task<int>> matcher)
+            => _toMatchList.Add(matcher);
+
+        //internal void AddMatch<TVerb>(Func<string?, CommandLineTypeMatchResult<Task<int>>> match)
+        //    => _toMatchList.Add(new CommandLineTypeMatcher<Task<int>>(typeof(TVerb), match));
 
         /// <summary>
         /// 将命令行参数转换为字符串值的字典。Key 为选项，Value 为选项后面的值。
