@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -100,16 +101,10 @@ namespace dotnetCampus.Cli.Standard
 
         private void PrintUnknownVerbHelpText(string? verb)
         {
-            var assembly = Assembly.GetEntryAssembly();
-            if (assembly is null)
-            {
-                Console.WriteLine(string.Format(CultureInfo.CurrentCulture, _localizableStrings.UnknownCommandFormat, verb));
-            }
-            else
-            {
-                var name = Path.GetFileNameWithoutExtension(assembly.Location);
-                Console.WriteLine(string.Format(CultureInfo.CurrentCulture, _localizableStrings.UnknownCommandFormat, name, verb));
-            }
+            var (commandDisplayName, commandName) = GetCommandName();
+            Console.WriteLine(string.Format(CultureInfo.CurrentCulture,
+                _localizableStrings.UnknownCommandFormat,
+                commandDisplayName, commandName, verb));
         }
 
         private void PrintDetailHelpText(IReadOnlyList<Type> relatedTypes)
@@ -129,6 +124,34 @@ namespace dotnetCampus.Cli.Standard
             else
             {
                 Console.WriteLine(version);
+            }
+        }
+
+        /// <summary>
+        /// 获取此进程的命令名称。
+        /// </summary>
+        /// <returns></returns>
+        private static ValueTupleSlim<string, string> GetCommandName()
+        {
+            var assembly = Assembly.GetEntryAssembly();
+            if (assembly is null)
+            {
+                var processName = Process.GetCurrentProcess().ProcessName;
+                return new ValueTupleSlim<string, string>(processName, processName);
+            }
+            else
+            {
+                var processName = Process.GetCurrentProcess().ProcessName;
+                var entryNameWithoutExtension = Path.GetFileNameWithoutExtension(assembly.Location);
+                var entryNameWithExtension = Path.GetFileName(assembly.Location);
+                if (string.Equals(processName, entryNameWithoutExtension, StringComparison.OrdinalIgnoreCase))
+                {
+                    return new ValueTupleSlim<string, string>(processName, processName);
+                }
+                else
+                {
+                    return new ValueTupleSlim<string, string>(entryNameWithoutExtension, $"{processName} {entryNameWithExtension}");
+                }
             }
         }
 

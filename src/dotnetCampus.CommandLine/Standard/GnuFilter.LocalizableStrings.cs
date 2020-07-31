@@ -53,18 +53,11 @@ namespace dotnetCampus.Cli.Standard
                 { "zh-CN", "命令：" },
             };
 
-            internal string UnknownCommand => GetString(Thread.CurrentThread.CurrentUICulture);
-            internal Dictionary<string, string> _unknownCommand = new Dictionary<string, string>
-            {
-                {  "", "'{0}' is not an available command. See '--help'." },
-                { "zh-CN", "无法执行“{0}”命令，请参阅“--help”。" },
-            };
-
             internal string UnknownCommandFormat => GetString(Thread.CurrentThread.CurrentUICulture);
             internal Dictionary<string, string> _unknownCommandFormat = new Dictionary<string, string>
             {
-                {  "", "{0}: '{1}' is not a {0} command. See '{0} --help'." },
-                { "zh-CN", "无法执行“{1}”命令，请参阅“{0} --help”。" },
+                {  "", "{0}: '{2}' is not a {0} command. See '{1} --help'." },
+                { "zh-CN", "{0}: 无法执行“{2}”命令，请参阅“{1} --help”。" },
             };
 
             private string GetString(CultureInfo culture, [CallerMemberName] string? propertyName = null)
@@ -79,7 +72,6 @@ namespace dotnetCampus.Cli.Standard
                     nameof(UsageHeader) => _usageHeader,
                     nameof(OptionsHeader) => _optionsHeader,
                     nameof(CommandHeader) => _commandHeader,
-                    nameof(UnknownCommand) => _unknownCommand,
                     nameof(UnknownCommandFormat) => _unknownCommandFormat,
                     _ => _defaultDictionary,
                 };
