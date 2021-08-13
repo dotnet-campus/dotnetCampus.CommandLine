@@ -11,7 +11,6 @@ namespace dotnetCampus.Cli.Standard
     {
         private readonly ResourceManager? _resourceManager;
 
-        [NotNull]
         private LocalizableStrings? _localizableStrings;
 
         [Option(nameof(Version), LocalizableDescription = nameof(LocalizableStrings.VersionOptionDescription))]

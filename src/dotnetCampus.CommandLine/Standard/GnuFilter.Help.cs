@@ -24,14 +24,14 @@ namespace dotnetCampus.Cli.Standard
                 .ToList();
             var mergedOptionInfoList = relatedTypes
                 .Where(x => !x.IsDefined(typeof(VerbAttribute)))
-                .SelectMany(x => NameDescription.EnumerateFromVerbType(x, _localizableStrings, _resourceManager)).ToList();
+                .SelectMany(x => NameDescription.EnumerateFromVerbType(x, _localizableStrings!, _resourceManager)).ToList();
 
             var maxVerbTextLength = verbInfoList.Count == 0 ? 0 : verbInfoList.Max(x => x.Name.Length);
             var maxOptionTextLength = mergedOptionInfoList.Count == 0 ? 0 : mergedOptionInfoList.Max(x => x.Name.Length);
             var columnLength = Math.Max(maxOptionTextLength, maxVerbTextLength);
             columnLength = Math.Max(12, columnLength);
 
-            Console.Write(_localizableStrings.UsageHeader);
+            Console.Write(_localizableStrings!.UsageHeader);
             if (verbInfoList.Count > 0)
             {
                 Console.WriteLine("[options] [command] [command-options] [arguments]");
@@ -73,7 +73,7 @@ namespace dotnetCampus.Cli.Standard
             {
                 var verb = NamingHelper.MakeKebabCase(verbAttribute.VerbName);
                 
-                Console.Write(_localizableStrings.UsageHeader);
+                Console.Write(_localizableStrings!.UsageHeader);
                 Console.WriteLine($"{verb} [options]");
                 Console.WriteLine();
 
@@ -103,7 +103,7 @@ namespace dotnetCampus.Cli.Standard
         {
             var (commandDisplayName, commandName) = GetCommandName();
             Console.WriteLine(string.Format(CultureInfo.CurrentCulture,
-                _localizableStrings.UnknownCommandFormat,
+                _localizableStrings!.UnknownCommandFormat,
                 commandDisplayName, commandName, verb));
         }
 
