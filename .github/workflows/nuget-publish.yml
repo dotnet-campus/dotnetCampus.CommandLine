@@ -16,4 +16,4 @@ jobs:
       - name: Pack
         run: dotnet build --configuration Release
       - name: Push
-        run: dotnet nuget push .\bin\Release\*.nupkg --skip-duplicate --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NugetOrgDotnetCampusApiKey }} --no-symbols 1
+        run: dotnet nuget push .\bin\Release\*.nupkg --skip-duplicate --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NugetOrgDotnetCampusApiKey }}
