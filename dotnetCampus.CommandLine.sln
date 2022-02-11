@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnetCampus.CommandLine", "src\dotnetCampus.CommandLine\dotnetCampus.CommandLine.csproj", "{EE3640D1-C870-4C4E-869E-AE3DCC6CB3C4}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnetCampus.CommandLine.Analyzer", "src\dotnetCampus.CommandLine.Analyzer\dotnetCampus.CommandLine.Analyzer.csproj", "{8AD0FEAB-2E36-4EBB-9E32-C4394FC6DC86}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{7DDA8183-3606-4B08-86E3-A4537860448F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnetCampus.CommandLine.Tests", "tests\dotnetCampus.CommandLine.Tests\dotnetCampus.CommandLine.Tests.csproj", "{470A596C-D8C4-4506-A71A-4BEEA08BCC62}"
@@ -41,6 +43,14 @@ Global
 		{EE3640D1-C870-4C4E-869E-AE3DCC6CB3C4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EE3640D1-C870-4C4E-869E-AE3DCC6CB3C4}.Release|x86.ActiveCfg = Release|Any CPU
 		{EE3640D1-C870-4C4E-869E-AE3DCC6CB3C4}.Release|x86.Build.0 = Release|Any CPU
+		{8AD0FEAB-2E36-4EBB-9E32-C4394FC6DC86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AD0FEAB-2E36-4EBB-9E32-C4394FC6DC86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AD0FEAB-2E36-4EBB-9E32-C4394FC6DC86}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8AD0FEAB-2E36-4EBB-9E32-C4394FC6DC86}.Debug|x86.Build.0 = Debug|Any CPU
+		{8AD0FEAB-2E36-4EBB-9E32-C4394FC6DC86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AD0FEAB-2E36-4EBB-9E32-C4394FC6DC86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AD0FEAB-2E36-4EBB-9E32-C4394FC6DC86}.Release|x86.ActiveCfg = Release|Any CPU
+		{8AD0FEAB-2E36-4EBB-9E32-C4394FC6DC86}.Release|x86.Build.0 = Release|Any CPU
 		{470A596C-D8C4-4506-A71A-4BEEA08BCC62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{470A596C-D8C4-4506-A71A-4BEEA08BCC62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{470A596C-D8C4-4506-A71A-4BEEA08BCC62}.Debug|x86.ActiveCfg = Debug|Any CPU
