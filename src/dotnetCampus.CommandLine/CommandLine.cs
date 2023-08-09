@@ -1,4 +1,7 @@
-﻿using System;
+﻿#if NETCOREAPP3_0_OR_GREATER
+#define SUPPORT_SPAN
+#endif
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -368,11 +371,23 @@ namespace dotnetCampus.Cli
         /// <param name="option">要转换的一个 Option（而不是它的值）。</param>
         /// <param name="prefix">前缀符号。</param>
         [Pure, MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static string FormatCoreLongName(IEnumerable<char> option, char prefix)
+        private static string FormatCoreLongName(
+#if SUPPORT_SPAN
+            ReadOnlySpan<char>
+#else
+            IEnumerable<char>
+#endif
+            option, char prefix)
         {
             var builder = new StringBuilder();
             var isWordFirstLetter = true;
-            foreach (var current in option.Skip(2))
+            foreach (var current in option
+#if SUPPORT_SPAN
+                .Slice(2)
+#else
+                .Skip(2)
+#endif
+                )
             {
                 if (current == prefix)
                 {
