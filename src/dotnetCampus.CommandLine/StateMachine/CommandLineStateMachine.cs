@@ -146,7 +146,7 @@ namespace dotnetCampus.Cli.StateMachine
                 return;
             }
 
-            var valueSplitIndex = option.IndexOf(':', StringComparison.OrdinalIgnoreCase);
+            var valueSplitIndex = option.IndexOf(':', StringComparison.Ordinal);
             if (valueSplitIndex < 0 || valueSplitIndex >= option.Length - 1)
             {
                 // -k value
