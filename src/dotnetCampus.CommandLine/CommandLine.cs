@@ -358,7 +358,7 @@ namespace dotnetCampus.Cli
                 return $"-{option}";
             }
 
-            chars[0] = char.ToUpper(chars[0], CultureInfo.InvariantCulture);
+            chars[0] = char.ToUpperInvariant(chars[0]);
             return $"-{new string(chars)}";
         }
 
@@ -381,7 +381,7 @@ namespace dotnetCampus.Cli
                 else if (isWordFirstLetter)
                 {
                     isWordFirstLetter = false;
-                    builder.Append(char.ToUpper(current, CultureInfo.InvariantCulture));
+                    builder.Append(char.ToUpperInvariant(current));
                 }
                 else
                 {
